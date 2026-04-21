@@ -1,26 +1,36 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-navy-950: #0a0f1e;
+  --color-navy-900: #0d1426;
+  --color-navy-800: #111d35;
+  --color-navy-700: #1a2d50;
+  --color-navy-600: #243d6b;
+  --color-gold-500: #c9a84c;
+  --color-gold-400: #d4b96a;
+  --color-gold-300: #e0ce94;
+  --color-cream-50: #faf8f3;
+  --color-cream-100: #f4f0e6;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-elevated: 0 10px 40px -10px rgb(0 0 0 / 0.2);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    @apply scroll-smooth;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-cream-50 text-navy-900 font-sans antialiased;
+  }
+  h1, h2, h3 {
+    @apply font-serif;
+  }
 }
