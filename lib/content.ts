@@ -7,8 +7,12 @@ const contentDir = path.join(process.cwd(), 'content')
 
 function readMdx(dir: string, slug: string) {
   const file = path.join(contentDir, dir, `${slug}.mdx`)
-  const raw = fs.readFileSync(file, 'utf8')
-  return matter(raw)
+  try {
+    const raw = fs.readFileSync(file, 'utf8')
+    return matter(raw)
+  } catch {
+    throw new Error(`Content file not found: ${dir}/${slug}.mdx`)
+  }
 }
 
 function getSlugs(dir: string): string[] {
