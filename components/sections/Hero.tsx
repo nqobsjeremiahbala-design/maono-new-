@@ -4,16 +4,16 @@ import Image from 'next/image'
 export function Hero() {
   return (
     <section className="relative bg-navy-950 overflow-hidden">
-      <div className="relative md:hidden aspect-[4/3] w-full">
+      <div className="relative md:hidden aspect-[3/4] w-full">
         <Image
           src="/images/hero/hero-main.jpg"
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center"
+          className="object-cover object-[70%_center]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-navy-950/30 via-transparent to-navy-950" />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy-950/20 via-transparent to-navy-950" />
       </div>
 
       <div className="hidden md:block absolute inset-0">
