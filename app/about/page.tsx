@@ -22,15 +22,15 @@ const TEAM: TeamMember[] = [
 export default function AboutPage() {
   return (
     <>
-      <section className="bg-navy-950 py-20 px-4">
+      <section className="bg-navy-950 py-16 md:py-20 px-5 sm:px-6">
         <div className="max-w-3xl mx-auto text-center">
-          <h1 className="font-serif text-4xl md:text-5xl text-white mb-4">About Maono</h1>
-          <p className="text-navy-300 text-lg">
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-white mb-4 leading-tight">About Maono</h1>
+          <p className="text-navy-300 text-base sm:text-lg">
             We are South African traders who got tired of watching good people lose money to bad education.
           </p>
         </div>
       </section>
-      <section className="py-16 px-4 bg-white">
+      <section className="py-12 md:py-16 px-5 sm:px-6 bg-white">
         <div className="max-w-3xl mx-auto">
           <h2 className="font-serif text-2xl text-navy-900 mb-4">Our story</h2>
           <p className="text-navy-600 mb-8">
@@ -49,10 +49,10 @@ export default function AboutPage() {
           </ul>
         </div>
       </section>
-      <section className="py-16 px-4 bg-white">
+      <section className="py-12 md:py-16 px-5 sm:px-6 bg-white">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="font-serif text-3xl text-navy-900 mb-12">The team</h2>
-          <div className="flex flex-wrap justify-center gap-12">
+          <h2 className="font-serif text-3xl text-navy-900 mb-10 md:mb-12">The team</h2>
+          <div className="flex flex-wrap justify-center gap-8 md:gap-12">
             {TEAM.map(m => <TeamCard key={m.name} member={m} />)}
           </div>
         </div>

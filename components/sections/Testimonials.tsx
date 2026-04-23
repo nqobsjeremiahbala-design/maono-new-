@@ -33,24 +33,24 @@ const TESTIMONIALS = [
 
 export function Testimonials() {
   return (
-    <section className="bg-white py-24 px-4">
+    <section className="bg-white py-16 md:py-24 px-5 sm:px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <p className="text-gold-600 text-sm font-semibold tracking-[0.2em] uppercase mb-4">
+        <div className="text-center mb-12 md:mb-16">
+          <p className="text-gold-600 text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase mb-4">
             Testimonials
           </p>
-          <h2 className="font-serif text-4xl md:text-5xl text-navy-900 mb-4">
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-navy-900 mb-4 leading-tight">
             Success stories that speak
           </h2>
-          <p className="text-navy-500 text-lg max-w-xl mx-auto">
+          <p className="text-navy-500 text-base sm:text-lg max-w-xl mx-auto">
             Traders who built the process, not the hype.
           </p>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
           {TESTIMONIALS.map(t => (
             <div
               key={t.name}
-              className="bg-white rounded-lg p-8 flex flex-col items-center text-center shadow-sm border border-navy-100"
+              className="bg-white rounded-lg p-6 sm:p-8 flex flex-col items-center text-center shadow-sm border border-navy-100"
             >
               <span className="text-gold-500 text-5xl font-serif leading-none mb-5" aria-hidden>
                 &ldquo;

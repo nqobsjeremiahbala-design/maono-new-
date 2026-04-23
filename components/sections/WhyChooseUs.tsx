@@ -33,18 +33,18 @@ const PILLARS = [
 
 export function WhyChooseUs() {
   return (
-    <section className="bg-white py-24 px-4">
+    <section className="bg-white py-16 md:py-24 px-5 sm:px-6">
       <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="font-serif text-4xl md:text-5xl text-navy-900 mb-4">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-navy-900 mb-4 leading-tight">
             Why choose us
           </h2>
           <div className="w-16 h-0.5 bg-gold-500 mx-auto mb-6" />
-          <p className="text-navy-600 text-lg max-w-2xl mx-auto">
+          <p className="text-navy-600 text-base sm:text-lg max-w-2xl mx-auto">
             Our approach combines practical strategies, solid risk management, and trader psychology to help you trade with confidence in real market conditions.
           </p>
         </div>
-        <div className="grid md:grid-cols-3 gap-12">
+        <div className="grid md:grid-cols-3 gap-10 md:gap-12">
           {PILLARS.map(p => (
             <div key={p.title} className="text-center">
               <div className="flex justify-center text-gold-500 mb-5">{p.icon}</div>

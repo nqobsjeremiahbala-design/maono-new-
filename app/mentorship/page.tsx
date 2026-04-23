@@ -10,16 +10,16 @@ export const metadata = generatePageMetadata({
 export default function MentorshipPage() {
   return (
     <>
-      <section className="bg-navy-950 py-20 px-4">
+      <section className="bg-navy-950 py-16 md:py-20 px-5 sm:px-6">
         <div className="max-w-2xl mx-auto text-center">
-          <h1 className="font-serif text-4xl text-white mb-4">1-on-1 Mentorship</h1>
-          <p className="text-navy-300 text-lg">
+          <h1 className="font-serif text-3xl sm:text-4xl text-white mb-4 leading-tight">1-on-1 Mentorship</h1>
+          <p className="text-navy-300 text-base sm:text-lg">
             Direct access to a Maono mentor. Personalised, accountable, results-focused.
           </p>
         </div>
       </section>
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
+      <section className="py-12 md:py-16 px-5 sm:px-6 bg-white">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16">
           <div>
             <h2 className="font-serif text-2xl text-navy-900 mb-6">What mentorship includes</h2>
             <ul className="space-y-4 text-sm text-navy-600">

@@ -26,16 +26,16 @@ export default function BlogPage() {
     <>
       <section className="relative bg-navy-950 overflow-hidden">
         <div className="absolute top-0 right-0 w-[40rem] h-[40rem] rounded-full bg-gold-500/10 blur-3xl -translate-y-1/3 translate-x-1/3" />
-        <div className="relative max-w-6xl mx-auto px-6 md:px-12 pt-24 pb-20 md:pt-32 md:pb-28">
+        <div className="relative max-w-6xl mx-auto px-5 sm:px-6 md:px-12 pt-20 pb-16 sm:pt-24 sm:pb-20 md:pt-32 md:pb-28">
           <div className="hero-reveal max-w-3xl">
-            <p className="text-gold-400 text-sm font-semibold tracking-[0.2em] uppercase mb-6">
+            <p className="text-gold-400 text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase mb-4 sm:mb-6">
               Journal
             </p>
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl text-white leading-[1.05] mb-6">
+            <h1 className="font-serif text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.05] mb-5 sm:mb-6">
               Market analysis.<br />
               <span className="text-gold-400">Trader insights.</span>
             </h1>
-            <p className="text-navy-200 text-lg md:text-xl max-w-xl">
+            <p className="text-navy-200 text-base sm:text-lg md:text-xl max-w-xl">
               Writings from the Maono desk, methodology, risk, psychology, and what we see in the market each week.
             </p>
           </div>
@@ -49,11 +49,11 @@ export default function BlogPage() {
       ) : (
         <>
           {featured && (
-            <section className="bg-white pt-20 md:pt-28 px-6 md:px-12">
+            <section className="bg-white pt-16 md:pt-28 px-5 sm:px-6 md:px-12">
               <div className="max-w-6xl mx-auto">
                 <Link
                   href={`/blog/${featured.slug}`}
-                  className="group grid md:grid-cols-[1.1fr_1fr] gap-10 md:gap-16 items-center"
+                  className="group grid md:grid-cols-[1.1fr_1fr] gap-8 md:gap-16 items-center"
                 >
                   <div className="relative aspect-[4/3] md:aspect-[5/4] rounded-3xl overflow-hidden bg-gradient-to-br from-navy-100 via-white to-navy-50 order-2 md:order-1">
                     <Image
@@ -68,10 +68,10 @@ export default function BlogPage() {
                     <p className="text-gold-600 text-xs font-semibold tracking-[0.2em] uppercase mb-4">
                       Featured · {featured.category}
                     </p>
-                    <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-navy-900 leading-[1.1] mb-5 group-hover:text-navy-700 transition-colors">
+                    <h2 className="font-serif text-3xl sm:text-4xl md:text-4xl lg:text-5xl text-navy-900 leading-[1.1] mb-5 group-hover:text-navy-700 transition-colors">
                       {featured.title}
                     </h2>
-                    <p className="text-navy-600 text-lg leading-relaxed mb-6 max-w-md">
+                    <p className="text-navy-600 text-base sm:text-lg leading-relaxed mb-6 max-w-md">
                       {featured.description}
                     </p>
                     <p className="text-sm text-navy-400">
@@ -84,9 +84,9 @@ export default function BlogPage() {
           )}
 
           {rest.length > 0 && (
-            <section className="py-20 md:py-28 px-6 md:px-12 bg-white">
+            <section className="py-16 md:py-28 px-5 sm:px-6 md:px-12 bg-white">
               <div className="max-w-6xl mx-auto">
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
                   {rest.map(post => (
                     <Link
                       key={post.slug}

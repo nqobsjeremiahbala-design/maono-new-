@@ -66,25 +66,25 @@ export function MyCoursesClient({ catalog }: { catalog: CatalogEntry[] }) {
 
   if (rows.length === 0) {
     return (
-      <section className="bg-navy-950 min-h-dvh px-6 py-20 md:py-28">
+      <section className="bg-navy-950 min-h-dvh px-5 sm:px-6 py-16 md:py-28">
         <div className="max-w-2xl mx-auto text-center hero-reveal">
-          <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-6">My courses</p>
-          <h1 className="font-serif text-4xl md:text-5xl text-white leading-[1.08] mb-5">
+          <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-4 sm:mb-6">My courses</p>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-white leading-[1.08] mb-5">
             You haven&apos;t enrolled in anything yet.
           </h1>
-          <p className="text-navy-300 text-lg mb-10 max-w-lg mx-auto">
+          <p className="text-navy-300 text-base sm:text-lg mb-8 md:mb-10 max-w-lg mx-auto">
             Pick a course to build a structured, risk-first trading process. Or start with the free signals group while you decide.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/courses"
-              className="press inline-flex items-center justify-center px-7 py-4 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
+              className="press inline-flex items-center justify-center px-7 py-4 min-h-[48px] rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
             >
               Browse courses
             </Link>
             <Link
               href="/signals"
-              className="press inline-flex items-center justify-center px-7 py-4 rounded-md border border-navy-700 text-white hover:border-gold-400 hover:text-gold-400 transition-colors"
+              className="press inline-flex items-center justify-center px-7 py-4 min-h-[48px] rounded-md border border-navy-700 text-white hover:border-gold-400 hover:text-gold-400 transition-colors"
             >
               Join the free signals group
             </Link>
@@ -98,21 +98,21 @@ export function MyCoursesClient({ catalog }: { catalog: CatalogEntry[] }) {
     <section className="bg-navy-950 min-h-dvh">
       <div className="relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[32rem] h-[32rem] rounded-full bg-gold-500/10 blur-3xl -translate-y-1/3 translate-x-1/3" />
-        <div className="relative max-w-6xl mx-auto px-6 md:px-10 pt-16 md:pt-24 pb-12">
+        <div className="relative max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pt-14 sm:pt-16 md:pt-24 pb-10 md:pb-12">
           <div className="hero-reveal">
-            <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-5">My courses</p>
-            <h1 className="font-serif text-4xl md:text-5xl text-white leading-[1.08] mb-4">
+            <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-4 sm:mb-5">My courses</p>
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-white leading-[1.08] mb-4">
               {name ? `Welcome back, ${name.split(' ')[0]}.` : 'Welcome back.'}
             </h1>
-            <p className="text-navy-300 text-lg max-w-2xl">
+            <p className="text-navy-300 text-base sm:text-lg max-w-2xl">
               Pick up where you left off. Your progress is saved on this device.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 md:px-10 pb-20 md:pb-28">
-        <ul className="grid md:grid-cols-2 gap-6">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pb-16 md:pb-28">
+        <ul className="grid sm:grid-cols-2 gap-6">
           {rows.map(({ course, progress, completedLessons }) => (
             <li key={course.slug}>
               <Link

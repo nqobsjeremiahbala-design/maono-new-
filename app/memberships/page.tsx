@@ -48,14 +48,14 @@ const TIERS: MembershipTier[] = [
 export default function MembershipsPage() {
   return (
     <>
-      <section className="bg-navy-950 py-20 px-4 text-center">
+      <section className="bg-navy-950 py-16 md:py-20 px-5 sm:px-6 text-center">
         <div className="max-w-2xl mx-auto">
-          <h1 className="font-serif text-4xl text-white mb-4">Membership tiers</h1>
-          <p className="text-navy-300 text-lg">Start free. Upgrade when you&apos;re ready.</p>
+          <h1 className="font-serif text-3xl sm:text-4xl text-white mb-4 leading-tight">Membership tiers</h1>
+          <p className="text-navy-300 text-base sm:text-lg">Start free. Upgrade when you&apos;re ready.</p>
         </div>
       </section>
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-4 gap-6">
+      <section className="py-12 md:py-16 px-5 sm:px-6 bg-white">
+        <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
           {TIERS.map(tier => (
             <div
               key={tier.name}
@@ -84,7 +84,7 @@ export default function MembershipsPage() {
               </ul>
               <Link
                 href={`/checkout?item=tier-${tier.name.toLowerCase()}`}
-                className={`inline-flex items-center justify-center w-full px-4 py-2 rounded-md text-sm font-semibold transition-colors ${
+                className={`press inline-flex items-center justify-center w-full px-4 py-3 min-h-[44px] rounded-md text-sm font-semibold transition-colors ${
                   tier.highlighted
                     ? 'bg-gold-500 text-navy-950 hover:bg-gold-400'
                     : 'border border-navy-700 text-navy-900 hover:bg-navy-950 hover:text-white'

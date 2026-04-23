@@ -35,14 +35,14 @@ export default function ResourcesPage() {
     <>
       <section className="bg-navy-950 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[32rem] h-[32rem] rounded-full bg-gold-500/10 blur-3xl -translate-y-1/3 translate-x-1/3" />
-        <div className="relative max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-28">
+        <div className="relative max-w-6xl mx-auto px-5 sm:px-6 md:px-10 py-16 sm:py-20 md:py-28">
           <div className="hero-reveal max-w-3xl">
-            <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-6">Free resources</p>
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl text-white leading-[1.05] mb-6">
+            <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-4 sm:mb-6">Free resources</p>
+            <h1 className="font-serif text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.05] mb-5 sm:mb-6">
               Practical guides.<br />
               <span className="text-gold-400">No signup.</span>
             </h1>
-            <p className="text-navy-300 text-lg md:text-xl max-w-2xl leading-relaxed">
+            <p className="text-navy-300 text-base sm:text-lg md:text-xl max-w-2xl leading-relaxed">
               Lessons, cheatsheets, and market breakdowns from the Maono team. Free to read, free to share.
             </p>
           </div>
@@ -50,19 +50,19 @@ export default function ResourcesPage() {
       </section>
 
       {featured && (
-        <section className="bg-white py-20 md:py-28 px-6 md:px-12">
+        <section className="bg-white py-16 md:py-28 px-5 sm:px-6 md:px-12">
           <Link
             href={`/resources/${featured.slug}`}
-            className="press group block max-w-6xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16 items-center focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-4 focus-visible:outline-none rounded-3xl"
+            className="press group block max-w-6xl mx-auto grid md:grid-cols-2 gap-8 md:gap-16 items-center focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-4 focus-visible:outline-none rounded-3xl"
           >
             <div className="order-2 md:order-1">
-              <p className="text-gold-600 text-xs font-semibold tracking-[0.2em] uppercase mb-5">
+              <p className="text-gold-600 text-xs font-semibold tracking-[0.2em] uppercase mb-4 sm:mb-5">
                 Featured · {TYPE_COPY[featured.type] ?? featured.type}
               </p>
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-navy-900 leading-[1.1] mb-5 group-hover:text-gold-600 transition-colors">
+              <h2 className="font-serif text-3xl sm:text-4xl md:text-4xl lg:text-5xl text-navy-900 leading-[1.1] mb-5 group-hover:text-gold-600 transition-colors">
                 {featured.title}
               </h2>
-              <p className="text-navy-600 text-lg mb-6 leading-relaxed max-w-lg">{featured.description}</p>
+              <p className="text-navy-600 text-base sm:text-lg mb-6 leading-relaxed max-w-lg">{featured.description}</p>
               <span className="inline-flex items-center gap-2 text-sm font-semibold text-navy-900">
                 Read the guide
                 <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">→</span>
@@ -82,16 +82,16 @@ export default function ResourcesPage() {
         </section>
       )}
 
-      <section className="bg-navy-50 py-20 md:py-28 px-6 md:px-12">
+      <section className="bg-navy-50 py-16 md:py-28 px-5 sm:px-6 md:px-12">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-14 md:flex md:items-end md:justify-between md:gap-10">
+          <div className="mb-10 md:mb-14 md:flex md:items-end md:justify-between md:gap-10">
             <div>
               <p className="text-gold-600 text-xs font-semibold tracking-[0.2em] uppercase mb-4">All resources</p>
-              <h2 className="font-serif text-4xl md:text-5xl text-navy-900 leading-[1.08] max-w-2xl">
+              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-navy-900 leading-[1.08] max-w-2xl">
                 Everything, organised.
               </h2>
             </div>
-            <p className="text-navy-600 max-w-sm mt-4 md:mt-0">
+            <p className="text-navy-600 text-base sm:text-lg max-w-sm mt-4 md:mt-0">
               New pieces added most weeks. Bookmark the ones that help, skip the ones that do not.
             </p>
           </div>

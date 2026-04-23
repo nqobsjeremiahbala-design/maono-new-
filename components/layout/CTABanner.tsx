@@ -9,10 +9,10 @@ export function CTABanner({
   sub?: string
 }) {
   return (
-    <section className="bg-navy-900 py-16 px-4">
+    <section className="bg-navy-900 py-12 md:py-16 px-5 sm:px-6">
       <div className="max-w-3xl mx-auto text-center">
-        <h2 className="font-serif text-3xl md:text-4xl text-white mb-4">{headline}</h2>
-        <p className="text-navy-300 mb-8">{sub}</p>
+        <h2 className="font-serif text-3xl sm:text-4xl text-white mb-4 leading-tight">{headline}</h2>
+        <p className="text-navy-300 text-base sm:text-lg mb-6 md:mb-8">{sub}</p>
         <Button size="lg">
           <Link href="/signals">Join the free signals group →</Link>
         </Button>

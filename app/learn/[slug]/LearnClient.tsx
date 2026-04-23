@@ -162,7 +162,7 @@ export function LearnClient({ courseSlug, courseTitle, curriculum }: Props) {
           onClose={() => setSidebarOpen(false)}
         />
 
-        <main className="px-4 md:px-10 lg:px-14 py-10 md:py-14 max-w-4xl">
+        <main className="px-5 sm:px-6 md:px-10 lg:px-14 py-8 sm:py-10 md:py-14 max-w-4xl">
           <LessonView
             lesson={activeLesson}
             lessonIndex={activeIndex + 1}
@@ -293,12 +293,12 @@ function LessonView({
         <span>{lesson.type === 'video' ? 'Video' : 'Reading'} · {lesson.duration}</span>
       </div>
 
-      <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl text-white leading-[1.1] mb-4">
+      <h1 className="font-serif text-[1.75rem] sm:text-3xl md:text-4xl lg:text-5xl text-white leading-[1.1] mb-3 sm:mb-4">
         {lesson.title}
       </h1>
-      <p className="text-navy-300 text-lg mb-10 max-w-2xl">{lesson.description}</p>
+      <p className="text-navy-300 text-base sm:text-lg mb-8 md:mb-10 max-w-2xl">{lesson.description}</p>
 
-      <div className="mb-10">
+      <div className="mb-8 md:mb-10">
         {lesson.type === 'video' && lesson.videoUrl ? (
           <div className="relative aspect-video rounded-2xl overflow-hidden bg-black shadow-elevated">
             <video
@@ -312,7 +312,7 @@ function LessonView({
             </video>
           </div>
         ) : (
-          <div className="rounded-2xl bg-white px-6 md:px-12 py-10 md:py-14 shadow-elevated">
+          <div className="rounded-2xl bg-white px-5 sm:px-6 md:px-12 py-8 sm:py-10 md:py-14 shadow-elevated">
             <div className="prose-maono max-w-2xl mx-auto">
               <Markdown source={lesson.content ?? ''} />
             </div>

@@ -27,14 +27,14 @@ export default function CoursesPage() {
     <>
       <section className="bg-navy-950 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[32rem] h-[32rem] rounded-full bg-gold-500/10 blur-3xl -translate-y-1/3 translate-x-1/3" />
-        <div className="relative max-w-6xl mx-auto px-6 md:px-10 py-20 md:py-28">
+        <div className="relative max-w-6xl mx-auto px-5 sm:px-6 md:px-10 py-16 sm:py-20 md:py-28">
           <div className="hero-reveal max-w-3xl">
-            <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-6">The curriculum</p>
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl text-white leading-[1.05] mb-6">
+            <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-4 sm:mb-6">The curriculum</p>
+            <h1 className="font-serif text-[2.5rem] sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.05] mb-5 sm:mb-6">
               Forex education<br />
               <span className="text-gold-400">without the noise.</span>
             </h1>
-            <p className="text-navy-300 text-lg md:text-xl max-w-2xl leading-relaxed">
+            <p className="text-navy-300 text-base sm:text-lg md:text-xl max-w-2xl leading-relaxed">
               Six structured courses built for real trading, not YouTube views. Start with the fundamentals,
               then layer in price action, risk management, psychology, and institutional concepts.
             </p>
@@ -43,16 +43,16 @@ export default function CoursesPage() {
       </section>
 
       {featured && (
-        <section className="bg-white py-20 md:py-28 px-6 md:px-12">
+        <section className="bg-white py-16 md:py-28 px-5 sm:px-6 md:px-12">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 md:gap-20 items-center">
             <div>
-              <p className="text-gold-600 text-xs font-semibold tracking-[0.2em] uppercase mb-5">
+              <p className="text-gold-600 text-xs font-semibold tracking-[0.2em] uppercase mb-4 sm:mb-5">
                 Featured · start here
               </p>
-              <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-navy-900 leading-[1.05] mb-6">
+              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-navy-900 leading-[1.05] mb-5 md:mb-6">
                 {featured.title}
               </h2>
-              <p className="text-navy-600 text-lg mb-8 leading-relaxed max-w-lg">
+              <p className="text-navy-600 text-base sm:text-lg mb-6 md:mb-8 leading-relaxed max-w-lg">
                 {featured.description}
               </p>
               <ul className="space-y-2.5 mb-8">
@@ -74,13 +74,13 @@ export default function CoursesPage() {
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 <Link
                   href={`/courses/${featured.slug}`}
-                  className="press inline-flex items-center justify-center px-6 py-3.5 rounded-md bg-navy-950 text-white font-semibold hover:bg-navy-900 transition-colors"
+                  className="press inline-flex items-center justify-center px-6 py-3.5 min-h-[48px] rounded-md bg-navy-950 text-white font-semibold hover:bg-navy-900 transition-colors"
                 >
                   View course details
                 </Link>
                 <Link
                   href={`/checkout?item=course-${featured.slug}`}
-                  className="press inline-flex items-center justify-center px-6 py-3.5 rounded-md border border-navy-200 text-navy-900 font-semibold hover:border-gold-500 hover:text-gold-600 transition-colors"
+                  className="press inline-flex items-center justify-center px-6 py-3.5 min-h-[48px] rounded-md border border-navy-200 text-navy-900 font-semibold hover:border-gold-500 hover:text-gold-600 transition-colors"
                 >
                   Enrol now
                 </Link>
@@ -97,28 +97,28 @@ export default function CoursesPage() {
                   className="object-cover"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 md:-left-10 bg-white rounded-xl shadow-elevated p-5 max-w-[240px] border border-navy-100">
-                <p className="text-[11px] text-gold-600 font-semibold tracking-[0.15em] uppercase mb-1">
+              <div className="absolute -bottom-4 left-3 md:-bottom-6 md:-left-10 bg-white rounded-xl shadow-elevated p-4 md:p-5 max-w-[200px] md:max-w-[240px] border border-navy-100">
+                <p className="text-[10px] md:text-[11px] text-gold-600 font-semibold tracking-[0.15em] uppercase mb-1">
                   {LEVEL_COPY[featured.level]}
                 </p>
-                <p className="text-navy-900 font-semibold mb-1">{featured.lessons} lessons</p>
-                <p className="text-navy-500 text-sm">{featured.duration} of structured content</p>
+                <p className="text-navy-900 font-semibold mb-1 text-sm md:text-base">{featured.lessons} lessons</p>
+                <p className="text-navy-500 text-xs md:text-sm">{featured.duration} of structured content</p>
               </div>
             </div>
           </div>
         </section>
       )}
 
-      <section className="bg-navy-50 py-20 md:py-28 px-6 md:px-12">
+      <section className="bg-navy-50 py-16 md:py-28 px-5 sm:px-6 md:px-12">
         <div className="max-w-6xl mx-auto">
-          <div className="mb-14 md:flex md:items-end md:justify-between md:gap-10">
+          <div className="mb-10 md:mb-14 md:flex md:items-end md:justify-between md:gap-10">
             <div>
               <p className="text-gold-600 text-xs font-semibold tracking-[0.2em] uppercase mb-4">All courses</p>
-              <h2 className="font-serif text-4xl md:text-5xl text-navy-900 leading-[1.08] max-w-2xl">
+              <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-navy-900 leading-[1.08] max-w-2xl">
                 Pick your path.
               </h2>
             </div>
-            <p className="text-navy-600 max-w-sm mt-4 md:mt-0">
+            <p className="text-navy-600 text-base sm:text-lg max-w-sm mt-4 md:mt-0">
               Each course stands on its own. Or bundle three into a learning path for a lower combined price.
             </p>
           </div>

@@ -21,14 +21,14 @@ export default function ContactPage() {
   return (
     <>
       <JsonLd data={faqJsonLd(FAQ)} />
-      <section className="bg-navy-950 py-20 px-4 text-center">
+      <section className="bg-navy-950 py-16 md:py-20 px-5 sm:px-6 text-center">
         <div className="max-w-2xl mx-auto">
-          <h1 className="font-serif text-4xl text-white mb-4">Contact us</h1>
-          <p className="text-navy-300">We typically respond within 24 hours.</p>
+          <h1 className="font-serif text-3xl sm:text-4xl text-white mb-4 leading-tight">Contact us</h1>
+          <p className="text-navy-300 text-base sm:text-lg">We typically respond within 24 hours.</p>
         </div>
       </section>
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
+      <section className="py-12 md:py-16 px-5 sm:px-6 bg-white">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 md:gap-16">
           <div>
             <h2 className="font-serif text-2xl text-navy-900 mb-6">Get in touch</h2>
             <ContactForm />

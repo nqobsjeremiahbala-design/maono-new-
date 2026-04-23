@@ -106,7 +106,7 @@ export function CheckoutClient() {
 
   if (!item) {
     return (
-      <section className="bg-navy-950 min-h-screen py-20 px-4">
+      <section className="bg-navy-950 min-h-screen py-16 md:py-20 px-5 sm:px-6">
         <div className="max-w-xl mx-auto text-center">
           <h1 className="font-serif text-3xl text-white mb-4">Nothing selected</h1>
           <p className="text-navy-300 mb-8">Pick a course, path, or membership tier to continue.</p>
@@ -122,7 +122,7 @@ export function CheckoutClient() {
   if (status === 'success') {
     const hasPlayer = enrolledSlug && COURSES_WITH_PLAYER.has(enrolledSlug)
     return (
-      <section className="bg-navy-950 min-h-dvh py-20 px-4">
+      <section className="bg-navy-950 min-h-dvh py-16 md:py-20 px-5 sm:px-6">
         <div className="max-w-xl mx-auto text-center hero-reveal">
           <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-5">
             {enrolledSlug ? 'You’re enrolled' : 'Order received'}
@@ -179,7 +179,7 @@ export function CheckoutClient() {
   const periodSuffix = item.period === 'month' ? ' / month' : ''
 
   return (
-    <section className="bg-white min-h-screen py-16 px-4">
+    <section className="bg-white min-h-screen py-12 md:py-16 px-5 sm:px-6">
       <div className="max-w-5xl mx-auto">
         <Link href="/" className="text-sm text-navy-500 hover:text-navy-900 mb-8 inline-block">
           ← Back
