@@ -2,16 +2,22 @@
 
 import { usePathname } from 'next/navigation'
 import { Footer } from './Footer'
-import { StickyBar } from './StickyBar'
+import { SignalsPopup } from './SignalsPopup'
 
 export function SiteChrome() {
   const pathname = usePathname()
-  const hide = pathname?.startsWith('/learn/')
-  if (hide) return null
+  const hideAll = pathname?.startsWith('/learn/')
+  if (hideAll) return null
+
+  const suppressPopup =
+    pathname?.startsWith('/signals') ||
+    pathname?.startsWith('/checkout') ||
+    pathname?.startsWith('/my-courses')
+
   return (
     <>
       <Footer />
-      <StickyBar />
+      {!suppressPopup && <SignalsPopup />}
     </>
   )
 }
