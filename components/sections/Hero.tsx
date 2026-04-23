@@ -4,20 +4,32 @@ import Image from 'next/image'
 export function Hero() {
   return (
     <section className="relative bg-navy-950 overflow-hidden">
-      <div className="absolute inset-0">
+      <div className="relative md:hidden aspect-[4/3] w-full">
         <Image
           src="/images/hero/hero-main.jpg"
           alt=""
           fill
           priority
           sizes="100vw"
-          className="object-cover object-center md:object-right"
+          className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-navy-950 via-navy-950/70 md:via-navy-950/85 to-navy-950/40 md:to-navy-950/20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/95 via-navy-950/40 md:via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-navy-950/30 via-transparent to-navy-950" />
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 pt-20 pb-20 sm:pt-24 sm:pb-28 md:pt-32 md:pb-36 min-h-dvh flex items-end md:items-center">
+      <div className="hidden md:block absolute inset-0">
+        <Image
+          src="/images/hero/hero-main.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-right"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950/60 via-transparent to-transparent" />
+      </div>
+
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 pt-10 pb-16 sm:pt-12 sm:pb-20 md:pt-32 md:pb-36 md:min-h-dvh md:flex md:items-center">
         <div className="max-w-2xl hero-reveal w-full">
           <h1 className="font-serif text-[2.5rem] leading-[1.08] sm:text-5xl md:text-6xl lg:text-7xl text-white md:leading-[1.05] mb-5 md:mb-6">
             Forex education<br />
