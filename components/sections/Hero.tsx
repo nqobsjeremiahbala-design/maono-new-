@@ -4,7 +4,7 @@ import Image from 'next/image'
 export function Hero() {
   return (
     <section className="relative bg-navy-950 overflow-hidden">
-      <div className="relative md:hidden aspect-[16/11] w-full">
+      <div className="relative md:hidden aspect-[16/9] w-full">
         <Image
           src="/images/hero/hero-main.jpg"
           alt=""
@@ -29,7 +29,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-navy-950/60 via-transparent to-transparent" />
       </div>
 
-      <div className="relative max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 pt-10 pb-16 sm:pt-12 sm:pb-20 md:pt-32 md:pb-36 md:min-h-dvh md:flex md:items-center">
+      <div className="relative max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 pt-4 pb-14 sm:pt-6 sm:pb-20 md:pt-32 md:pb-36 md:min-h-dvh md:flex md:items-center">
         <div className="max-w-2xl hero-reveal w-full">
           <h1 className="font-serif text-[2.5rem] leading-[1.08] sm:text-5xl md:text-6xl lg:text-7xl text-white md:leading-[1.05] mb-5 md:mb-6">
             Forex education<br />
@@ -58,7 +58,7 @@ export function Hero() {
               Explore courses
             </Link>
           </div>
-          <div className="mt-10 md:mt-14 flex flex-col sm:flex-row gap-2 sm:gap-6 text-sm text-navy-300 sm:divide-x divide-navy-700">
+          <div className="mt-8 md:mt-14 flex flex-col sm:flex-row gap-2 sm:gap-6 text-sm text-navy-300 sm:divide-x divide-navy-700">
             <span className="sm:pr-6">Based in Cape Town</span>
             <span className="sm:px-6">7+ years trading &amp; mentoring</span>
             <span className="sm:pl-6">Real team. Real methodology.</span>
