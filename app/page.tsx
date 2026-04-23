@@ -1,11 +1,10 @@
 import { Hero } from '@/components/sections/Hero'
-import { LevelSegmenter } from '@/components/sections/LevelSegmenter'
-import { MethodologyBelt } from '@/components/sections/MethodologyBelt'
-import { SampleLesson } from '@/components/sections/SampleLesson'
-import { CoursesPreview } from '@/components/sections/CoursesPreview'
-import { ForWhom } from '@/components/sections/ForWhom'
-import { TeamSnapshot } from '@/components/sections/TeamSnapshot'
-import { MembershipsPreview } from '@/components/sections/MembershipsPreview'
+import { Testimonials } from '@/components/sections/Testimonials'
+import { WhyChooseUs } from '@/components/sections/WhyChooseUs'
+import { ConfidenceSplit } from '@/components/sections/ConfidenceSplit'
+import { MidCTA } from '@/components/sections/MidCTA'
+import { StructuredLearningSplit } from '@/components/sections/StructuredLearningSplit'
+import { AboutUs } from '@/components/sections/AboutUs'
 import { FinalCTA } from '@/components/sections/FinalCTA'
 import { JsonLd } from '@/components/shared/JsonLd'
 import { organizationJsonLd } from '@/lib/jsonld'
@@ -21,13 +20,12 @@ export default function HomePage() {
     <>
       <JsonLd data={organizationJsonLd()} />
       <Hero />
-      <LevelSegmenter />
-      <MethodologyBelt />
-      <SampleLesson />
-      <CoursesPreview />
-      <ForWhom />
-      <TeamSnapshot />
-      <MembershipsPreview />
+      <Testimonials />
+      <WhyChooseUs />
+      <MidCTA />
+      <StructuredLearningSplit />
+      <AboutUs />
+      <ConfidenceSplit />
       <FinalCTA />
     </>
   )

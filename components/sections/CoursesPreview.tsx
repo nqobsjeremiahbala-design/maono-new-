@@ -6,7 +6,7 @@ import { getCourses } from '@/lib/content'
 export function CoursesPreview() {
   const courses = getCourses()
   return (
-    <section className="py-20 px-4 bg-cream-100">
+    <section className="py-20 px-4 bg-white">
       <div className="max-w-7xl mx-auto">
         <h2 className="font-serif text-3xl md:text-4xl text-navy-900 text-center mb-4">
           Our courses

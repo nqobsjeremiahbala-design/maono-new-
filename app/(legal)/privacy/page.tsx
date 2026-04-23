@@ -8,7 +8,7 @@ export const metadata = generatePageMetadata({
 
 export default function PrivacyPage() {
   return (
-    <section className="py-20 px-4 bg-cream-50">
+    <section className="py-20 px-4 bg-white">
       <div className="max-w-3xl mx-auto">
         <h1 className="font-serif text-3xl text-navy-900 mb-4">Privacy Policy</h1>
         <p className="text-navy-400 text-sm mb-8">Last updated: 2026-04-21</p>

@@ -5,7 +5,7 @@ import { generatePageMetadata } from '@/lib/metadata'
 import type { MembershipTier } from '@/lib/types'
 
 export const metadata = generatePageMetadata({
-  title: 'Membership Tiers — Bronze, Silver, Gold, Platinum',
+  title: 'Membership Tiers, Bronze, Silver, Gold, Platinum',
   description: 'Choose a Maono membership tier. From signals access to full 1-on-1 mentorship.',
   path: '/memberships',
 })
@@ -50,25 +50,25 @@ export default function MembershipsPage() {
     <>
       <section className="bg-navy-950 py-20 px-4 text-center">
         <div className="max-w-2xl mx-auto">
-          <h1 className="font-serif text-4xl text-cream-50 mb-4">Membership tiers</h1>
+          <h1 className="font-serif text-4xl text-white mb-4">Membership tiers</h1>
           <p className="text-navy-300 text-lg">Start free. Upgrade when you&apos;re ready.</p>
         </div>
       </section>
-      <section className="py-16 px-4 bg-cream-50">
+      <section className="py-16 px-4 bg-white">
         <div className="max-w-6xl mx-auto grid md:grid-cols-4 gap-6">
           {TIERS.map(tier => (
             <div
               key={tier.name}
               className={`rounded-xl p-6 flex flex-col ${
                 tier.highlighted
-                  ? 'bg-navy-950 text-cream-50 ring-2 ring-gold-500'
+                  ? 'bg-navy-950 text-white ring-2 ring-gold-500'
                   : 'bg-white border border-navy-100'
               }`}
             >
               <p className={`text-sm font-semibold mb-1 ${tier.highlighted ? 'text-gold-400' : 'text-navy-500'}`}>
                 {tier.name}
               </p>
-              <p className={`font-serif text-3xl mb-1 ${tier.highlighted ? 'text-cream-50' : 'text-navy-900'}`}>
+              <p className={`font-serif text-3xl mb-1 ${tier.highlighted ? 'text-white' : 'text-navy-900'}`}>
                 R{tier.price.toLocaleString()}
               </p>
               <p className="text-xs text-navy-400 mb-4">per {tier.period}</p>
@@ -82,9 +82,16 @@ export default function MembershipsPage() {
                   </li>
                 ))}
               </ul>
-              <Button variant={tier.highlighted ? 'primary' : 'outline'} size="sm">
-                <Link href="/signals">Start free first →</Link>
-              </Button>
+              <Link
+                href={`/checkout?item=tier-${tier.name.toLowerCase()}`}
+                className={`inline-flex items-center justify-center w-full px-4 py-2 rounded-md text-sm font-semibold transition-colors ${
+                  tier.highlighted
+                    ? 'bg-gold-500 text-navy-950 hover:bg-gold-400'
+                    : 'border border-navy-700 text-navy-900 hover:bg-navy-950 hover:text-white'
+                }`}
+              >
+                Start {tier.name} →
+              </Link>
             </div>
           ))}
         </div>

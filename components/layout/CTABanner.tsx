@@ -11,7 +11,7 @@ export function CTABanner({
   return (
     <section className="bg-navy-900 py-16 px-4">
       <div className="max-w-3xl mx-auto text-center">
-        <h2 className="font-serif text-3xl md:text-4xl text-cream-50 mb-4">{headline}</h2>
+        <h2 className="font-serif text-3xl md:text-4xl text-white mb-4">{headline}</h2>
         <p className="text-navy-300 mb-8">{sub}</p>
         <Button size="lg">
           <Link href="/signals">Join the free signals group →</Link>

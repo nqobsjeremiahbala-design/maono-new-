@@ -16,7 +16,7 @@ export function MembershipsPreview() {
           Membership tiers
         </h2>
         <p className="text-center text-navy-500 mb-12 max-w-lg mx-auto">
-          From signals access to full mentorship — a tier for every stage of your journey.
+          From signals access to full mentorship, a tier for every stage of your journey.
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {tiers.map(t => (
@@ -24,8 +24,8 @@ export function MembershipsPreview() {
               key={t.name}
               className={`rounded-lg p-5 text-center border ${
                 t.highlight
-                  ? 'border-gold-500 bg-navy-950 text-cream-50'
-                  : 'border-navy-100 bg-cream-50 text-navy-900'
+                  ? 'border-gold-500 bg-navy-950 text-white'
+                  : 'border-navy-100 bg-white text-navy-900'
               }`}
             >
               <p className="font-semibold text-sm mb-1">{t.name}</p>

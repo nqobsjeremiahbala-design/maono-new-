@@ -11,7 +11,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variants: Record<Variant, string> = {
   primary: 'bg-gold-500 text-navy-950 hover:bg-gold-400 font-semibold',
-  secondary: 'bg-navy-800 text-cream-50 hover:bg-navy-700 font-semibold',
+  secondary: 'bg-navy-800 text-white hover:bg-navy-700 font-semibold',
   ghost: 'bg-transparent text-navy-900 hover:bg-navy-100',
   outline: 'border border-navy-700 text-navy-900 hover:bg-navy-50',
 }
@@ -23,10 +23,10 @@ const sizes: Record<Size, string> = {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'primary', size = 'md', className = '', children, ...props }, ref) => (
+  ({ variant = 'primary', size = 'md', className = '', children, asChild: _asChild, ...props }, ref) => (
     <button
       ref={ref}
-      className={`inline-flex items-center justify-center rounded-md transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`press inline-flex items-center justify-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
       {children}

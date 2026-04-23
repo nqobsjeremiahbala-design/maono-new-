@@ -7,7 +7,7 @@ export function FinalCTA() {
         <p className="text-gold-500 text-sm font-medium uppercase tracking-widest mb-4">
           Start free today
         </p>
-        <h2 className="font-serif text-3xl md:text-4xl text-cream-50 mb-4">
+        <h2 className="font-serif text-3xl md:text-4xl text-white mb-4">
           Join the signals group. Zero cost.
         </h2>
         <p className="text-navy-300 mb-10">

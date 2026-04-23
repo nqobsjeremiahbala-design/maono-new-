@@ -14,7 +14,7 @@ const FAQ = [
   { question: 'Do I need prior trading experience?', answer: 'No. Our beginner path and Forex Introduction course are designed for people with zero prior experience.' },
   { question: 'What payment methods do you accept?', answer: 'We accept EFT, major credit/debit cards, and mobile payment methods. Details provided at checkout.' },
   { question: 'How quickly will I see results?', answer: 'Trading is a skill that takes time to develop. We do not promise specific returns. Most students see meaningful improvement in their analytical ability within 3-6 months of consistent practice.' },
-  { question: 'Is the signals group really free?', answer: 'Yes. The signals group is completely free with no strings attached. We offer it as a starting point — upgrades to courses and memberships are entirely optional.' },
+  { question: 'Is the signals group really free?', answer: 'Yes. The signals group is completely free with no strings attached. We offer it as a starting point, upgrades to courses and memberships are entirely optional.' },
 ]
 
 export default function ContactPage() {
@@ -23,11 +23,11 @@ export default function ContactPage() {
       <JsonLd data={faqJsonLd(FAQ)} />
       <section className="bg-navy-950 py-20 px-4 text-center">
         <div className="max-w-2xl mx-auto">
-          <h1 className="font-serif text-4xl text-cream-50 mb-4">Contact us</h1>
+          <h1 className="font-serif text-4xl text-white mb-4">Contact us</h1>
           <p className="text-navy-300">We typically respond within 24 hours.</p>
         </div>
       </section>
-      <section className="py-16 px-4 bg-cream-50">
+      <section className="py-16 px-4 bg-white">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
           <div>
             <h2 className="font-serif text-2xl text-navy-900 mb-6">Get in touch</h2>

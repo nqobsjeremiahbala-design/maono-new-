@@ -10,7 +10,8 @@ export function CourseCard({ course }: { course: Course }) {
     <Card className="flex flex-col overflow-hidden">
       <div className="relative h-48 bg-navy-800">
         <Image
-          src={course.image || '/images/courses/placeholder.jpg'}
+          src={course.image || `/images/courses/${course.slug}.jpg`}
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
           alt={course.title}
           fill
           className="object-cover"

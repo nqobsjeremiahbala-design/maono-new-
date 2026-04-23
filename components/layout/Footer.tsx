@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 const columns = [
   {
@@ -45,11 +46,11 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {columns.map(col => (
             <div key={col.title}>
-              <h3 className="text-cream-50 font-semibold text-sm mb-4">{col.title}</h3>
+              <h3 className="text-white font-semibold text-sm mb-4">{col.title}</h3>
               <ul className="space-y-2">
                 {col.links.map(l => (
                   <li key={l.href}>
-                    <Link href={l.href} className="text-sm hover:text-cream-50 transition-colors">
+                    <Link href={l.href} className="text-sm hover:text-white transition-colors">
                       {l.label}
                     </Link>
                   </li>
@@ -61,7 +62,16 @@ export function Footer() {
 
         <div className="border-t border-navy-800 pt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <p className="font-serif text-cream-50 font-bold text-lg">Maono Forex Trading</p>
+            <div className="flex items-center gap-2 mb-2">
+              <Image
+                src="/images/logo/maono-logo.png"
+                alt="Maono Forex Trading"
+                width={36}
+                height={36}
+                className="object-contain"
+              />
+              <p className="font-serif text-white font-bold text-lg">Maono Forex Trading</p>
+            </div>
             <p className="text-xs mt-1">Unit 3B Waterside Place, 19 Carl Cronje Drive, Tyger Waterfront, Western Cape, 7530</p>
             <p className="text-xs mt-0.5">+27 81 436 9770</p>
           </div>

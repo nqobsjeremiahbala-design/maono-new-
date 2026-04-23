@@ -14,7 +14,7 @@ export default function SignalsPage() {
         <p className="text-gold-500 text-sm font-medium uppercase tracking-widest text-center mb-4">
           Free · No commitment
         </p>
-        <h1 className="font-serif text-4xl text-cream-50 text-center mb-4">
+        <h1 className="font-serif text-4xl text-white text-center mb-4">
           Join the free signals group
         </h1>
         <p className="text-navy-300 text-center mb-10">
@@ -25,9 +25,9 @@ export default function SignalsPage() {
           <SignalsForm />
         </div>
         <div className="grid grid-cols-3 gap-4 text-center text-sm text-navy-400">
-          <div><p className="text-cream-50 font-semibold mb-1">Daily</p><p>Market analysis</p></div>
-          <div><p className="text-cream-50 font-semibold mb-1">Live</p><p>Trade setups</p></div>
-          <div><p className="text-cream-50 font-semibold mb-1">Free</p><p>Forever</p></div>
+          <div><p className="text-white font-semibold mb-1">Daily</p><p>Market analysis</p></div>
+          <div><p className="text-white font-semibold mb-1">Live</p><p>Trade setups</p></div>
+          <div><p className="text-white font-semibold mb-1">Free</p><p>Forever</p></div>
         </div>
       </div>
     </div>

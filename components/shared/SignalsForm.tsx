@@ -34,7 +34,7 @@ export function SignalsForm() {
     return (
       <div className="text-center py-8">
         <p className="text-gold-500 font-semibold text-lg mb-2">You&apos;re in.</p>
-        <p className="text-navy-300 text-sm">Check WhatsApp — we&apos;ll add you to the group shortly.</p>
+        <p className="text-navy-300 text-sm">Check WhatsApp, we&apos;ll add you to the group shortly.</p>
       </div>
     )
   }

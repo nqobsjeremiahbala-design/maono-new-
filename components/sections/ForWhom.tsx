@@ -24,7 +24,7 @@ export function ForWhom() {
           We&apos;d rather be honest with you upfront than sell you something that isn&apos;t the right fit.
         </p>
         <div className="grid md:grid-cols-2 gap-8">
-          <div className="bg-cream-50 rounded-lg p-8">
+          <div className="bg-white rounded-lg p-8">
             <h3 className="font-serif text-xl text-navy-900 mb-6">This is for you if…</h3>
             <ul className="space-y-3">
               {forYou.map(item => (
@@ -36,7 +36,7 @@ export function ForWhom() {
             </ul>
           </div>
           <div className="bg-navy-950 rounded-lg p-8">
-            <h3 className="font-serif text-xl text-cream-50 mb-6">This is not for you if…</h3>
+            <h3 className="font-serif text-xl text-white mb-6">This is not for you if…</h3>
             <ul className="space-y-3">
               {notForYou.map(item => (
                 <li key={item} className="flex items-start gap-3 text-sm text-navy-300">

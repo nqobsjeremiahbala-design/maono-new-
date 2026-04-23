@@ -12,13 +12,13 @@ export default function MentorshipPage() {
     <>
       <section className="bg-navy-950 py-20 px-4">
         <div className="max-w-2xl mx-auto text-center">
-          <h1 className="font-serif text-4xl text-cream-50 mb-4">1-on-1 Mentorship</h1>
+          <h1 className="font-serif text-4xl text-white mb-4">1-on-1 Mentorship</h1>
           <p className="text-navy-300 text-lg">
             Direct access to a Maono mentor. Personalised, accountable, results-focused.
           </p>
         </div>
       </section>
-      <section className="py-16 px-4 bg-cream-50">
+      <section className="py-16 px-4 bg-white">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
           <div>
             <h2 className="font-serif text-2xl text-navy-900 mb-6">What mentorship includes</h2>
@@ -26,7 +26,7 @@ export default function MentorshipPage() {
               {[
                 'Monthly 1-on-1 video sessions with your assigned mentor',
                 'Personalised trading plan built for your goals and risk profile',
-                'Trade review — your mentor reviews your setups and gives structured feedback',
+                'Trade review, your mentor reviews your setups and gives structured feedback',
                 'Priority WhatsApp support between sessions',
                 'Full access to the Gold membership tier (all courses + live sessions)',
               ].map(item => (

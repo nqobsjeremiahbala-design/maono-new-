@@ -7,7 +7,7 @@ export function generatePageMetadata({
   title,
   description,
   path = '',
-  image = '/images/og-default.jpg',
+  image = '/images/og/og-image.jpg',
 }: {
   title: string
   description: string

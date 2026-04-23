@@ -15,7 +15,7 @@ const TEAM: TeamMember[] = [
 
 export function TeamSnapshot() {
   return (
-    <section className="py-20 px-4 bg-cream-50">
+    <section className="py-20 px-4 bg-white">
       <div className="max-w-5xl mx-auto text-center">
         <p className="text-gold-500 text-sm font-medium uppercase tracking-widest mb-4">Real people</p>
         <h2 className="font-serif text-3xl md:text-4xl text-navy-900 mb-4">Meet the team</h2>

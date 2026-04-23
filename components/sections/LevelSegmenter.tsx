@@ -5,7 +5,7 @@ const levels = [
     href: '/paths/beginner',
     label: 'Beginner',
     emoji: '🌱',
-    description: "You've heard about forex and want to start right — with a real foundation, not YouTube shortcuts.",
+    description: "You've heard about forex and want to start right, with a real foundation, not YouTube shortcuts.",
   },
   {
     href: '/paths/intermediate',
@@ -23,7 +23,7 @@ const levels = [
 
 export function LevelSegmenter() {
   return (
-    <section className="py-20 px-4 bg-cream-50">
+    <section className="py-20 px-4 bg-white">
       <div className="max-w-5xl mx-auto">
         <h2 className="font-serif text-3xl md:text-4xl text-navy-900 text-center mb-4">
           Choose your path

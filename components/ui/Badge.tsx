@@ -1,9 +1,9 @@
 type BadgeVariant = 'default' | 'gold' | 'navy'
 
 const variants: Record<BadgeVariant, string> = {
-  default: 'bg-cream-100 text-navy-700',
+  default: 'bg-white text-navy-700',
   gold: 'bg-gold-300 text-navy-900',
-  navy: 'bg-navy-800 text-cream-50',
+  navy: 'bg-navy-800 text-white',
 }
 
 export function Badge({

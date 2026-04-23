@@ -1,7 +1,7 @@
 const pillars = [
   {
     title: 'Institutional approach',
-    body: "We teach how banks and funds actually trade — not the retail indicator strategies that keep 90% of traders losing.",
+    body: "We teach how banks and funds actually trade, not the retail indicator strategies that keep 90% of traders losing.",
     icon: '🏛️',
   },
   {
@@ -23,7 +23,7 @@ export function MethodologyBelt() {
         {pillars.map(p => (
           <div key={p.title}>
             <span className="text-3xl block mb-4">{p.icon}</span>
-            <h3 className="font-serif text-xl text-cream-50 mb-3">{p.title}</h3>
+            <h3 className="font-serif text-xl text-white mb-3">{p.title}</h3>
             <p className="text-navy-300 text-sm leading-relaxed">{p.body}</p>
           </div>
         ))}

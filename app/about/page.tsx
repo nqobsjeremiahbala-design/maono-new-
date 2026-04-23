@@ -13,7 +13,7 @@ const TEAM: TeamMember[] = [
   {
     name: 'REPLACE WITH REAL NAME',
     role: 'Founder & Head Trader',
-    bio: 'REPLACE WITH REAL BIO — 7+ years of trading and mentoring experience.',
+    bio: 'REPLACE WITH REAL BIO, 7+ years of trading and mentoring experience.',
     image: '/images/team/placeholder.jpg',
     years: 7,
   },
@@ -24,13 +24,13 @@ export default function AboutPage() {
     <>
       <section className="bg-navy-950 py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <h1 className="font-serif text-4xl md:text-5xl text-cream-50 mb-4">About Maono</h1>
+          <h1 className="font-serif text-4xl md:text-5xl text-white mb-4">About Maono</h1>
           <p className="text-navy-300 text-lg">
             We are South African traders who got tired of watching good people lose money to bad education.
           </p>
         </div>
       </section>
-      <section className="py-16 px-4 bg-cream-50">
+      <section className="py-16 px-4 bg-white">
         <div className="max-w-3xl mx-auto">
           <h2 className="font-serif text-2xl text-navy-900 mb-4">Our story</h2>
           <p className="text-navy-600 mb-8">
@@ -38,7 +38,7 @@ export default function AboutPage() {
           </p>
           <h2 className="font-serif text-2xl text-navy-900 mb-4">Our methodology</h2>
           <p className="text-navy-600 mb-4">
-            We teach institutional concepts — how banks, hedge funds, and professional market participants
+            We teach institutional concepts, how banks, hedge funds, and professional market participants
             actually read and use price. Not retail indicators. Not automated signals. Structure, liquidity, and order flow.
           </p>
           <h2 className="font-serif text-2xl text-navy-900 mb-4 mt-8">What we stand for</h2>
