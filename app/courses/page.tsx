@@ -123,14 +123,14 @@ export default function CoursesPage() {
             </p>
           </div>
 
-          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {rest.map(c => {
               const hasPlayer = !!getCurriculum(c.slug)
               return (
-                <li key={c.slug}>
+                <li key={c.slug} className="h-full">
                   <Link
                     href={`/courses/${c.slug}`}
-                    className="press group block rounded-2xl overflow-hidden bg-white border border-navy-100 hover:border-gold-400 transition-colors focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    className="press group flex flex-col h-full rounded-2xl overflow-hidden bg-white border border-navy-100 hover:border-gold-400 transition-colors focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:outline-none"
                   >
                     <div className="relative aspect-[4/3] bg-navy-100 overflow-hidden">
                       <Image
@@ -141,7 +141,7 @@ export default function CoursesPage() {
                         className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
                       />
                     </div>
-                    <div className="p-6">
+                    <div className="p-6 flex flex-col flex-1">
                       <div className="flex items-center gap-3 mb-4">
                         <span className="text-[11px] text-gold-600 font-semibold tracking-[0.15em] uppercase">
                           {LEVEL_COPY[c.level]}
@@ -150,11 +150,11 @@ export default function CoursesPage() {
                           <span className="text-[11px] text-navy-400 tracking-wider">· Interactive</span>
                         )}
                       </div>
-                      <h3 className="font-serif text-xl md:text-2xl text-navy-900 mb-2 leading-snug">
+                      <h3 className="font-serif text-xl md:text-2xl text-navy-900 mb-2 leading-snug min-h-[3.5rem]">
                         {c.title}
                       </h3>
                       <p className="text-navy-500 text-sm mb-5 line-clamp-2">{c.description}</p>
-                      <div className="flex items-center justify-between pt-4 border-t border-navy-100">
+                      <div className="mt-auto flex items-center justify-between pt-4 border-t border-navy-100">
                         <span className="text-navy-900 font-semibold">
                           R{c.price.toLocaleString()}
                         </span>
