@@ -120,7 +120,7 @@ export function RegisterForm() {
         <p className="text-red-500 text-sm">{error}</p>
       )}
 
-      <Button type="submit" size="lg" className="w-full" disabled={loading}>
+      <Button type="submit" size="md" className="w-full" disabled={loading}>
         {loading ? 'Creating account…' : 'Create account'}
       </Button>
 
