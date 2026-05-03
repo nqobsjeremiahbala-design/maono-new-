@@ -21,6 +21,7 @@ model User {
   name          String?
   email         String    @unique
   emailVerified DateTime?
+  passwordHash  String?
   image         String?
   phone         String?
   role          Role      @default(STUDENT)

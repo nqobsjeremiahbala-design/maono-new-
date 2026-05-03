@@ -1,19 +1,18 @@
-/**
- * Admin Course List — /admin/courses
- *
- * Non-technical course management:
- * - View all courses with status (published/draft)
- * - Click to edit (modules, lessons, pricing)
- * - Create new course
- *
- * TODO: Wire to Prisma queries. For now, shows static courses from MDX.
- */
-
 import Link from 'next/link'
-import { getCourses } from '@/lib/content'
+import { prisma } from '@/lib/db'
 
-export default function AdminCoursesPage() {
-  const courses = getCourses()
+export const dynamic = 'force-dynamic'
+
+export default async function AdminCoursesPage() {
+  const courses = await prisma.course.findMany({
+    orderBy: { createdAt: 'desc' },
+    include: {
+      modules: {
+        include: { _count: { select: { lessons: true } } },
+      },
+      _count: { select: { enrollments: true } },
+    },
+  })
 
   return (
     <>
@@ -34,38 +33,58 @@ export default function AdminCoursesPage() {
               <th className="px-4 py-3 text-navy-400 font-medium">Title</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Level</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Price</th>
-              <th className="px-4 py-3 text-navy-400 font-medium">Lessons</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Modules</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Enrollments</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Status</th>
               <th className="px-4 py-3 text-navy-400 font-medium"></th>
             </tr>
           </thead>
           <tbody>
-            {courses.map((course) => (
-              <tr
-                key={course.slug}
-                className="border-b border-navy-800/50 hover:bg-navy-800/30 transition-colors"
-              >
-                <td className="px-4 py-3 text-white">{course.title}</td>
-                <td className="px-4 py-3 text-navy-300 capitalize">{course.level}</td>
-                <td className="px-4 py-3 text-navy-300">
-                  R{course.price.toLocaleString()}
-                </td>
-                <td className="px-4 py-3 text-navy-300">{course.lessons}</td>
-                <td className="px-4 py-3 text-right">
-                  <span className="text-navy-500 text-xs">
-                    {/* TODO: Link to /admin/courses/[id] once DB is live */}
-                    Edit →
-                  </span>
-                </td>
-              </tr>
-            ))}
+            {courses.map((course) => {
+              const lessonCount = course.modules.reduce((acc, m) => acc + m._count.lessons, 0)
+              return (
+                <tr
+                  key={course.id}
+                  className="border-b border-navy-800/50 hover:bg-navy-800/30 transition-colors"
+                >
+                  <td className="px-4 py-3 text-white">{course.title}</td>
+                  <td className="px-4 py-3 text-navy-300 capitalize">{course.level}</td>
+                  <td className="px-4 py-3 text-navy-300">
+                    R{(course.price / 100).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-3 text-navy-300">
+                    {course.modules.length} modules, {lessonCount} lessons
+                  </td>
+                  <td className="px-4 py-3 text-navy-300">{course._count.enrollments}</td>
+                  <td className="px-4 py-3">
+                    <span className={`text-xs px-2 py-0.5 rounded-full ${
+                      course.published
+                        ? 'bg-green-900/50 text-green-400'
+                        : 'bg-yellow-900/50 text-yellow-400'
+                    }`}>
+                      {course.published ? 'Published' : 'Draft'}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <Link
+                      href={`/admin/courses/${course.id}`}
+                      className="text-gold-400 hover:text-gold-300 text-xs"
+                    >
+                      Edit →
+                    </Link>
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
 
-      <p className="text-navy-500 text-xs mt-4">
-        Currently showing courses from MDX files. Once the database is connected,
-        this page will manage DB-backed courses with full CRUD.
-      </p>
+      {courses.length === 0 && (
+        <p className="text-navy-500 text-sm mt-4 text-center">
+          No courses yet. Click &ldquo;+ New Course&rdquo; to create your first one.
+        </p>
+      )}
     </>
   )
 }

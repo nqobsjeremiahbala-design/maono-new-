@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { getServerSession, isAdmin } from '@/lib/auth'
+import { getServerSession, isAdmin, type SessionUser } from '@/lib/auth'
 
 /**
  * Admin layout — protects all /admin/* routes.
@@ -27,7 +27,7 @@ export default async function AdminLayout({
 }) {
   const session = await getServerSession()
 
-  if (!session || !isAdmin(session.user)) {
+  if (!session || !isAdmin(session.user as SessionUser)) {
     redirect('/login')
   }
 

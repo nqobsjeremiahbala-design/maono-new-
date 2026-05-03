@@ -1,13 +1,5 @@
-/**
- * Ozow payment webhook handler
- *
- * Ozow POSTs payment results here after the user completes (or abandons) payment.
- * We verify the hash, update the Purchase record, and grant enrollment on success.
- *
- * TODO: Wire to real Prisma queries once DB is migrated.
- */
-
 import { NextRequest } from 'next/server'
+import { prisma } from '@/lib/db'
 import {
   verifyOzowWebhook,
   mapOzowStatus,
@@ -36,10 +28,6 @@ export async function POST(request: NextRequest) {
   console.log(`[ozow-webhook] ${purchaseId} → ${status} (Ozow: ${payload.Status})`)
 
   // 2. Update purchase record
-  // TODO: Uncomment when Prisma is migrated
-  /*
-  const { prisma } = await import('@/lib/db')
-
   const purchase = await prisma.purchase.update({
     where: { id: purchaseId },
     data: {
@@ -47,7 +35,6 @@ export async function POST(request: NextRequest) {
       ozowTransId: payload.TransactionId,
       paymentMethod: 'ozow_eft',
     },
-    include: { user: true },
   })
 
   // 3. On successful payment, create enrollment
@@ -65,8 +52,8 @@ export async function POST(request: NextRequest) {
         courseId: purchase.courseId,
       },
     })
+    console.log(`[ozow-webhook] Enrolled user ${purchase.userId} in course ${purchase.courseId}`)
   }
-  */
 
   return new Response('OK', { status: 200 })
 }
