@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { Input } from '@/components/ui/Input'
+import { Button } from '@/components/ui/Button'
 
 export function LoginForm() {
   const router = useRouter()
@@ -39,50 +41,44 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       <div>
-        <label htmlFor="login-email" className="block text-sm font-medium text-navy-300 mb-1.5">
+        <label htmlFor="login-email" className="block text-sm font-medium text-navy-700 mb-1.5">
           Email
         </label>
-        <input
+        <Input
           id="login-email"
           name="email"
           type="email"
           required
           autoComplete="email"
-          className="w-full rounded-md border border-navy-700 bg-navy-900 px-4 py-3 text-white placeholder:text-navy-500 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition"
           placeholder="you@example.com"
         />
       </div>
 
       <div>
-        <label htmlFor="login-password" className="block text-sm font-medium text-navy-300 mb-1.5">
+        <label htmlFor="login-password" className="block text-sm font-medium text-navy-700 mb-1.5">
           Password
         </label>
-        <input
+        <Input
           id="login-password"
           name="password"
           type="password"
           required
           autoComplete="current-password"
-          className="w-full rounded-md border border-navy-700 bg-navy-900 px-4 py-3 text-white placeholder:text-navy-500 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition"
           placeholder="••••••••"
         />
       </div>
 
       {error && (
-        <p className="text-red-400 text-sm">{error}</p>
+        <p className="text-red-500 text-sm">{error}</p>
       )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full press inline-flex items-center justify-center rounded-md px-8 py-4 text-lg bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-      >
+      <Button type="submit" size="lg" className="w-full" disabled={loading}>
         {loading ? 'Signing in…' : 'Sign in'}
-      </button>
+      </Button>
 
-      <p className="text-center text-sm text-navy-400">
+      <p className="text-center text-sm text-navy-500 pt-2">
         Don&apos;t have an account?{' '}
-        <Link href="/register" className="text-gold-400 hover:text-gold-300 underline">
+        <Link href="/register" className="text-gold-600 hover:text-gold-500 font-medium underline underline-offset-2">
           Create one
         </Link>
       </p>

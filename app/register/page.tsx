@@ -9,14 +9,24 @@ export const metadata: Metadata = {
 
 export default function RegisterPage() {
   return (
-    <section className="bg-navy-950 min-h-screen flex items-center justify-center py-16 px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="font-serif text-3xl text-white mb-2">Create your account</h1>
-          <p className="text-navy-400">Start your trading education journey</p>
+    <>
+      <section className="bg-navy-950 py-16 md:py-20 px-5 sm:px-6 text-center">
+        <div className="max-w-2xl mx-auto hero-reveal">
+          <div className="w-12 h-0.5 bg-gold-500 mx-auto mb-6" />
+          <h1 className="font-serif text-3xl sm:text-4xl text-white mb-3 leading-tight">
+            Start your trading journey
+          </h1>
+          <p className="text-navy-300 text-base sm:text-lg">
+            Create your account and get access to structured forex education.
+          </p>
         </div>
-        <RegisterForm />
-      </div>
-    </section>
+      </section>
+
+      <section className="py-12 md:py-16 px-5 sm:px-6 bg-white">
+        <div className="max-w-md mx-auto">
+          <RegisterForm />
+        </div>
+      </section>
+    </>
   )
 }
