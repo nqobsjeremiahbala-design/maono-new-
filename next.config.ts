@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [],
   },
+  serverExternalPackages: ['fs'],
 }
 
 export default nextConfig

@@ -32,6 +32,7 @@ services:
       - .:/app
       - /app/node_modules
       - /app/.next
+      - uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
@@ -39,3 +40,4 @@ services:
 
 volumes:
   pgdata:
+  uploads:

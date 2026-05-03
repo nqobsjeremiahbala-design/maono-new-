@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { useSession, signOut } from 'next-auth/react'
 import { Button } from '@/components/ui/Button'
 import { Logo } from './Logo'
 import { getAllEnrollments } from '@/lib/enrollment'
@@ -17,6 +18,7 @@ const links = [
 export function Nav() {
   const [open, setOpen] = useState(false)
   const [hasEnrollments, setHasEnrollments] = useState(false)
+  const { data: session, status } = useSession()
 
   useEffect(() => {
     function sync() {
@@ -31,6 +33,9 @@ export function Nav() {
     }
   }, [])
 
+  const isLoggedIn = status === 'authenticated' && session?.user
+  const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN'
+
   return (
     <header className="sticky top-0 z-50 bg-navy-950/95 backdrop-blur border-b border-navy-800">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
@@ -44,7 +49,7 @@ export function Nav() {
               </Link>
             </li>
           ))}
-          {hasEnrollments && (
+          {(hasEnrollments || isLoggedIn) && (
             <li>
               <Link
                 href="/my-courses"
@@ -54,12 +59,42 @@ export function Nav() {
               </Link>
             </li>
           )}
+          {isAdmin && (
+            <li>
+              <Link
+                href="/admin"
+                className="text-sm text-purple-400 hover:text-purple-300 transition-colors font-medium"
+              >
+                Admin
+              </Link>
+            </li>
+          )}
         </ul>
 
-        <div className="hidden md:block">
-          <Button size="sm">
-            <Link href="/signals">Free Signals</Link>
-          </Button>
+        <div className="hidden md:flex items-center gap-3">
+          {isLoggedIn ? (
+            <>
+              <span className="text-sm text-navy-300">
+                {session.user?.name || session.user?.email}
+              </span>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => signOut({ callbackUrl: '/' })}
+              >
+                Sign Out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button size="sm" variant="outline">Sign In</Button>
+              </Link>
+              <Link href="/register">
+                <Button size="sm">Sign Up</Button>
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -87,7 +122,7 @@ export function Nav() {
                 </Link>
               </li>
             ))}
-            {hasEnrollments && (
+            {(hasEnrollments || isLoggedIn) && (
               <li>
                 <Link
                   href="/my-courses"
@@ -98,10 +133,37 @@ export function Nav() {
                 </Link>
               </li>
             )}
-            <li className="pt-2">
-              <Button size="sm" className="w-full">
-                <Link href="/signals">Free Signals</Link>
-              </Button>
+            {isAdmin && (
+              <li>
+                <Link
+                  href="/admin"
+                  className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+                  onClick={() => setOpen(false)}
+                >
+                  Admin
+                </Link>
+              </li>
+            )}
+            <li className="pt-2 flex gap-2">
+              {isLoggedIn ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                >
+                  Sign Out
+                </Button>
+              ) : (
+                <>
+                  <Link href="/login" className="flex-1" onClick={() => setOpen(false)}>
+                    <Button size="sm" variant="outline" className="w-full">Sign In</Button>
+                  </Link>
+                  <Link href="/register" className="flex-1" onClick={() => setOpen(false)}>
+                    <Button size="sm" className="w-full">Sign Up</Button>
+                  </Link>
+                </>
+              )}
             </li>
           </ul>
         </div>

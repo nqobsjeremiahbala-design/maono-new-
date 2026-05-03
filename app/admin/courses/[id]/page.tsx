@@ -10,6 +10,8 @@ import {
   createLesson,
   deleteLesson,
 } from '../actions'
+import { DeleteCourseButton } from './DeleteButton'
+import { LessonForm } from './LessonForm'
 
 export default async function EditCoursePage({
   params,
@@ -40,19 +42,7 @@ export default async function EditCoursePage({
     <>
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-serif text-3xl text-white">Edit: {course.title}</h1>
-        <form action={deleteCourseAction}>
-          <button
-            type="submit"
-            className="px-4 py-2 text-sm text-red-400 border border-red-800 rounded-md hover:bg-red-900/30 transition-colors"
-            onClick={(e) => {
-              if (!confirm('Delete this course and all its modules/lessons?')) {
-                e.preventDefault()
-              }
-            }}
-          >
-            Delete Course
-          </button>
-        </form>
+        <DeleteCourseButton action={deleteCourseAction} />
       </div>
 
       {/* Course details form */}
@@ -208,60 +198,7 @@ export default async function EditCoursePage({
                   <summary className="text-xs text-gold-400 cursor-pointer hover:text-gold-300">
                     + Add lesson
                   </summary>
-                  <form action={createLessonWithIds} className="mt-3 space-y-3">
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      <input
-                        name="title"
-                        required
-                        placeholder="Lesson title"
-                        className="w-full rounded border border-navy-700 bg-navy-800 px-3 py-2 text-sm text-white placeholder:text-navy-500 focus:outline-none focus:ring-1 focus:ring-gold-500"
-                      />
-                      <input
-                        name="slug"
-                        required
-                        placeholder="lesson-slug"
-                        className="w-full rounded border border-navy-700 bg-navy-800 px-3 py-2 text-sm text-white placeholder:text-navy-500 focus:outline-none focus:ring-1 focus:ring-gold-500"
-                      />
-                    </div>
-                    <div className="grid sm:grid-cols-3 gap-3">
-                      <select
-                        name="type"
-                        className="w-full rounded border border-navy-700 bg-navy-800 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-gold-500"
-                      >
-                        <option value="video">Video</option>
-                        <option value="text">Text</option>
-                      </select>
-                      <input
-                        name="duration"
-                        required
-                        placeholder="5 min"
-                        className="w-full rounded border border-navy-700 bg-navy-800 px-3 py-2 text-sm text-white placeholder:text-navy-500 focus:outline-none focus:ring-1 focus:ring-gold-500"
-                      />
-                      <input
-                        name="videoUrl"
-                        placeholder="Video URL (optional)"
-                        className="w-full rounded border border-navy-700 bg-navy-800 px-3 py-2 text-sm text-white placeholder:text-navy-500 focus:outline-none focus:ring-1 focus:ring-gold-500"
-                      />
-                    </div>
-                    <input
-                      name="description"
-                      required
-                      placeholder="Brief lesson description"
-                      className="w-full rounded border border-navy-700 bg-navy-800 px-3 py-2 text-sm text-white placeholder:text-navy-500 focus:outline-none focus:ring-1 focus:ring-gold-500"
-                    />
-                    <textarea
-                      name="content"
-                      rows={3}
-                      placeholder="Markdown content (for text lessons)"
-                      className="w-full rounded border border-navy-700 bg-navy-800 px-3 py-2 text-sm text-white placeholder:text-navy-500 focus:outline-none focus:ring-1 focus:ring-gold-500 resize-none"
-                    />
-                    <button
-                      type="submit"
-                      className="px-4 py-1.5 text-sm bg-gold-500 text-navy-950 font-semibold rounded hover:bg-gold-400 transition-colors"
-                    >
-                      Add Lesson
-                    </button>
-                  </form>
+                  <LessonForm action={createLessonWithIds} />
                 </details>
               </div>
             )
