@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     image: postgres:16-alpine
@@ -29,6 +27,7 @@ services:
       - .env.local
     environment:
       DATABASE_URL: "postgresql://maono:maono_dev@db:5432/maono?schema=public"
+      DIRECT_URL: "postgresql://maono:maono_dev@db:5432/maono?schema=public"
     volumes:
       - .:/app
       - /app/node_modules
