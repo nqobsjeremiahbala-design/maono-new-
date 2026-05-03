@@ -2,13 +2,15 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 
 export function RegisterForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get('callbackUrl') || '/my-courses'
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -52,7 +54,7 @@ export function RegisterForm() {
       setError('Account created but sign-in failed. Please go to the login page.')
       setLoading(false)
     } else {
-      router.push('/my-courses')
+      router.push(callbackUrl)
       router.refresh()
     }
   }

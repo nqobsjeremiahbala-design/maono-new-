@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import { RegisterForm } from './RegisterForm'
 
 export const metadata: Metadata = {
@@ -24,7 +25,9 @@ export default function RegisterPage() {
 
       <section className="py-12 md:py-16 px-5 sm:px-6 bg-white">
         <div className="max-w-md mx-auto">
-          <RegisterForm />
+          <Suspense>
+            <RegisterForm />
+          </Suspense>
         </div>
       </section>
     </>
