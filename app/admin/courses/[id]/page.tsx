@@ -157,7 +157,7 @@ export default async function EditCoursePage({
               <div key={mod.id} className="bg-navy-900 border border-navy-800 rounded-lg p-5">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg text-white font-medium">
-                    Module {mod.position + 1}: {mod.title}
+                    {mod.title}
                   </h3>
                   <form action={deleteModAction}>
                     <button type="submit" className="text-xs text-red-400 hover:text-red-300">
