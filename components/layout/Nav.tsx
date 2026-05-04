@@ -64,7 +64,7 @@ export function Nav() {
                 href="/admin"
                 className="text-sm text-purple-400 hover:text-purple-300 transition-colors font-medium"
               >
-                Admin
+                Admin Dashboard
               </Link>
             </li>
           )}
@@ -144,7 +144,7 @@ export function Nav() {
                   className="text-purple-400 hover:text-purple-300 text-sm font-medium"
                   onClick={() => setOpen(false)}
                 >
-                  Admin
+                  Admin Dashboard
                 </Link>
               </li>
             )}
