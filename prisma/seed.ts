@@ -10,14 +10,21 @@ async function main() {
   console.log('Seeding database...')
 
   // 1. Create admin user
-  const adminPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'admin123456', 12)
+  const adminPassword = process.env.ADMIN_PASSWORD
+  if (!adminPassword || adminPassword.length < 8) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('ADMIN_PASSWORD must be set and at least 8 characters in production')
+    }
+    console.warn('WARNING: Using default admin password. Set ADMIN_PASSWORD for production.')
+  }
+  const hashedPassword = await bcrypt.hash(adminPassword || 'admin123456', 12)
   const admin = await prisma.user.upsert({
     where: { email: process.env.ADMIN_EMAIL || 'admin@maonoforextrading.co.za' },
     update: {},
     create: {
       name: 'Maono Admin',
       email: process.env.ADMIN_EMAIL || 'admin@maonoforextrading.co.za',
-      passwordHash: adminPassword,
+      passwordHash: hashedPassword,
       role: 'ADMIN',
     },
   })
