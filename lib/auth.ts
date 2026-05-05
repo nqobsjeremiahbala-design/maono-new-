@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+import Google from 'next-auth/providers/google'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from './db'
 import bcrypt from 'bcryptjs'
@@ -15,6 +16,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt', maxAge: 7 * 24 * 60 * 60 },
   providers: [
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    }),
     Credentials({
       credentials: {
         email: { label: 'Email', type: 'email' },
@@ -46,8 +51,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as SessionUser).role
         token.id = user.id
+        // Credentials provider includes role; OAuth does not — look it up
+        const role = (user as SessionUser).role
+        if (role) {
+          token.role = role
+        } else {
+          const dbUser = await prisma.user.findUnique({ where: { id: user.id! }, select: { role: true } })
+          token.role = dbUser?.role ?? 'STUDENT'
+        }
       }
       return token
     },
