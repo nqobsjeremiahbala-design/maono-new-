@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/Button'
+import { useSession, signOut } from 'next-auth/react'
 import { Logo } from './Logo'
 import { getAllEnrollments } from '@/lib/enrollment'
 
@@ -17,6 +17,7 @@ const links = [
 export function Nav() {
   const [open, setOpen] = useState(false)
   const [hasEnrollments, setHasEnrollments] = useState(false)
+  const { data: session, status } = useSession()
 
   useEffect(() => {
     function sync() {
@@ -31,6 +32,9 @@ export function Nav() {
     }
   }, [])
 
+  const isLoggedIn = status === 'authenticated' && session?.user
+  const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN'
+
   return (
     <header className="sticky top-0 z-50 bg-navy-950/95 backdrop-blur border-b border-navy-800">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between">
@@ -44,7 +48,7 @@ export function Nav() {
               </Link>
             </li>
           ))}
-          {hasEnrollments && (
+          {(hasEnrollments || isLoggedIn) && (
             <li>
               <Link
                 href="/my-courses"
@@ -54,12 +58,47 @@ export function Nav() {
               </Link>
             </li>
           )}
+          {isAdmin && (
+            <li>
+              <Link
+                href="/admin"
+                className="text-sm text-purple-400 hover:text-purple-300 transition-colors font-medium"
+              >
+                Admin Dashboard
+              </Link>
+            </li>
+          )}
         </ul>
 
-        <div className="hidden md:block">
-          <Button size="sm">
-            <Link href="/signals">Free Signals</Link>
-          </Button>
+        <div className="hidden md:flex items-center gap-2">
+          {isLoggedIn ? (
+            <>
+              <span className="text-sm text-navy-300 mr-1">
+                {session.user?.name || session.user?.email}
+              </span>
+              <button
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="press px-4 py-2 text-sm rounded-md border border-navy-600 text-navy-200 hover:text-white hover:border-navy-400 transition-colors"
+              >
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="press px-4 py-2 text-sm rounded-md text-navy-200 hover:text-white transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/register"
+                className="press px-5 py-2 text-sm rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -87,7 +126,7 @@ export function Nav() {
                 </Link>
               </li>
             ))}
-            {hasEnrollments && (
+            {(hasEnrollments || isLoggedIn) && (
               <li>
                 <Link
                   href="/my-courses"
@@ -98,10 +137,43 @@ export function Nav() {
                 </Link>
               </li>
             )}
-            <li className="pt-2">
-              <Button size="sm" className="w-full">
-                <Link href="/signals">Free Signals</Link>
-              </Button>
+            {isAdmin && (
+              <li>
+                <Link
+                  href="/admin"
+                  className="text-purple-400 hover:text-purple-300 text-sm font-medium"
+                  onClick={() => setOpen(false)}
+                >
+                  Admin Dashboard
+                </Link>
+              </li>
+            )}
+            <li className="pt-3 flex gap-2">
+              {isLoggedIn ? (
+                <button
+                  onClick={() => { signOut({ callbackUrl: '/' }); setOpen(false) }}
+                  className="press w-full px-4 py-2.5 text-sm rounded-md border border-navy-600 text-navy-200 hover:text-white hover:border-navy-400 transition-colors"
+                >
+                  Sign Out
+                </button>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="press flex-1 text-center px-4 py-2.5 text-sm rounded-md border border-navy-600 text-navy-200 hover:text-white hover:border-navy-400 transition-colors"
+                    onClick={() => setOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="press flex-1 text-center px-4 py-2.5 text-sm rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
+                    onClick={() => setOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </li>
           </ul>
         </div>

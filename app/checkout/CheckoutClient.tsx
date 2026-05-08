@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
@@ -67,9 +68,48 @@ export function CheckoutClient() {
   const sp = useSearchParams()
   const itemKey = sp.get('item') || ''
   const item = CATALOG[itemKey]
+  const { data: session, status: authStatus } = useSession()
   const [method, setMethod] = useState<'card' | 'eft'>('card')
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
   const [enrolledSlug, setEnrolledSlug] = useState<string | null>(null)
+
+  if (authStatus === 'loading') {
+    return (
+      <section className="bg-navy-950 min-h-screen py-20 px-4 text-center">
+        <p className="text-white">Loading…</p>
+      </section>
+    )
+  }
+
+  if (!session?.user) {
+    return (
+      <section className="bg-navy-950 min-h-dvh py-16 md:py-20 px-5 sm:px-6">
+        <div className="max-w-md mx-auto text-center hero-reveal">
+          <div className="w-12 h-0.5 bg-gold-500 mx-auto mb-6" />
+          <h1 className="font-serif text-3xl sm:text-4xl text-white mb-4 leading-tight">
+            Sign in to continue
+          </h1>
+          <p className="text-navy-300 text-base sm:text-lg mb-8">
+            You need an account to purchase courses. Sign in or create one to continue to checkout.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href={`/login?callbackUrl=${encodeURIComponent(`/checkout?item=${itemKey}`)}`}
+              className="press inline-flex items-center justify-center px-6 py-3 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
+            >
+              Sign in
+            </Link>
+            <Link
+              href={`/register?callbackUrl=${encodeURIComponent(`/checkout?item=${itemKey}`)}`}
+              className="press inline-flex items-center justify-center px-6 py-3 rounded-md border border-navy-700 text-white hover:border-gold-400 hover:text-gold-400 transition-colors"
+            >
+              Create account
+            </Link>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()

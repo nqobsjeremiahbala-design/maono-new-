@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/react'
 import Script from 'next/script'
 import { Nav } from '@/components/layout/Nav'
 import { SiteChrome } from '@/components/layout/SiteChrome'
+import { Providers } from '@/components/Providers'
 import './globals.css'
 
 const rubik = Rubik({
@@ -22,9 +23,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-ZA" className={rubik.variable}>
       <body>
-        <Nav />
-        <main>{children}</main>
-        <SiteChrome />
+        <Providers>
+          <Nav />
+          <main>{children}</main>
+          <SiteChrome />
+        </Providers>
         <Analytics />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"

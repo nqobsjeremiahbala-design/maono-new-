@@ -1,0 +1,244 @@
+// Maono Global Forex — Production Data Model
+// -------------------------------------------------
+// Provider: PostgreSQL (Supabase recommended for Vercel)
+// Auth:     NextAuth.js v5 (Auth.js) — adapter-prisma
+// Payments: Ozow (ZAR instant EFT + card)
+// -------------------------------------------------
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")  // Supabase: direct connection for migrations (bypasses pgbouncer)
+}
+
+// ─── Auth (NextAuth adapter tables) ──────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String?
+  image         String?
+  phone         String?
+  role          Role      @default(STUDENT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts    Account[]
+  sessions    Session[]
+  enrollments Enrollment[]
+  purchases   Purchase[]
+  subscription Subscription?
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+// ─── Courses ─────────────────────────────────────────────────────────
+
+model Course {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  level       Level
+  price       Int      // cents (ZAR) — R999 = 99900
+  currency    String   @default("ZAR")
+  duration    String
+  image       String?
+  featured    Boolean  @default(false)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  modules     Module[]
+  enrollments Enrollment[]
+  purchases   Purchase[]
+
+  @@map("courses")
+}
+
+enum Level {
+  beginner
+  intermediate
+  advanced
+}
+
+model Module {
+  id       String   @id @default(cuid())
+  courseId  String
+  title    String
+  position Int      // ordering within course
+
+  course  Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@map("modules")
+}
+
+model Lesson {
+  id          String     @id @default(cuid())
+  moduleId    String
+  slug        String
+  title       String
+  type        LessonType
+  duration    String
+  description String
+  videoUrl    String?    // signed URL or storage key (see video strategy)
+  content     String?    // markdown for text lessons
+  position    Int        // ordering within module
+
+  module            Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  completedLessons  CompletedLesson[]
+
+  @@unique([moduleId, slug])
+  @@map("lessons")
+}
+
+enum LessonType {
+  video
+  text
+}
+
+// ─── Enrollments & Progress ──────────────────────────────────────────
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String
+  enrolledAt DateTime @default(now())
+
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course           Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  completedLessons CompletedLesson[]
+
+  @@unique([userId, courseId])
+  @@map("enrollments")
+}
+
+model CompletedLesson {
+  id           String   @id @default(cuid())
+  enrollmentId String
+  lessonId     String
+  completedAt  DateTime @default(now())
+
+  enrollment Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lesson     Lesson     @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([enrollmentId, lessonId])
+  @@map("completed_lessons")
+}
+
+// ─── Purchases (one-off payments via Ozow) ───────────────────────────
+
+model Purchase {
+  id              String        @id @default(cuid())
+  userId          String
+  courseId        String?       // null for path/bundle purchases
+  itemKey         String        // catalog key: "course-forex-trading-introduction", "path-beginner"
+  amountCents     Int           // ZAR cents
+  status          PaymentStatus @default(PENDING)
+  ozowTransId     String?       @unique // Ozow TransactionId for reconciliation
+  ozowReference   String?       // Ozow SiteReference
+  paymentMethod   String?       // "ozow_eft", "ozow_card", "manual_eft"
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([ozowTransId])
+  @@map("purchases")
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETE
+  CANCELLED
+  ERROR
+}
+
+// ─── Subscriptions (recurring via Ozow or manual) ────────────────────
+
+model Subscription {
+  id            String             @id @default(cuid())
+  userId        String             @unique
+  tier          MembershipTier
+  status        SubscriptionStatus @default(ACTIVE)
+  amountCents   Int                // monthly ZAR cents
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelledAt   DateTime?
+  ozowReference String?            // for recurring billing reference
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("subscriptions")
+}
+
+enum MembershipTier {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  PAUSED
+}
