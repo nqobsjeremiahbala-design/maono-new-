@@ -13,7 +13,8 @@
     "db:migrate": "npx prisma migrate dev",
     "db:seed": "npx prisma db seed",
     "db:studio": "npx prisma studio",
-    "deploy:supabase": "./scripts/deploy-supabase.sh"
+    "deploy:supabase": "./scripts/deploy-supabase.sh",
+    "db:migrate:wp": "WP_DUMP=$WP_DUMP npx tsx scripts/migrate-wordpress.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

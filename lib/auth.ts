@@ -4,6 +4,7 @@ import Google from 'next-auth/providers/google'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from './db'
 import bcrypt from 'bcryptjs'
+import { verifyPhpass } from './phpass'
 
 export type SessionUser = {
   id: string
@@ -27,16 +28,42 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
+        const password = credentials.password as string
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
         })
-        if (!user?.passwordHash) return null
+        if (!user) return null
 
-        const valid = await bcrypt.compare(
-          credentials.password as string,
-          user.passwordHash,
-        )
+        let valid = false
+
+        if (user.passwordHash) {
+          // WordPress 6+ wraps bcrypt with a $wp$ prefix — strip it before comparing
+          const hash = user.passwordHash.startsWith('$wp$')
+            ? user.passwordHash.slice(4)
+            : user.passwordHash
+          valid = await bcrypt.compare(password, hash)
+        }
+
+        // Fallback: legacy WordPress phpass hash from migration
+        if (!valid && user.legacyPasswordHash) {
+          // WordPress 6+ bcrypt stored in legacyPasswordHash
+          if (user.legacyPasswordHash.startsWith('$wp$')) {
+            valid = await bcrypt.compare(password, user.legacyPasswordHash.slice(4))
+          } else {
+            valid = verifyPhpass(password, user.legacyPasswordHash)
+          }
+
+          if (valid) {
+            // Seamlessly re-hash to bcrypt and clear the legacy hash
+            const newHash = await bcrypt.hash(password, 12)
+            await prisma.user.update({
+              where: { id: user.id },
+              data: { passwordHash: newHash, legacyPasswordHash: null },
+            })
+          }
+        }
+
         if (!valid) return null
 
         return {
