@@ -16,7 +16,7 @@ function encode64(input: Buffer): string {
   let out = ''
   let i = 0
   const len = 16 // MD5 = 16 bytes
-  while (i < len) {
+  do {
     let v = input[i++]
     out += ITOA64[v & 0x3f]
     if (i < len) v |= input[i] << 8
@@ -26,8 +26,7 @@ function encode64(input: Buffer): string {
     out += ITOA64[(v >> 12) & 0x3f]
     if (i++ >= len) break
     out += ITOA64[(v >> 18) & 0x3f]
-    i++
-  }
+  } while (i < len)
   return out
 }
 
