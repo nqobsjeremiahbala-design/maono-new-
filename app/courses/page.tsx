@@ -171,7 +171,7 @@ export default function CoursesPage() {
 
       <CTABanner
         headline="Not sure which course to pick?"
-        sub="Join the free signals group first — you’ll see how we teach before you pay for anything."
+        sub="Join the Telegram channel first — you’ll see how we teach before you pay for anything."
       />
     </>
   )

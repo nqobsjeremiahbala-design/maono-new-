@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { getAllEnrollments, getProgress } from '@/lib/enrollment'
+import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
 
 type CatalogEntry = {
   slug: string
@@ -73,7 +74,7 @@ export function MyCoursesClient({ catalog }: { catalog: CatalogEntry[] }) {
             You haven&apos;t enrolled in anything yet.
           </h1>
           <p className="text-navy-300 text-base sm:text-lg mb-8 md:mb-10 max-w-lg mx-auto">
-            Pick a course to build a structured, risk-first trading process. Or start with the free signals group while you decide.
+            Pick a course to build a structured, risk-first trading process. Or join the Telegram channel while you decide.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
@@ -83,10 +84,12 @@ export function MyCoursesClient({ catalog }: { catalog: CatalogEntry[] }) {
               Browse courses
             </Link>
             <Link
-              href="/signals"
+              href={TELEGRAM_CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="press inline-flex items-center justify-center px-7 py-4 min-h-[48px] rounded-md border border-navy-700 text-white hover:border-gold-400 hover:text-gold-400 transition-colors"
             >
-              Join the free signals group
+              Join Telegram Channel
             </Link>
           </div>
         </div>

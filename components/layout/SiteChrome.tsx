@@ -12,6 +12,10 @@ export function SiteChrome() {
   const suppressPopup =
     pathname?.startsWith('/signals') ||
     pathname?.startsWith('/checkout') ||
+    pathname?.startsWith('/cart') ||
+    pathname?.startsWith('/login') ||
+    pathname?.startsWith('/register') ||
+    pathname?.startsWith('/dashboard') ||
     pathname?.startsWith('/my-courses')
 
   return (

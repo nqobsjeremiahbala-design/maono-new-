@@ -5,6 +5,7 @@ import { getCourses } from '@/lib/content'
 import { CourseCard } from '@/components/shared/CourseCard'
 import { CTABanner } from '@/components/layout/CTABanner'
 import { generatePageMetadata } from '@/lib/metadata'
+import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
 import type { PathLevel } from '@/lib/types'
 
 const PATH_PRICES: Record<PathLevel, number> = {
@@ -84,10 +85,12 @@ export default async function PathPage({ params }: { params: Promise<{ level: st
               Start the {lvl} path →
             </Link>
             <Link
-              href="/signals"
+              href={TELEGRAM_CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="press inline-flex items-center justify-center px-6 py-3 min-h-[44px] text-white hover:text-gold-500 transition-colors"
             >
-              Try free signals first
+              Try Telegram channel first
             </Link>
           </div>
         </div>
@@ -101,7 +104,7 @@ export default async function PathPage({ params }: { params: Promise<{ level: st
         </div>
       </section>
       <CTABanner
-        headline="Start with the free signals group."
+        headline="Start with the Telegram channel."
         sub="Get familiar with how we think before investing in a course."
       />
     </>

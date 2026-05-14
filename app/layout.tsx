@@ -14,7 +14,7 @@ const rubik = Rubik({
 
 export const metadata: Metadata = {
   title: 'Maono Forex Trading, Trading Insights Re-defined',
-  description: 'Institutional-grade forex education for South African traders. Free signals group, structured courses, and 1-on-1 mentorship.',
+  description: 'Institutional-grade forex education for South African traders. Telegram channel, structured courses, and live seminars.',
   metadataBase: new URL('https://maonoforextrading.co.za'),
 }
 

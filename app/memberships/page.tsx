@@ -98,7 +98,7 @@ export default function MembershipsPage() {
       </section>
       <CTABanner
         headline="Not sure which tier?"
-        sub="Start with the free signals group and upgrade when you're ready."
+        sub="Start with the Telegram channel and upgrade when you're ready."
       />
     </>
   )

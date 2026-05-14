@@ -21,14 +21,14 @@ export default function SeminarsPage() {
           <div className="bg-white border border-navy-100 rounded-lg p-6 sm:p-8 text-center">
             <p className="text-navy-400 mb-4">No upcoming seminars scheduled.</p>
             <p className="text-sm text-navy-500">
-              Join the free signals group to be notified when the next seminar is announced.
+              Join the Telegram channel to be notified when the next seminar is announced.
             </p>
           </div>
         </div>
       </section>
       <CTABanner
         headline="Get notified of the next seminar."
-        sub="Join the free signals group, all event announcements go there first."
+        sub="Join the Telegram channel, all event announcements go there first."
       />
     </>
   )
