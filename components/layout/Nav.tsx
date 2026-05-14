@@ -6,12 +6,13 @@ import { Logo } from './Logo'
 import { getAllEnrollments } from '@/lib/enrollment'
 
 const links = [
+  { href: '/', label: 'Home' },
   { href: '/courses', label: 'Courses' },
-  { href: '/memberships', label: 'Memberships' },
-  { href: '/mentorship', label: 'Mentorship' },
   { href: '/resources', label: 'Resources' },
-  { href: '/about', label: 'About' },
+  { href: '/news', label: 'News' },
+  { href: '/about', label: 'About Us' },
   { href: '/blog', label: 'Blog' },
+  { href: '/checkout', label: 'Cart' },
 ]
 
 export function Nav() {
@@ -43,7 +44,7 @@ export function Nav() {
         <ul className="hidden md:flex items-center gap-6">
           {links.map(l => (
             <li key={l.href}>
-              <Link href={l.href} className="text-sm text-navy-300 hover:text-white transition-colors">
+              <Link href={l.href} className="text-sm font-bold text-white hover:text-gold-400 transition-colors tracking-wide">
                 {l.label}
               </Link>
             </li>
@@ -119,7 +120,7 @@ export function Nav() {
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="text-navy-200 hover:text-white text-sm"
+                  className="text-white hover:text-gold-400 text-sm font-bold tracking-wide"
                   onClick={() => setOpen(false)}
                 >
                   {l.label}

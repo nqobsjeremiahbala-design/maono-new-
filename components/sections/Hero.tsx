@@ -70,12 +70,14 @@ export function Hero() {
                 →
               </span>
             </Link>
-            <Link
-              href="/courses"
-              className="press inline-flex items-center justify-center px-6 sm:px-8 py-4 min-h-[48px] border-2 border-gold-500 text-gold-500 font-semibold rounded-md hover:bg-gold-500 hover:text-navy-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+            <a
+              href="https://t.me/maonoforextrading"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="press inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-4 min-h-[48px] border-2 border-gold-500 text-gold-500 font-semibold rounded-md hover:bg-gold-500 hover:text-navy-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
             >
-              Explore courses
-            </Link>
+              Join Telegram Channel
+            </a>
           </div>
           <div className="mt-6 md:mt-14 hidden sm:flex flex-col sm:flex-row gap-2 sm:gap-6 text-sm text-navy-300 sm:divide-x divide-navy-700">
             <span className="sm:pr-6">Based in Cape Town</span>

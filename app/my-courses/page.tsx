@@ -143,13 +143,24 @@ export default async function MyCoursesPage() {
           })}
         </ul>
 
-        <div className="mt-12 text-center">
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
           <Link
             href="/courses"
             className="press inline-flex items-center gap-2 text-sm text-navy-300 hover:text-gold-400 transition-colors"
           >
             Browse more courses <span aria-hidden>→</span>
           </Link>
+          <a
+            href="https://t.me/maonoforextrading"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="press inline-flex items-center gap-2 px-6 py-3 min-h-[44px] bg-gold-500 text-navy-950 font-semibold rounded-md hover:bg-gold-400 transition-colors text-sm"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/>
+            </svg>
+            Join Telegram
+          </a>
         </div>
       </div>
     </section>
