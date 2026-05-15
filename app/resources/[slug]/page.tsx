@@ -1,8 +1,8 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getResources, getResource } from '@/lib/content'
 import { CTABanner } from '@/components/layout/CTABanner'
+import { ResourceCover } from '@/components/shared/ResourceCover'
 import { generatePageMetadata } from '@/lib/metadata'
 import { Markdown } from '@/lib/markdown'
 
@@ -72,22 +72,21 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
           </div>
         </header>
 
-        {meta!.image && (
-          <div className="bg-white">
-            <div className="max-w-5xl mx-auto px-5 sm:px-6 md:px-12 -mt-8 md:-mt-16">
-              <div className="relative aspect-[16/9] rounded-3xl overflow-hidden bg-gradient-to-br from-navy-100 via-white to-navy-50 shadow-elevated">
-                <Image
-                  src={meta!.image}
-                  alt={meta!.title}
-                  fill
-                  priority
-                  sizes="(min-width: 1024px) 1024px, 90vw"
-                  className="object-cover"
-                />
-              </div>
+        <div className="bg-white">
+          <div className="max-w-5xl mx-auto px-5 sm:px-6 md:px-12 -mt-8 md:-mt-16">
+            <div className="relative aspect-[16/9] rounded-3xl overflow-hidden bg-gradient-to-br from-navy-100 via-white to-navy-50 shadow-elevated">
+              <ResourceCover
+                slug={slug}
+                title={meta!.title}
+                type={TYPE_COPY[meta!.type] ?? meta!.type}
+                image={meta!.image}
+                priority
+                sizes="(min-width: 1024px) 1024px, 90vw"
+                className="object-cover"
+              />
             </div>
           </div>
-        )}
+        </div>
 
         <div className="bg-white py-12 md:py-24 px-5 sm:px-6 md:px-12">
           <div className="max-w-2xl mx-auto prose-maono">
