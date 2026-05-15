@@ -137,7 +137,7 @@ export default function ResourcesPage() {
 
       <CTABanner
         headline="Want more than articles?"
-        sub="Join the free signals group for daily chart breakdowns sent to your WhatsApp."
+        sub="Join the Telegram channel for daily chart breakdowns."
       />
     </>
   )

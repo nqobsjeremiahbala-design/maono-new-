@@ -1,4 +1,5 @@
-import { SignalsForm } from '@/components/shared/SignalsForm'
+import Link from 'next/link'
+import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
 
 export function FinalCTA() {
   return (
@@ -8,12 +9,19 @@ export function FinalCTA() {
           Start free today
         </p>
         <h2 className="font-serif text-3xl sm:text-4xl text-white mb-4 leading-tight">
-          Join the signals group. Zero cost.
+          Join the Telegram channel. Zero cost.
         </h2>
         <p className="text-navy-300 text-base sm:text-lg mb-8 md:mb-10">
-          Get real market analysis in your WhatsApp daily. No commitment. Cancel anytime.
+          Get real market analysis on Telegram daily. No commitment. Cancel anytime.
         </p>
-        <SignalsForm />
+        <Link
+          href={TELEGRAM_CHANNEL_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="press inline-flex items-center justify-center w-full px-8 py-4 min-h-[48px] bg-gold-500 text-navy-950 font-bold rounded-md hover:bg-gold-400 transition-colors"
+        >
+          Join Telegram Channel →
+        </Link>
       </div>
     </section>
   )

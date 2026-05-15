@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
 
 const STORAGE_KEY = 'maono-signals-popup-dismissed'
 
@@ -33,7 +34,7 @@ export function SignalsPopup() {
   return (
     <div
       role="dialog"
-      aria-label="Join the free signals group"
+      aria-label="Join the Telegram channel"
       className="md:hidden fixed inset-x-0 bottom-0 z-50 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] animate-[slide-up_320ms_cubic-bezier(0.23,1,0.32,1)_both]"
     >
       <div className="relative bg-navy-900 border border-navy-800 rounded-2xl shadow-elevated p-5 pr-12">
@@ -60,17 +61,19 @@ export function SignalsPopup() {
           Free · No signup
         </p>
         <p className="text-white font-serif text-lg leading-snug mb-1">
-          Join the free signals group.
+          Join the Telegram channel.
         </p>
         <p className="text-navy-300 text-sm leading-snug mb-4">
-          Daily market analysis on WhatsApp. Cancel anytime.
+          Daily market analysis on Telegram. Cancel anytime.
         </p>
         <Link
-          href="/signals"
+          href={TELEGRAM_CHANNEL_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={dismiss}
           className="press inline-flex w-full items-center justify-center px-5 py-3 min-h-[44px] rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
         >
-          Join the signals group →
+          Join Telegram Channel →
         </Link>
       </div>
     </div>

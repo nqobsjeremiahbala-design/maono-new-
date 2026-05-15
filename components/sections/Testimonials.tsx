@@ -1,33 +1,53 @@
 const TESTIMONIALS = [
   {
     quote:
-      'Absolute amazing team to work with. The course is easy to understand and to the point. Only had a great experience with Maono, they never turn you down when you ask for help. Definitely recommend.',
-    name: 'Michaela',
+      "I've been with Maono since the early days and have grown so much as a trader. Jody and the team are always there when you need them. The way they break things down makes forex feel less intimidating.",
+    name: 'Qaaseem',
   },
   {
     quote:
-      "Never stopped following the Maono team since the day I joined the community back in 2022. What a journey, watching myself grow as an independent trader while the mentors grow with me. Huge blessing.",
-    name: 'Shermanale',
+      'Best decision I made was joining Maono. The course material is well-structured, the community is supportive, and the mentorship is real. Worth every cent.',
+    name: 'Praveen Kumat',
   },
   {
     quote:
-      "I bought a lot of courses in the past but Maono is the real one. Especially their story and how they started, it's relatable. I decided to buy their course and my trading game changed.",
-    name: 'Jager',
+      "Maono changed how I see the market. The institutional approach made me unlearn a lot of bad retail habits. I'm a completely different trader now.",
+    name: 'Caleb Barkes',
   },
   {
     quote:
-      "Best price action strategies by far. After years of wasting money on other people's bad signals, I found Maono. The setups and guidance helped me succeed without needing signals to boost my confidence.",
-    name: 'Chad',
+      'Honest, transparent, and genuinely cares about your growth. The Maono team doesn’t sell hype, they teach you the process. That’s rare in this space.',
+    name: 'Alverique',
   },
   {
     quote:
-      "What a legend! Had a great experience with Maono. The course is well-structured, and the community is really supportive. Their insights have helped me a lot with my trading. Highly recommend.",
-    name: 'Justice',
+      'I tried other mentors before and wasted thousands. Maono is the only one that actually delivered on what they promised. Highly recommend the course bundles.',
+    name: 'Greg Schuurman',
   },
   {
     quote:
-      "Thank you Maono for the easy-to-learn and understandable course. The daily guidance gave me more confidence to trade the FX market. Not just in trading but in life in general. Truly one of a kind.",
-    name: 'Muller',
+      'The structured learning path took me from zero to executing my own setups with confidence. Jody is the real deal, the community is gold.',
+    name: 'Kyle Fisher',
+  },
+  {
+    quote:
+      "What I appreciate most is the accountability. You're not just buying a course, you're joining a team that pushes you to take this seriously.",
+    name: 'Ryan Jacobs',
+  },
+  {
+    quote:
+      'Maono is the most professional forex education team in South Africa. The content quality and ongoing support are unmatched.',
+    name: 'Comforted Phiri',
+  },
+  {
+    quote:
+      'Joined as a complete beginner. Six months in, I understand structure, liquidity, and risk in a way I never thought I would. Thank you Maono.',
+    name: 'Kelly Frans',
+  },
+  {
+    quote:
+      'Real traders teaching real concepts. The Telegram channel alone has been worth more than most paid courses I’ve bought elsewhere.',
+    name: 'Brady Layman',
   },
 ]
 
@@ -37,13 +57,13 @@ export function Testimonials() {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12 md:mb-16">
           <p className="text-gold-600 text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase mb-4">
-            Testimonials
+            Student Stories
           </p>
           <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-navy-900 mb-4 leading-tight">
-            Success stories that speak
+            Real traders. Real results.
           </h2>
           <p className="text-navy-500 text-base sm:text-lg max-w-xl mx-auto">
-            Traders who built the process, not the hype.
+            Hundreds of students. Years of compounding growth. These are their words, not ours.
           </p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">

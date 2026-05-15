@@ -180,7 +180,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
 
       <CTABanner
         headline="Not ready to buy? Start free."
-        sub="Join the signals group first — get a feel for how we teach before committing to a course."
+        sub="Join the Telegram channel first — get a feel for how we teach before committing to a course."
       />
     </>
   )

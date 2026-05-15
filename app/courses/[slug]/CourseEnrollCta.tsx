@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { getEnrollment, getProgress, isEnrolled } from '@/lib/enrollment'
+import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
 
 type Props = {
   slug: string
@@ -107,15 +108,17 @@ function EnrollCard({ price, slug }: { price: number; slug: string }) {
         </li>
         <li className="flex items-start gap-2">
           <span aria-hidden className="text-gold-400 mt-0.5">✓</span>
-          Free signals group included
+          Telegram channel access included
         </li>
       </ul>
 
       <Link
-        href="/signals"
+        href={TELEGRAM_CHANNEL_URL}
+        target="_blank"
+        rel="noopener noreferrer"
         className="block mt-6 text-sm text-navy-300 hover:text-gold-400 transition-colors"
       >
-        Or try the free signals group first →
+        Or join the Telegram channel first →
       </Link>
     </aside>
   )

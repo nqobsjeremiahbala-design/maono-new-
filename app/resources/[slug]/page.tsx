@@ -98,7 +98,7 @@ export default async function ResourcePage({ params }: { params: Promise<{ slug:
 
       <CTABanner
         headline="Found this useful?"
-        sub="Join the free signals group for daily analysis like this, direct to your WhatsApp."
+        sub="Join the Telegram channel for daily analysis like this."
       />
     </>
   )
