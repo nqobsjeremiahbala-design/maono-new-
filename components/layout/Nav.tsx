@@ -55,10 +55,10 @@ export function Nav() {
           {(hasEnrollments || isLoggedIn) && (
             <li>
               <Link
-                href="/my-courses"
+                href="/dashboard"
                 className="text-[15px] font-bold uppercase tracking-wide text-gold-400 hover:text-gold-300 transition-colors"
               >
-                My Courses
+                Dashboard
               </Link>
             </li>
           )}
@@ -133,11 +133,11 @@ export function Nav() {
             {(hasEnrollments || isLoggedIn) && (
               <li>
                 <Link
-                  href="/my-courses"
+                  href="/dashboard"
                   className="text-gold-400 hover:text-gold-300 text-sm font-bold uppercase tracking-wide"
                   onClick={() => setOpen(false)}
                 >
-                  My Courses
+                  Dashboard
                 </Link>
               </li>
             )}
