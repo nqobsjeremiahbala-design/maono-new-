@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/Button'
 export function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/my-courses'
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 

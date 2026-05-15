@@ -2,39 +2,40 @@
 import { useEffect, useRef } from 'react'
 
 export function TradingViewTicker() {
-  const ref = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!ref.current) return
-    // Clear any previous script
-    ref.current.innerHTML = ''
+    if (!containerRef.current) return
+    if (containerRef.current.querySelector('script')) return
+
     const script = document.createElement('script')
     script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js'
     script.async = true
+    script.type = 'text/javascript'
     script.innerHTML = JSON.stringify({
       symbols: [
-        { proName: 'FOREXCOM:SPXUSD', title: 'S&P 500' },
-        { proName: 'FOREXCOM:NSXUSD', title: 'US 100' },
-        { proName: 'FX_IDC:EURUSD', title: 'EUR/USD' },
-        { proName: 'FX_IDC:GBPUSD', title: 'GBP/USD' },
-        { proName: 'FX_IDC:USDZAR', title: 'USD/ZAR' },
-        { proName: 'FX_IDC:XAUUSD', title: 'Gold' },
-        { proName: 'NASDAQ:AAPL', title: 'Apple' },
+        { proName: 'FX:EURUSD', title: 'EUR/USD' },
+        { proName: 'FX:GBPUSD', title: 'GBP/USD' },
+        { proName: 'FX:USDJPY', title: 'USD/JPY' },
+        { proName: 'OANDA:USDZAR', title: 'USD/ZAR' },
+        { proName: 'OANDA:XAUUSD', title: 'Gold' },
+        { proName: 'TVC:DXY', title: 'DXY' },
+        { proName: 'BITSTAMP:BTCUSD', title: 'BTC/USD' },
       ],
       showSymbolLogo: true,
-      isTransparent: false,
+      isTransparent: true,
       displayMode: 'adaptive',
       colorTheme: 'dark',
       locale: 'en',
     })
-    ref.current.appendChild(script)
+    containerRef.current.appendChild(script)
   }, [])
 
   return (
-    <div className="bg-navy-900 border-b border-navy-800 overflow-hidden">
-      <div className="tradingview-widget-container" ref={ref}>
+    <section aria-label="Live market data" className="bg-navy-950 border-y border-navy-800">
+      <div ref={containerRef} className="tradingview-widget-container">
         <div className="tradingview-widget-container__widget" />
       </div>
-    </div>
+    </section>
   )
 }

@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { CTABanner } from '@/components/layout/CTABanner'
+import { ResourceCover } from '@/components/shared/ResourceCover'
 import { getResources } from '@/lib/content'
 import { generatePageMetadata } from '@/lib/metadata'
 
@@ -69,10 +69,11 @@ export default function ResourcesPage() {
               </span>
             </div>
             <div className="order-1 md:order-2 relative aspect-[4/5] rounded-3xl overflow-hidden bg-gradient-to-br from-navy-100 via-white to-navy-50">
-              <Image
-                src={featured.image || '/images/resources/default.jpg'}
-                alt={featured.title}
-                fill
+              <ResourceCover
+                slug={featured.slug}
+                title={featured.title}
+                type={TYPE_COPY[featured.type] ?? featured.type}
+                image={featured.image}
                 priority
                 sizes="(min-width: 768px) 50vw, 100vw"
                 className="object-cover group-hover:scale-[1.02] transition-transform duration-700"
@@ -107,10 +108,11 @@ export default function ResourcesPage() {
                     className="press group block h-full rounded-2xl overflow-hidden bg-white border border-navy-100 hover:border-gold-400 transition-colors focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:outline-none"
                   >
                     <div className="relative aspect-[16/9] bg-navy-100 overflow-hidden">
-                      <Image
-                        src={r.image || '/images/resources/default.jpg'}
-                        alt={r.title}
-                        fill
+                      <ResourceCover
+                        slug={r.slug}
+                        title={r.title}
+                        type={TYPE_COPY[r.type] ?? r.type}
+                        image={r.image}
                         sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                         className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
                       />
@@ -137,7 +139,7 @@ export default function ResourcesPage() {
 
       <CTABanner
         headline="Want more than articles?"
-        sub="Join the free signals group for daily chart breakdowns sent to your WhatsApp."
+        sub="Join the Telegram channel for daily chart breakdowns."
       />
     </>
   )

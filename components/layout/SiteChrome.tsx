@@ -14,7 +14,9 @@ export function SiteChrome() {
     pathname?.startsWith('/checkout') ||
     pathname?.startsWith('/my-courses') ||
     pathname?.startsWith('/login') ||
-    pathname?.startsWith('/register')
+    pathname?.startsWith('/register') ||
+    pathname?.startsWith('/dashboard') ||
+    pathname?.startsWith('/cart')
 
   return (
     <>

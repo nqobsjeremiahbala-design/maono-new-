@@ -1,13 +1,15 @@
 import { Hero } from '@/components/sections/Hero'
-import { MembershipsPreview } from '@/components/sections/MembershipsPreview'
 import { TradingViewTicker } from '@/components/sections/TradingViewTicker'
-import { Testimonials } from '@/components/sections/Testimonials'
-import { BrokerSection } from '@/components/sections/BrokerSection'
+import { MembershipsPreview } from '@/components/sections/MembershipsPreview'
+import { BrokerOfChoice } from '@/components/sections/BrokerOfChoice'
+import { TelegramTestimonials } from '@/components/sections/TelegramTestimonials'
+import { NewsFeed } from '@/components/sections/NewsFeed'
 import { WhyChooseUs } from '@/components/sections/WhyChooseUs'
 import { MidCTA } from '@/components/sections/MidCTA'
 import { StructuredLearningSplit } from '@/components/sections/StructuredLearningSplit'
 import { AboutUs } from '@/components/sections/AboutUs'
 import { ConfidenceSplit } from '@/components/sections/ConfidenceSplit'
+import { Testimonials } from '@/components/sections/Testimonials'
 import { FinalCTA } from '@/components/sections/FinalCTA'
 import { JsonLd } from '@/components/shared/JsonLd'
 import { organizationJsonLd } from '@/lib/jsonld'
@@ -15,7 +17,7 @@ import { generatePageMetadata } from '@/lib/metadata'
 
 export const metadata = generatePageMetadata({
   title: 'Maono Forex Trading',
-  description: 'Institutional-grade forex education for South African traders. Join our Telegram channel, structured courses, and membership plans.',
+  description: 'Institutional-grade forex education for South African traders. Telegram channel, structured courses, and live seminars.',
 })
 
 export default function HomePage() {
@@ -25,13 +27,15 @@ export default function HomePage() {
       <Hero />
       <TradingViewTicker />
       <MembershipsPreview />
-      <Testimonials />
-      <BrokerSection />
+      <BrokerOfChoice />
+      <TelegramTestimonials />
+      <NewsFeed />
       <WhyChooseUs />
       <MidCTA />
       <StructuredLearningSplit />
       <AboutUs />
       <ConfidenceSplit />
+      <Testimonials />
       <FinalCTA />
     </>
   )

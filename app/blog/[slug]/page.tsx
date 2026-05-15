@@ -95,7 +95,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
       <CTABanner
         headline="Found this useful?"
-        sub="Join the free signals group for daily analysis delivered to your WhatsApp."
+        sub="Join the Telegram channel for daily analysis."
       />
     </>
   )

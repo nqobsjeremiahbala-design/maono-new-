@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
 
 export function Hero() {
   return (
@@ -17,7 +18,6 @@ export function Hero() {
           <source src="/videos/hero-bg.mp4" type="video/mp4" />
         </video>
 
-        {/* Shader overlays to mask low resolution */}
         {/* Base darkening layer */}
         <div className="absolute inset-0 bg-navy-950/50" />
 
@@ -50,17 +50,17 @@ export function Hero() {
 
       <div className="relative w-full max-w-6xl mx-auto px-5 sm:px-6 lg:px-8 pt-8 pb-12 sm:pt-10 md:pt-32 md:pb-36 flex items-end md:items-center">
         <div className="max-w-2xl hero-reveal w-full">
-          <h1 className="font-serif text-[2.5rem] leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl text-white mb-4 md:mb-6 drop-shadow-lg">
+          <h1 className="font-serif font-extrabold text-[2.75rem] leading-[1.02] sm:text-5xl md:text-6xl lg:text-7xl text-white mb-4 md:mb-6 drop-shadow-lg tracking-tight">
             Forex education<br />
             <span className="text-gold-400">without the noise.</span>
           </h1>
-          <p className="text-navy-100 text-base sm:text-lg md:text-xl mb-6 md:mb-10 max-w-xl drop-shadow-md">
+          <p className="text-white/95 font-semibold text-lg sm:text-xl md:text-2xl mb-6 md:mb-10 max-w-xl drop-shadow-md">
             Institutional-grade trading education for South Africans at every stage, from first chart to full-time trader.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4">
             <Link
               href="/register"
-              className="group press inline-flex items-center justify-center px-6 sm:px-8 py-4 min-h-[48px] bg-gold-500 text-navy-950 font-semibold rounded-md hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+              className="group press inline-flex items-center justify-center px-6 sm:px-8 py-4 min-h-[48px] bg-gold-500 text-navy-950 font-bold rounded-md hover:bg-gold-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
             >
               Start learning
               <span
@@ -70,14 +70,20 @@ export function Hero() {
                 →
               </span>
             </Link>
-            <a
-              href="https://t.me/maonoforextrading"
+            <Link
+              href="/courses"
+              className="press inline-flex items-center justify-center px-6 sm:px-8 py-4 min-h-[48px] border-2 border-gold-500 text-gold-500 font-bold rounded-md hover:bg-gold-500 hover:text-navy-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+            >
+              Explore courses
+            </Link>
+            <Link
+              href={TELEGRAM_CHANNEL_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="press inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-4 min-h-[48px] border-2 border-gold-500 text-gold-500 font-semibold rounded-md hover:bg-gold-500 hover:text-navy-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+              className="press inline-flex items-center justify-center px-6 sm:px-8 py-4 min-h-[48px] text-white font-bold hover:text-gold-400 transition-colors"
             >
-              Join Telegram Channel
-            </a>
+              Join Telegram Channel →
+            </Link>
           </div>
           <div className="mt-6 md:mt-14 hidden sm:flex flex-col sm:flex-row gap-2 sm:gap-6 text-sm text-navy-300 sm:divide-x divide-navy-700">
             <span className="sm:pr-6">Based in Cape Town</span>
