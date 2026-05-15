@@ -15,6 +15,8 @@ export const SOCIAL_LINKS = {
 export const BROKER_OF_CHOICE = {
   name: 'Maono Global Markets',
   url: process.env.NEXT_PUBLIC_BROKER_URL || 'https://maonoglobalmarkets.com',
+  signupUrl:
+    process.env.NEXT_PUBLIC_BROKER_SIGNUP_URL || 'https://secure.maonoglobalmarkets.com/register',
   blurb:
     'Our recommended broker. Tight spreads, fast execution, and South-Africa-friendly funding options.',
 }

@@ -28,14 +28,24 @@ export function BrokerOfChoice() {
                 </li>
               ))}
             </ul>
-            <Link
-              href={BROKER_OF_CHOICE.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="press inline-flex items-center justify-center px-6 py-3.5 min-h-[48px] rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
-            >
-              Open an account with {BROKER_OF_CHOICE.name.split(' ')[0]} →
-            </Link>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={BROKER_OF_CHOICE.signupUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="press inline-flex items-center justify-center px-6 py-3.5 min-h-[48px] rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
+              >
+                Open a trading account →
+              </Link>
+              <Link
+                href={BROKER_OF_CHOICE.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="press inline-flex items-center justify-center px-6 py-3.5 min-h-[48px] rounded-md border border-navy-700 text-navy-200 font-semibold hover:border-gold-400 hover:text-gold-400 transition-colors"
+              >
+                Visit {BROKER_OF_CHOICE.name.split(' ')[0]} site
+              </Link>
+            </div>
           </div>
           <div className="bg-navy-900 border border-navy-800 rounded-2xl p-8 md:p-10 shadow-elevated">
             <div className="flex items-center gap-3 mb-5">
