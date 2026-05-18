@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { CTABanner } from '@/components/layout/CTABanner'
+import { ContentCover } from '@/components/shared/ContentCover'
 import { getBlogPosts } from '@/lib/content'
 import { generatePageMetadata } from '@/lib/metadata'
 
@@ -53,10 +53,12 @@ export default function NewsPage() {
                   className="press group bg-white rounded-2xl overflow-hidden border border-navy-100 hover:border-gold-400 hover:shadow-elevated transition-all"
                 >
                   <div className="relative aspect-[16/10] bg-navy-100 overflow-hidden">
-                    <Image
-                      src={post.image}
-                      alt={post.title}
-                      fill
+                    <ContentCover
+                      slug={post.slug}
+                      title={post.title}
+                      type={post.category}
+                      image={post.image}
+                      footer="Maono · Market News"
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                       className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
                     />

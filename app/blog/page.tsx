@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { CTABanner } from '@/components/layout/CTABanner'
+import { ContentCover } from '@/components/shared/ContentCover'
 import { getBlogPosts } from '@/lib/content'
 import { generatePageMetadata } from '@/lib/metadata'
 
@@ -56,10 +56,12 @@ export default function BlogPage() {
                   className="group grid md:grid-cols-[1.1fr_1fr] gap-8 md:gap-16 items-center"
                 >
                   <div className="relative aspect-[4/3] md:aspect-[5/4] rounded-3xl overflow-hidden bg-gradient-to-br from-navy-100 via-white to-navy-50 order-2 md:order-1">
-                    <Image
-                      src={featured.image}
-                      alt={featured.title}
-                      fill
+                    <ContentCover
+                      slug={featured.slug}
+                      title={featured.title}
+                      type={`Featured · ${featured.category}`}
+                      image={featured.image}
+                      footer="Maono · Journal"
                       sizes="(min-width: 768px) 55vw, 90vw"
                       className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
                     />
@@ -94,10 +96,12 @@ export default function BlogPage() {
                       className="group flex flex-col"
                     >
                       <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-navy-100 via-white to-navy-50 mb-6">
-                        <Image
-                          src={post.image}
-                          alt={post.title}
-                          fill
+                        <ContentCover
+                          slug={post.slug}
+                          title={post.title}
+                          type={post.category}
+                          image={post.image}
+                          footer="Maono · Journal"
                           sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 90vw"
                           className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                         />

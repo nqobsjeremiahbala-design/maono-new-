@@ -1,5 +1,13 @@
+import fs from 'fs'
+import path from 'path'
 import Link from 'next/link'
+import Image from 'next/image'
 import { BROKER_OF_CHOICE } from '@/lib/links'
+
+const BROKER_LOGO_PATH = '/images/brokers/maono-global-markets-logo.png'
+const BROKER_LOGO_AVAILABLE = fs.existsSync(
+  path.join(process.cwd(), 'public', BROKER_LOGO_PATH.replace(/^\//, '')),
+)
 
 export function BrokerOfChoice() {
   return (
@@ -48,6 +56,18 @@ export function BrokerOfChoice() {
             </div>
           </div>
           <div className="bg-navy-900 border border-navy-800 rounded-2xl p-8 md:p-10 shadow-elevated">
+            {BROKER_LOGO_AVAILABLE && (
+              <div className="relative bg-navy-950 border border-navy-800 rounded-xl px-6 py-8 mb-6 flex items-center justify-center min-h-[140px]">
+                <Image
+                  src={BROKER_LOGO_PATH}
+                  alt={`${BROKER_OF_CHOICE.name} logo`}
+                  width={420}
+                  height={210}
+                  className="w-auto h-20 sm:h-24 object-contain"
+                  priority={false}
+                />
+              </div>
+            )}
             <div className="flex items-center gap-3 mb-5">
               <div className="w-12 h-12 rounded-full bg-gold-500/15 ring-1 ring-gold-400/40 flex items-center justify-center">
                 <span className="text-gold-400 font-bold text-lg" aria-hidden>MGM</span>
