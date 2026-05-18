@@ -69,8 +69,17 @@ async function main() {
     console.log(`Course: ${course.title} (${course.slug})`)
   }
 
-  // 3. Seed modules and lessons with video files
-  const courseModules: Record<string, { title: string; lessons: { slug: string; title: string; videoUrl: string; duration: string }[] }[]> = {
+  // 3. Seed modules and lessons (video + text)
+  type SeedLesson = {
+    slug: string
+    title: string
+    duration: string
+    description?: string
+  } & (
+    | { type?: 'video'; videoUrl: string; content?: undefined }
+    | { type: 'text'; content: string; videoUrl?: undefined }
+  )
+  const courseModules: Record<string, { title: string; lessons: SeedLesson[] }[]> = {
     'forex-trading-introduction': [
       {
         title: 'Forex Fundamentals',
@@ -129,6 +138,95 @@ async function main() {
         ],
       },
     ],
+    'trading-psychology': [
+      {
+        title: 'Module 1 · The mindset problem',
+        lessons: [
+          {
+            slug: 'why-psychology-matters',
+            title: 'Why psychology is the real edge',
+            type: 'text',
+            duration: '6 min',
+            description: 'Strategy is the ten percent. Execution is the ninety. Here is why.',
+            content: `There is a phrase that gets thrown around in trading: "psychology is 90% of the game."
+
+It sounds like a cliché. It is also, unfortunately, true.
+
+## The thought experiment
+
+Imagine two traders using the exact same strategy. Same entries, same stops, same targets.
+
+Trader A follows the plan. Every trade. Even the ones that feel wrong.
+
+Trader B takes the setups that "feel right," skips the ones that "feel off," moves stops when the trade gets uncomfortable, and occasionally doubles down after a loss.
+
+After one hundred trades, Trader A is slightly profitable. Trader B is down thirty percent.
+
+## What this tells us
+
+The edge was not the strategy. Both had the same one. The edge was execution. Trader A's psychology let the strategy produce its results. Trader B's psychology got in the way.
+
+**Strategy is what you know. Psychology is what you do when you know it.**`,
+          },
+          {
+            slug: 'overtrading',
+            title: 'Why overtrading happens',
+            type: 'text',
+            duration: '5 min',
+            description: 'Overtrading is a symptom. Here is the real cause and the fix.',
+            content: `Overtrading almost always comes from one of three emotional states:
+
+- **Revenge** — trying to recover a loss immediately.
+- **Boredom** — the market is flat and you feel like you should be doing something.
+- **FOMO** — price is moving without you and you cannot stand it.
+
+## The fix
+
+The fix is not willpower. Willpower fails under emotional load. The fix is a rule that removes the decision:
+
+> "After two consecutive losses, I am done for the day."
+> "If the market is ranging on the 4H, I do not trade intraday."
+> "If a trade has already moved more than halfway to its target without me, I do not chase."
+
+Rules beat willpower. Write them. Follow them. Review them.`,
+          },
+        ],
+      },
+      {
+        title: 'Module 2 · Building the habit',
+        lessons: [
+          {
+            slug: 'the-pre-trade-ritual',
+            title: 'The pre-trade ritual',
+            type: 'text',
+            duration: '5 min',
+            description: 'Three questions that catch most bad trades before they happen.',
+            content: `Before you click the button, ask three questions:
+
+1. **Does this setup match my written plan?**
+2. **What is the worst case?** How much am I losing, in rands, if this hits the stop?
+3. **Am I taking this trade for the right reason?**
+
+The three questions introduce friction at exactly the moment you need it. Friction at the entry button is the cheapest risk management tool you will ever find.`,
+          },
+          {
+            slug: 'the-sunday-review',
+            title: 'The Sunday review',
+            type: 'text',
+            duration: '4 min',
+            description: 'Ten minutes on a Sunday that compound into consistency.',
+            content: `Ten minutes. Four questions:
+
+- What did I do well this week?
+- Which trades broke my rules?
+- What emotion was driving the rule-breaking?
+- What is one thing to change next week?
+
+After ten weeks, those small observations become a map of who you are as a trader. That map is the difference between random results and improving ones.`,
+          },
+        ],
+      },
+    ],
   }
 
   for (const [courseSlug, modules] of Object.entries(courseModules)) {
@@ -153,22 +251,27 @@ async function main() {
 
       for (let li = 0; li < mod.lessons.length; li++) {
         const les = mod.lessons[li]
+        const lessonType = les.type ?? 'video'
         await prisma.lesson.upsert({
           where: { moduleId_slug: { moduleId: courseModule.id, slug: les.slug } },
           update: {
             title: les.title,
-            videoUrl: les.videoUrl,
+            type: lessonType,
+            videoUrl: les.videoUrl ?? null,
+            content: les.content ?? null,
             duration: les.duration,
+            description: les.description ?? les.title,
             position: li + 1,
           },
           create: {
             moduleId: courseModule.id,
             slug: les.slug,
             title: les.title,
-            type: 'video',
+            type: lessonType,
             duration: les.duration,
-            description: les.title,
-            videoUrl: les.videoUrl,
+            description: les.description ?? les.title,
+            videoUrl: les.videoUrl ?? null,
+            content: les.content ?? null,
             position: li + 1,
           },
         })
