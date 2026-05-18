@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { BROKER_OF_CHOICE } from '@/lib/links'
 
-const BROKER_LOGO_PATH = '/images/brokers/maono-global-markets-logo.png'
+const BROKER_LOGO_PATH = '/images/brokers/maono-global-markets-logo.jpg'
 const BROKER_LOGO_AVAILABLE = fs.existsSync(
   path.join(process.cwd(), 'public', BROKER_LOGO_PATH.replace(/^\//, '')),
 )
