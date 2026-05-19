@@ -33,5 +33,14 @@ export default async function LearnPage({ params }: { params: Promise<{ slug: st
     notFound()
   }
 
-  return <LearnClient courseSlug={slug} courseTitle={course!.title} curriculum={curriculum!} />
+  // Strip videoUrl from curriculum before sending to client — video paths stay server-side only
+  const safeCurriculum = {
+    ...curriculum,
+    modules: curriculum.modules.map(m => ({
+      ...m,
+      lessons: m.lessons.map(({ videoUrl: _v, ...lesson }) => lesson),
+    })),
+  }
+
+  return <LearnClient courseSlug={slug} courseTitle={course!.title} curriculum={safeCurriculum} />
 }

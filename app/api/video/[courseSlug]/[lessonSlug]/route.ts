@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import { auth } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { getLesson } from '@/lib/courseLessons'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,9 +9,9 @@ const IPFS_ROOT_CID = 'QmSiZD35puBGmJCKew1znuG8PdHZSiLAgDFXgeJ6qZ7Jn8'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ lessonId: string }> },
+  { params }: { params: Promise<{ courseSlug: string; lessonSlug: string }> },
 ) {
-  const { lessonId } = await params
+  const { courseSlug, lessonSlug } = await params
 
   // 1. Require authentication
   const session = await auth()
@@ -19,40 +19,13 @@ export async function GET(
     return new Response('Unauthorized', { status: 401 })
   }
 
-  const userId = (session.user as { id: string }).id
-  const userRole = (session.user as { role: string }).role
-
-  // 2. Look up the lesson
-  const lesson = await prisma.lesson.findUnique({
-    where: { id: lessonId },
-    include: {
-      module: {
-        include: { course: true },
-      },
-    },
-  })
-
-  if (!lesson || !lesson.videoUrl) {
+  // 2. Look up the lesson server-side (videoUrl never leaves the server)
+  const lesson = getLesson(courseSlug, lessonSlug)
+  if (!lesson || lesson.type !== 'video' || !lesson.videoUrl) {
     return new Response('Not found', { status: 404 })
   }
 
-  // 3. Check enrollment (admins bypass)
-  if (userRole !== 'ADMIN') {
-    const enrollment = await prisma.enrollment.findUnique({
-      where: {
-        userId_courseId: {
-          userId,
-          courseId: lesson.module.courseId,
-        },
-      },
-    })
-
-    if (!enrollment) {
-      return new Response('Not enrolled', { status: 403 })
-    }
-  }
-
-  // 4. Proxy the video from IPFS gateway
+  // 3. Proxy the video from IPFS gateway
   const ipfsUrl = `${IPFS_GATEWAY}/${IPFS_ROOT_CID}/${lesson.videoUrl}`
 
   const headers: Record<string, string> = {}

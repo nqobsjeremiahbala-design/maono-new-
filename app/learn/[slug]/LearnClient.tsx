@@ -164,6 +164,7 @@ export function LearnClient({ courseSlug, courseTitle, curriculum }: Props) {
 
         <main className="px-5 sm:px-6 md:px-10 lg:px-14 py-8 sm:py-10 md:py-14 max-w-4xl">
           <LessonView
+            courseSlug={courseSlug}
             lesson={activeLesson}
             lessonIndex={activeIndex + 1}
             totalLessons={allLessons.length}
@@ -267,6 +268,7 @@ function Sidebar({
 }
 
 function LessonView({
+  courseSlug,
   lesson,
   lessonIndex,
   totalLessons,
@@ -276,6 +278,7 @@ function LessonView({
   next,
   onNavigate,
 }: {
+  courseSlug: string
   lesson: Lesson
   lessonIndex: number
   totalLessons: number
@@ -299,11 +302,11 @@ function LessonView({
       <p className="text-navy-300 text-base sm:text-lg mb-8 md:mb-10 max-w-2xl">{lesson.description}</p>
 
       <div className="mb-8 md:mb-10">
-        {lesson.type === 'video' && lesson.videoUrl ? (
+        {lesson.type === 'video' ? (
           <div className="relative aspect-video rounded-2xl overflow-hidden bg-black shadow-elevated">
             <video
               key={lesson.slug}
-              src={lesson.videoUrl}
+              src={`/api/video/${courseSlug}/${lesson.slug}`}
               controls
               playsInline
               className="w-full h-full object-cover"
