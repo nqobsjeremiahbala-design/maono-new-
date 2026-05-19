@@ -1,11 +1,11 @@
 import { NextRequest } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db'
-import { createReadStream, statSync } from 'fs'
-import path from 'path'
-import { Readable } from 'stream'
 
 export const dynamic = 'force-dynamic'
+
+const IPFS_GATEWAY = 'https://ipfs.io/ipfs'
+const IPFS_ROOT_CID = 'QmSiZD35puBGmJCKew1znuG8PdHZSiLAgDFXgeJ6qZ7Jn8'
 
 export async function GET(
   request: NextRequest,
@@ -52,50 +52,35 @@ export async function GET(
     }
   }
 
-  // 4. Stream the video file
-  const filePath = path.join(process.cwd(), 'uploads', 'videos', lesson.videoUrl)
+  // 4. Proxy the video from IPFS gateway
+  const ipfsUrl = `${IPFS_GATEWAY}/${IPFS_ROOT_CID}/${lesson.videoUrl}`
 
-  let stat
-  try {
-    stat = statSync(filePath)
-  } catch {
+  const headers: Record<string, string> = {}
+  const range = request.headers.get('range')
+  if (range) {
+    headers['Range'] = range
+  }
+
+  const ipfsRes = await fetch(ipfsUrl, { headers })
+
+  if (!ipfsRes.ok && ipfsRes.status !== 206) {
     return new Response('Video file not found', { status: 404 })
   }
 
-  const range = request.headers.get('range')
+  const resHeaders = new Headers({
+    'Content-Type': 'video/mp4',
+    'Accept-Ranges': 'bytes',
+    'Cache-Control': 'private, max-age=3600',
+  })
 
-  if (range) {
-    // Partial content for seeking
-    const parts = range.replace(/bytes=/, '').split('-')
-    const start = parseInt(parts[0], 10)
-    const end = parts[1] ? parseInt(parts[1], 10) : stat.size - 1
-    const chunkSize = end - start + 1
+  const contentLength = ipfsRes.headers.get('content-length')
+  if (contentLength) resHeaders.set('Content-Length', contentLength)
 
-    const stream = createReadStream(filePath, { start, end })
-    const webStream = Readable.toWeb(stream) as ReadableStream
+  const contentRange = ipfsRes.headers.get('content-range')
+  if (contentRange) resHeaders.set('Content-Range', contentRange)
 
-    return new Response(webStream, {
-      status: 206,
-      headers: {
-        'Content-Range': `bytes ${start}-${end}/${stat.size}`,
-        'Accept-Ranges': 'bytes',
-        'Content-Length': String(chunkSize),
-        'Content-Type': 'video/mp4',
-        'Cache-Control': 'private, no-store',
-      },
-    })
-  }
-
-  const stream = createReadStream(filePath)
-  const webStream = Readable.toWeb(stream) as ReadableStream
-
-  return new Response(webStream, {
-    status: 200,
-    headers: {
-      'Content-Length': String(stat.size),
-      'Content-Type': 'video/mp4',
-      'Accept-Ranges': 'bytes',
-      'Cache-Control': 'private, no-store',
-    },
+  return new Response(ipfsRes.body, {
+    status: ipfsRes.status,
+    headers: resHeaders,
   })
 }
