@@ -6,7 +6,6 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [],
   },
-  serverExternalPackages: ['fs'],
   async headers() {
     return [
       {
@@ -19,13 +18,18 @@ const nextConfig: NextConfig = {
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
           {
             key: 'Content-Security-Policy',
+            // 'unsafe-inline' is still required for the GA bootstrap snippet and a few inline style attributes.
+            // 'unsafe-eval' has been removed — Next 16 App Router does not require it in production.
+            // TradingView and Telegram embeds need their script/frame origins allowlisted.
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com",
+              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://s3.tradingview.com https://*.tradingview.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https:",
+              "media-src 'self' blob:",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com https://www.google.com",
+              "connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com https://www.google.com https://*.tradingview.com",
+              "frame-src 'self' https://*.tradingview.com https://www.youtube.com https://t.me",
               "frame-ancestors 'none'",
             ].join('; '),
           },
