@@ -1,22 +1,23 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-export function Logo({
-  variant = 'default',
-  size = 40,
-}: {
-  variant?: 'default' | 'footer'
-  size?: number
-}) {
+export function Logo({ variant = 'default' }: { variant?: 'default' | 'footer' }) {
+  // Footer logo can be a fixed size; the header logo scales with the viewport
+  // so the brand reads on desktop without breaking the mobile nav height.
+  const heightClass =
+    variant === 'footer'
+      ? 'h-[96px]'
+      : 'h-[72px] md:h-[96px] lg:h-[112px]'
+
   return (
     <Link href="/" className="inline-flex items-center" aria-label="Maono Forex Trading">
       <Image
         src="/images/logo/logov2.svg"
         alt="Maono Forex Trading"
-        width={size * 3}
-        height={size}
+        width={420}
+        height={140}
         priority={variant === 'default'}
-        className="h-[88px] w-auto object-contain"
+        className={`${heightClass} w-auto object-contain`}
       />
     </Link>
   )

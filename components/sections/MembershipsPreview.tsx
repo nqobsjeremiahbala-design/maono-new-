@@ -57,34 +57,44 @@ export function MembershipsPreview() {
             <Link
               key={t.name}
               href="/memberships"
-              className={`press group relative rounded-xl p-5 sm:p-6 border transition-colors ${
+              className={`press group relative rounded-xl p-5 sm:p-6 border-2 transition-all duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.03] hover:shadow-[0_20px_40px_-12px_rgba(201,168,76,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 ${
                 t.highlight
-                  ? 'border-gold-500 bg-navy-950 text-white hover:bg-navy-900'
-                  : 'border-navy-100 bg-white hover:border-gold-400'
+                  ? 'border-gold-500 bg-navy-950 text-white hover:border-gold-300 hover:bg-navy-900'
+                  : 'border-navy-100 bg-white hover:border-gold-500 hover:bg-[#fbf6e7]'
               }`}
             >
               {t.badge && (
-                <span className="absolute -top-2.5 left-4 bg-gold-500 text-navy-950 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+                <span className="absolute -top-2.5 left-4 bg-gold-500 text-navy-950 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-sm transition-transform duration-200 group-hover:scale-110">
                   {t.badge}
                 </span>
               )}
-              <p className={`font-semibold text-sm mb-1 ${t.highlight ? 'text-gold-400' : 'text-navy-900'}`}>
+              <p
+                className={`font-semibold text-sm mb-1 transition-colors ${
+                  t.highlight
+                    ? 'text-gold-400 group-hover:text-gold-300'
+                    : 'text-navy-900 group-hover:text-gold-600'
+                }`}
+              >
                 {t.name}
               </p>
               <div className="flex items-baseline gap-2 mb-2">
-                <p className={`font-serif text-2xl sm:text-3xl ${t.highlight ? 'text-white' : 'text-navy-900'}`}>
+                <p
+                  className={`font-serif text-2xl sm:text-3xl transition-colors ${
+                    t.highlight ? 'text-white' : 'text-navy-900 group-hover:text-navy-950'
+                  }`}
+                >
                   {t.price}
                 </p>
                 {t.originalPrice && (
-                  <p className={`text-xs line-through ${t.highlight ? 'text-navy-400' : 'text-navy-400'}`}>
-                    {t.originalPrice}
-                  </p>
+                  <p className="text-xs line-through text-navy-400">{t.originalPrice}</p>
                 )}
               </div>
-              <p className={`text-[11px] uppercase tracking-wider mb-3 ${t.highlight ? 'text-navy-400' : 'text-navy-400'}`}>
-                Once-off
-              </p>
-              <p className={`text-xs leading-relaxed ${t.highlight ? 'text-navy-200' : 'text-navy-500'}`}>
+              <p className="text-[11px] uppercase tracking-wider mb-3 text-navy-400">Once-off</p>
+              <p
+                className={`text-xs leading-relaxed transition-colors ${
+                  t.highlight ? 'text-navy-200' : 'text-navy-500 group-hover:text-navy-700'
+                }`}
+              >
                 {t.blurb}
               </p>
             </Link>
