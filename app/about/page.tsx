@@ -1,23 +1,11 @@
-import { TeamCard } from '@/components/shared/TeamCard'
 import { CTABanner } from '@/components/layout/CTABanner'
 import { generatePageMetadata } from '@/lib/metadata'
-import type { TeamMember } from '@/lib/types'
 
 export const metadata = generatePageMetadata({
   title: 'About Maono Forex Trading',
   description: 'Maono Forex Trading was founded by Jody Francis on transparency and integrity. Over 7 years of trading and mentoring experience, structured online courses, and live 3-day training.',
   path: '/about',
 })
-
-const TEAM: TeamMember[] = [
-  {
-    name: 'Jody Francis',
-    role: 'Founder & Head Trader',
-    bio: 'Visionary and founder of Maono Forex Trading. 7+ years of live trading and mentoring, focused on smart money order flow and institutional concepts.',
-    image: '/images/team/founder.jpg',
-    years: 7,
-  },
-]
 
 const PILLARS = [
   {
@@ -180,15 +168,6 @@ export default function AboutPage() {
               </li>
             ))}
           </ul>
-        </div>
-      </section>
-
-      <section className="py-12 md:py-16 px-5 sm:px-6 bg-navy-50">
-        <div className="max-w-5xl mx-auto text-center">
-          <h2 className="font-serif text-3xl text-navy-900 mb-10 md:mb-12">The team</h2>
-          <div className="flex flex-wrap justify-center gap-8 md:gap-12">
-            {TEAM.map(m => <TeamCard key={m.name} member={m} />)}
-          </div>
         </div>
       </section>
 
