@@ -58,11 +58,11 @@ This will:
 - Seed the database (admin user + courses from MDX content)
 - Start the Next.js dev server on **http://localhost:3000**
 
-Default admin credentials (from seed):
-- **Email:** `admin@maonoforextrading.co.za`
-- **Password:** `admin123456`
+**You must set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env.local` before first run** — the seed will throw if `ADMIN_PASSWORD` is missing or shorter than 12 characters. Generate a strong password with:
 
-Change these via `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env.local` before first run.
+```bash
+openssl rand -base64 24
+```
 
 ### Docker Commands
 
@@ -126,8 +126,8 @@ Copy `.env.example` to `.env.local` for development. For production, set these i
 | `OZOW_PRIVATE_KEY` | For payments | Your Ozow Private Key. |
 | `OZOW_API_KEY` | For payments | Your Ozow API Key. |
 | `OZOW_IS_TEST` | For payments | `"true"` for sandbox, `"false"` for production. |
-| `ADMIN_EMAIL` | Seed only | Email for the seeded admin user. Default: `admin@maonoforextrading.co.za` |
-| `ADMIN_PASSWORD` | Seed only | Password for the seeded admin user. Default: `admin123456` |
+| `ADMIN_EMAIL` | Seed only | Email for the seeded admin user. Required by the seed. |
+| `ADMIN_PASSWORD` | Seed only | Password for the seeded admin user. Required, min 12 chars. Generate with `openssl rand -base64 24`. |
 
 ---
 

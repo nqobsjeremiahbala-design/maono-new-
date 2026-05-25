@@ -7,10 +7,17 @@ import Link from 'next/link'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 
+/** Allow only same-origin path-based redirects to prevent open-redirect phishing. */
+function safeCallbackUrl(raw: string | null): string {
+  if (!raw) return '/dashboard'
+  if (raw.startsWith('/') && !raw.startsWith('//')) return raw
+  return '/dashboard'
+}
+
 export function RegisterForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+  const callbackUrl = safeCallbackUrl(searchParams.get('callbackUrl'))
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 

@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     return new Response('Bad request', { status: 400 })
   }
 
-  // 1. Verify hash to ensure this came from Ozow
+  // 1. Verify hash to ensure this came from Ozow (timing-safe).
   if (!verifyOzowWebhook(payload)) {
     console.error('[ozow-webhook] Hash verification failed', payload.TransactionReference)
     return new Response('Unauthorized', { status: 401 })
@@ -25,11 +25,27 @@ export async function POST(request: NextRequest) {
   const status = mapOzowStatus(payload.Status)
   const purchaseId = payload.TransactionReference
 
-  console.log(`[ozow-webhook] ${purchaseId} → ${status} (Ozow: ${payload.Status})`)
+  // 2. Look up the purchase and validate the amount.
+  const purchase = await prisma.purchase.findUnique({ where: { id: purchaseId } })
+  if (!purchase) {
+    console.error('[ozow-webhook] Unknown purchase ref', purchaseId)
+    // Return 200 so Ozow stops retrying — replay/spam from unknown refs is not our problem.
+    return new Response('OK', { status: 200 })
+  }
 
-  // 2. Update purchase record
-  const purchase = await prisma.purchase.update({
-    where: { id: purchaseId },
+  // Ozow sends Amount in rands with 2 decimals; our purchase is cents.
+  const ozowCents = Math.round(parseFloat(payload.Amount) * 100)
+  if (!Number.isFinite(ozowCents) || ozowCents !== purchase.amountCents) {
+    console.error(
+      `[ozow-webhook] Amount mismatch for ${purchaseId}: ozow=${payload.Amount} ours=${purchase.amountCents}c`
+    )
+    return new Response('Amount mismatch', { status: 400 })
+  }
+
+  // 3. Idempotent state transition — only PENDING purchases advance.
+  // Subsequent retries (or replays) hit updateMany with count=0 and do nothing.
+  const updated = await prisma.purchase.updateMany({
+    where: { id: purchaseId, status: 'PENDING' },
     data: {
       status,
       ozowTransId: payload.TransactionId,
@@ -37,7 +53,14 @@ export async function POST(request: NextRequest) {
     },
   })
 
-  // 3. On successful payment, create enrollment
+  if (updated.count === 0) {
+    console.log(`[ozow-webhook] ${purchaseId} already finalized (current=${purchase.status})`)
+    return new Response('OK', { status: 200 })
+  }
+
+  console.log(`[ozow-webhook] ${purchaseId} → ${status} (Ozow: ${payload.Status})`)
+
+  // 4. On successful payment, grant enrollment (idempotent via upsert).
   if (status === 'COMPLETE' && purchase.courseId) {
     await prisma.enrollment.upsert({
       where: {

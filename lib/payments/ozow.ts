@@ -66,7 +66,14 @@ export type OzowWebhookPayload = {
 
 export function buildOzowPaymentUrl(req: OzowPaymentRequest): string {
   const config = getConfig()
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const appUrl =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined) ||
+    (process.env.NODE_ENV === 'production'
+      ? (() => {
+          throw new Error('NEXT_PUBLIC_APP_URL must be set in production')
+        })()
+      : 'http://localhost:3000')
 
   const params: Record<string, string> = {
     SiteCode: config.siteCode,
@@ -133,7 +140,13 @@ export function verifyOzowWebhook(payload: OzowWebhookPayload): boolean {
     .toLowerCase()
 
   const expected = crypto.createHash('sha512').update(hashInput).digest('hex')
-  return expected === payload.Hash.toLowerCase()
+  const received = payload.Hash.toLowerCase()
+
+  // Timing-safe compare to avoid leaking hash bytes via response time.
+  const expectedBuf = Buffer.from(expected, 'utf8')
+  const receivedBuf = Buffer.from(received, 'utf8')
+  if (expectedBuf.length !== receivedBuf.length) return false
+  return crypto.timingSafeEqual(expectedBuf, receivedBuf)
 }
 
 // ─── Map Ozow status to our PaymentStatus enum ──────────────

@@ -11,13 +11,12 @@ async function main() {
 
   // 1. Create admin user
   const adminPassword = process.env.ADMIN_PASSWORD
-  if (!adminPassword || adminPassword.length < 8) {
-    if (process.env.NODE_ENV === 'production') {
-      throw new Error('ADMIN_PASSWORD must be set and at least 8 characters in production')
-    }
-    console.warn('WARNING: Using default admin password. Set ADMIN_PASSWORD for production.')
+  if (!adminPassword || adminPassword.length < 12) {
+    throw new Error(
+      'ADMIN_PASSWORD must be set and at least 12 characters. Generate one with: openssl rand -base64 24'
+    )
   }
-  const hashedPassword = await bcrypt.hash(adminPassword || 'admin123456', 12)
+  const hashedPassword = await bcrypt.hash(adminPassword, 12)
   const admin = await prisma.user.upsert({
     where: { email: process.env.ADMIN_EMAIL || 'admin@maonoforextrading.co.za' },
     update: {},
