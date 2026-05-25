@@ -14,7 +14,7 @@ const TEAM: TeamMember[] = [
     name: 'Jody Francis',
     role: 'Founder & Head Trader',
     bio: 'Visionary and founder of Maono Forex Trading. 7+ years of live trading and mentoring, focused on smart money order flow and institutional concepts.',
-    image: '/images/team/placeholder.jpg',
+    image: '/images/team/founder.jpg',
     years: 7,
   },
 ]

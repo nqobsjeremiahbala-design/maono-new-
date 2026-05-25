@@ -297,7 +297,7 @@ export default async function DashboardPage() {
             {[
               { href: '/courses', label: 'Browse courses', sub: 'Add to your library' },
               { href: '/resources', label: 'Free resources', sub: 'Guides & cheatsheets' },
-              { href: '/news', label: 'Market news', sub: 'Insights from the desk' },
+              { href: '/blog', label: 'Trading blog', sub: 'Insights from the desk' },
               { href: '/memberships', label: 'Course bundles', sub: 'Pay once, learn forever' },
             ].map((q) => (
               <Link

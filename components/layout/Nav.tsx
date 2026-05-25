@@ -9,10 +9,8 @@ const links = [
   { href: '/', label: 'Home' },
   { href: '/courses', label: 'Courses' },
   { href: '/resources', label: 'Resources' },
-  { href: '/news', label: 'News' },
   { href: '/about', label: 'About' },
   { href: '/blog', label: 'Blog' },
-  { href: '/cart', label: 'Cart' },
 ]
 
 export function Nav() {

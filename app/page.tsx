@@ -3,7 +3,6 @@ import { TradingViewTicker } from '@/components/sections/TradingViewTicker'
 import { MembershipsPreview } from '@/components/sections/MembershipsPreview'
 import { BrokerOfChoice } from '@/components/sections/BrokerOfChoice'
 import { TelegramTestimonials } from '@/components/sections/TelegramTestimonials'
-import { NewsFeed } from '@/components/sections/NewsFeed'
 import { WhyChooseUs } from '@/components/sections/WhyChooseUs'
 import { MidCTA } from '@/components/sections/MidCTA'
 import { StructuredLearningSplit } from '@/components/sections/StructuredLearningSplit'
@@ -29,7 +28,6 @@ export default function HomePage() {
       <MembershipsPreview />
       <BrokerOfChoice />
       <TelegramTestimonials />
-      <NewsFeed />
       <WhyChooseUs />
       <MidCTA />
       <StructuredLearningSplit />
