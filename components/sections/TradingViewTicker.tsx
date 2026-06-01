@@ -35,7 +35,7 @@ export function TradingViewTicker() {
     <section aria-label="Live market data" className="bg-navy-950 border-b border-navy-800">
       <div
         ref={containerRef}
-        className="tradingview-widget-container h-9 sm:h-10 overflow-hidden"
+        className="tradingview-widget-container h-7 sm:h-8 overflow-hidden"
       >
         <div className="tradingview-widget-container__widget" />
       </div>
