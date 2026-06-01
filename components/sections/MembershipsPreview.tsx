@@ -23,10 +23,9 @@ const BUNDLES: Bundle[] = [
   },
   {
     name: 'Gold',
-    price: 'R799',
-    originalPrice: 'R3,500',
-    blurb: 'Full course library. Black Friday pricing.',
-    badge: 'BF Special',
+    price: 'R3,500',
+    blurb: 'Full course library, lifetime access.',
+    badge: 'Recommended',
     highlight: true,
   },
   {

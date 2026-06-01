@@ -34,11 +34,9 @@ const BUNDLES: Bundle[] = [
   },
   {
     name: 'Gold',
-    price: 799,
-    originalPrice: 3500,
-    badge: 'Black Friday Special',
-    ribbon: 'Best value',
-    description: 'Full library at the lowest price we have ever offered. Stack everything we teach in one bundle.',
+    price: 3500,
+    ribbon: 'Recommended',
+    description: 'Full course library, lifetime access. Stack everything we teach in one bundle.',
     courses: [
       'Forex Introduction',
       'Price Action Trading',
