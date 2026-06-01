@@ -24,7 +24,7 @@ export function TradingViewTicker() {
       ],
       showSymbolLogo: true,
       isTransparent: true,
-      displayMode: 'adaptive',
+      displayMode: 'compact',
       colorTheme: 'dark',
       locale: 'en',
     })
@@ -32,8 +32,11 @@ export function TradingViewTicker() {
   }, [])
 
   return (
-    <section aria-label="Live market data" className="bg-navy-950 border-y border-navy-800">
-      <div ref={containerRef} className="tradingview-widget-container">
+    <section aria-label="Live market data" className="bg-navy-950 border-b border-navy-800">
+      <div
+        ref={containerRef}
+        className="tradingview-widget-container h-9 sm:h-10 overflow-hidden"
+      >
         <div className="tradingview-widget-container__widget" />
       </div>
     </section>
