@@ -35,7 +35,7 @@ export function Nav() {
   const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN'
 
   return (
-    <header className="sticky top-0 z-50 bg-navy-950/95 backdrop-blur border-b border-navy-800">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-navy-100 shadow-sm">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 md:h-28 lg:h-32 flex items-center justify-between">
         <Logo />
 
@@ -44,7 +44,7 @@ export function Nav() {
             <li key={l.href}>
               <Link
                 href={l.href}
-                className="text-[15px] font-bold uppercase tracking-wide text-white hover:text-gold-400 transition-colors"
+                className="text-[15px] font-bold uppercase tracking-wide text-navy-900 hover:text-gold-600 transition-colors"
               >
                 {l.label}
               </Link>
@@ -54,7 +54,7 @@ export function Nav() {
             <li>
               <Link
                 href="/dashboard"
-                className="text-[15px] font-bold uppercase tracking-wide text-gold-400 hover:text-gold-300 transition-colors"
+                className="text-[15px] font-bold uppercase tracking-wide text-gold-600 hover:text-gold-500 transition-colors"
               >
                 Dashboard
               </Link>
@@ -64,7 +64,7 @@ export function Nav() {
             <li>
               <Link
                 href="/admin"
-                className="text-[15px] font-bold uppercase tracking-wide text-purple-400 hover:text-purple-300 transition-colors"
+                className="text-[15px] font-bold uppercase tracking-wide text-purple-700 hover:text-purple-500 transition-colors"
               >
                 Admin
               </Link>
@@ -75,12 +75,12 @@ export function Nav() {
         <div className="hidden md:flex items-center gap-2">
           {isLoggedIn ? (
             <>
-              <span className="text-sm text-navy-300 mr-1">
+              <span className="text-sm text-navy-600 mr-1">
                 {session.user?.name || session.user?.email}
               </span>
               <button
                 onClick={() => signOut({ callbackUrl: '/' })}
-                className="press px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md border border-navy-600 text-white hover:border-navy-400 transition-colors"
+                className="press px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md border border-navy-300 text-navy-900 hover:border-navy-900 transition-colors"
               >
                 Sign Out
               </button>
@@ -89,7 +89,7 @@ export function Nav() {
             <>
               <Link
                 href="/login"
-                className="press px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md text-white border border-navy-700 hover:bg-navy-800 transition-colors"
+                className="press px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md text-navy-900 border border-navy-300 hover:bg-navy-50 transition-colors"
               >
                 Login
               </Link>
@@ -105,7 +105,7 @@ export function Nav() {
 
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden text-white p-2"
+          className="md:hidden text-navy-900 p-2"
           aria-label="Toggle menu"
         >
           <span className="block w-5 h-0.5 bg-current mb-1" />
@@ -115,13 +115,13 @@ export function Nav() {
       </nav>
 
       {open && (
-        <div className="md:hidden bg-navy-900 border-t border-navy-800 px-4 pb-4">
+        <div className="md:hidden bg-white border-t border-navy-100 px-4 pb-4">
           <ul className="flex flex-col gap-3 pt-4">
             {links.map(l => (
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="text-white font-bold uppercase tracking-wide text-sm hover:text-gold-400"
+                  className="text-navy-900 font-bold uppercase tracking-wide text-sm hover:text-gold-600"
                   onClick={() => setOpen(false)}
                 >
                   {l.label}
@@ -132,7 +132,7 @@ export function Nav() {
               <li>
                 <Link
                   href="/dashboard"
-                  className="text-gold-400 hover:text-gold-300 text-sm font-bold uppercase tracking-wide"
+                  className="text-gold-600 hover:text-gold-500 text-sm font-bold uppercase tracking-wide"
                   onClick={() => setOpen(false)}
                 >
                   Dashboard
@@ -143,7 +143,7 @@ export function Nav() {
               <li>
                 <Link
                   href="/admin"
-                  className="text-purple-400 hover:text-purple-300 text-sm font-bold uppercase tracking-wide"
+                  className="text-purple-700 hover:text-purple-500 text-sm font-bold uppercase tracking-wide"
                   onClick={() => setOpen(false)}
                 >
                   Admin
@@ -154,7 +154,7 @@ export function Nav() {
               {isLoggedIn ? (
                 <button
                   onClick={() => { signOut({ callbackUrl: '/' }); setOpen(false) }}
-                  className="press w-full px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md border border-navy-600 text-white"
+                  className="press w-full px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md border border-navy-300 text-navy-900"
                 >
                   Sign Out
                 </button>
@@ -162,7 +162,7 @@ export function Nav() {
                 <>
                   <Link
                     href="/login"
-                    className="press flex-1 text-center px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md border border-navy-600 text-white"
+                    className="press flex-1 text-center px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md border border-navy-300 text-navy-900"
                     onClick={() => setOpen(false)}
                   >
                     Login
