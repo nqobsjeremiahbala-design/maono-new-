@@ -46,3 +46,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .gstack/
+.omc/
+
+# Supabase CLI link cache (commit config.toml when added, not .temp)
+supabase/.temp/
