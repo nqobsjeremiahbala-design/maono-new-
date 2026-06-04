@@ -1,2 +1,4 @@
 uploads/
-*.MP4
+# Raw uploads at repo root only — do not ignore public/videos/*.mp4
+/-*.MP4
+/-*.mp4
