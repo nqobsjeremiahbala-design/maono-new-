@@ -1,7 +1,14 @@
 import type { NextConfig } from 'next'
+import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
+
+// Makes Cloudflare bindings (Hyperdrive, R2, etc.) available via getCloudflareContext()
+// during `next dev`. No-op in production builds.
+initOpenNextCloudflareForDev()
 
 const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
+  // Prisma must stay external so the OpenNext adapter can patch it for the workerd runtime.
+  serverExternalPackages: ['@prisma/client', '.prisma/client'],
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [],

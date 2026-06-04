@@ -14,6 +14,9 @@ export type SessionUser = {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // Required on non-Vercel hosts (Cloudflare Workers) so Auth.js trusts the
+  // request host/origin instead of rejecting it as an untrusted host.
+  trustHost: true,
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt', maxAge: 7 * 24 * 60 * 60 },
   providers: [

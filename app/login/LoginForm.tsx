@@ -44,7 +44,7 @@ export function LoginForm() {
       // If no explicit callbackUrl was provided, route admins to /admin
       if (!searchParams.get('callbackUrl')) {
         const res = await fetch('/api/auth/session')
-        const session = await res.json()
+        const session = (await res.json()) as { user?: { role?: string } } | null
         if (session?.user?.role === 'ADMIN') {
           router.push('/admin')
           router.refresh()

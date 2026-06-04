@@ -35,13 +35,13 @@ export function LessonForm({
       })
 
       if (!res.ok) {
-        const data = await res.json()
+        const data = (await res.json()) as { error?: string }
         setUploadError(data.error || 'Upload failed')
         setUploading(false)
         return
       }
 
-      const { fileKey } = await res.json()
+      const { fileKey } = (await res.json()) as { fileKey: string }
       setUploadedKey(fileKey)
       setUploading(false)
     } catch {

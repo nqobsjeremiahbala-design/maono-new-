@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth, isAdmin } from '@/lib/auth'
 import type { SessionUser } from '@/lib/auth'
-import { writeFile, mkdir } from 'fs/promises'
-import path from 'path'
-import crypto from 'crypto'
+import { getCloudflareContext } from '@opennextjs/cloudflare'
 
-const UPLOAD_DIR = path.join(process.cwd(), 'uploads', 'videos')
+// Videos are stored in the R2 bucket bound as MEDIA_BUCKET (see wrangler.jsonc).
+// The returned `fileKey` is persisted as the lesson's videoUrl.
 const MAX_SIZE = 500 * 1024 * 1024 // 500MB
 
 export async function POST(request: NextRequest) {
@@ -34,12 +33,12 @@ export async function POST(request: NextRequest) {
   }
 
   const ext = file.name.split('.').pop() || 'mp4'
-  const fileKey = `${crypto.randomUUID()}.${ext}`
+  const fileKey = `videos/${crypto.randomUUID()}.${ext}`
 
-  await mkdir(UPLOAD_DIR, { recursive: true })
-
-  const buffer = Buffer.from(await file.arrayBuffer())
-  await writeFile(path.join(UPLOAD_DIR, fileKey), buffer)
+  const { env } = getCloudflareContext()
+  await env.MEDIA_BUCKET.put(fileKey, file.stream(), {
+    httpMetadata: { contentType: file.type },
+  })
 
   return NextResponse.json({ fileKey, size: file.size })
 }

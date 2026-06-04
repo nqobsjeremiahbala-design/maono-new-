@@ -6,7 +6,10 @@
 // -------------------------------------------------
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  // driverAdapters lets us swap the native query engine for the pg driver adapter,
+  // which is what makes Prisma run on Cloudflare Workers (via @opennextjs/cloudflare).
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {

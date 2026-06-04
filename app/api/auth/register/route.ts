@@ -4,7 +4,12 @@ import { prisma } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, password, phone } = await request.json()
+    const { name, email, password, phone } = (await request.json()) as {
+      name?: string
+      email?: string
+      password?: string
+      phone?: string
+    }
 
     if (!email || !password) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 })

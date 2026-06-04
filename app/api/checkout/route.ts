@@ -9,7 +9,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
   }
 
-  const { itemKey, courseSlug } = await request.json()
+  const { itemKey, courseSlug } = (await request.json()) as {
+    itemKey?: string
+    courseSlug?: string
+  }
   if (!itemKey) {
     return NextResponse.json({ error: 'Missing itemKey' }, { status: 400 })
   }
