@@ -20,6 +20,9 @@
 # production
 /build
 
+# Raw video uploads at repo root (compress into public/videos/)
+-1330444101696814779.MP4
+
 # misc
 .DS_Store
 *.pem

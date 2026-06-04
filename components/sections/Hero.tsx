@@ -11,7 +11,7 @@ export function Hero() {
           loop
           muted
           playsInline
-          preload="metadata"
+          preload="auto"
           poster="/images/hero/hero-main.jpg"
           className="absolute inset-0 w-full h-full object-cover"
         >
