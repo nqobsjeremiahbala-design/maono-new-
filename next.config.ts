@@ -2,8 +2,10 @@ import type { NextConfig } from 'next'
 import { initOpenNextCloudflareForDev } from '@opennextjs/cloudflare'
 
 // Makes Cloudflare bindings (Hyperdrive, R2, etc.) available via getCloudflareContext()
-// during `next dev`. No-op in production builds.
-initOpenNextCloudflareForDev()
+// during `next dev`. Gated to dev so `next build` (CI/prod) needs no DB/binding access.
+if (process.env.NODE_ENV === 'development') {
+  initOpenNextCloudflareForDev()
+}
 
 const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
