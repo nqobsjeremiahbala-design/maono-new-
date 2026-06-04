@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "maono-global-forex",
+  "name": "maono-new",
   "main": ".open-next/worker.js",
   "compatibility_date": "2025-06-01",
   // nodejs_compat is required by the OpenNext adapter (Prisma pg driver, bcryptjs, crypto, etc.)
