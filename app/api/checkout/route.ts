@@ -3,11 +3,18 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { buildOzowPaymentUrl } from '@/lib/payments/ozow'
 import { CATALOG, enrollSlugsForItem } from '@/lib/checkout'
+import { canEnroll } from '@/lib/flags'
 
 export async function POST(request: NextRequest) {
   const session = await auth()
   if (!session?.user) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  }
+
+  // Go-live gate: only admins may start a checkout while enrollment is closed.
+  const role = (session.user as { role?: string }).role
+  if (!canEnroll(role)) {
+    return NextResponse.json({ error: 'Enrollment is currently closed to new students.' }, { status: 403 })
   }
 
   const { itemKey } = (await request.json()) as { itemKey?: string }

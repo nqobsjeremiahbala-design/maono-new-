@@ -7,6 +7,8 @@ import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { enroll } from '@/lib/enrollment'
 import { CATALOG, COURSES_WITH_PLAYER, enrollSlugsForItem } from '@/lib/checkout'
+import { canEnroll } from '@/lib/flags'
+import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
 import { completeCheckout } from './actions'
 
 const FORMSPREE_ID = 'xpwzeygk'
@@ -53,6 +55,42 @@ export function CheckoutClient() {
             >
               Create account
             </Link>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  // Go-live gate: enrollment is closed to new students (admins bypass for demos).
+  const role = (session.user as { role?: string }).role
+  if (!canEnroll(role)) {
+    return (
+      <section className="bg-navy-950 min-h-dvh py-16 md:py-20 px-5 sm:px-6">
+        <div className="max-w-md mx-auto text-center hero-reveal">
+          <div className="w-12 h-0.5 bg-gold-500 mx-auto mb-6" />
+          <h1 className="font-serif text-3xl sm:text-4xl text-white mb-4 leading-tight">
+            Enrolment is currently closed
+          </h1>
+          <p className="text-navy-300 text-base sm:text-lg mb-8">
+            We&apos;re not taking new course sign-ups right now. If you already have a
+            course with us, sign in and it&apos;ll be in your dashboard. Otherwise, join our
+            Telegram and we&apos;ll let you know the moment enrolment reopens.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/dashboard"
+              className="press inline-flex items-center justify-center px-6 py-3 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
+            >
+              Go to my dashboard
+            </Link>
+            <a
+              href={TELEGRAM_CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="press inline-flex items-center justify-center px-6 py-3 rounded-md border border-navy-700 text-white hover:border-gold-400 hover:text-gold-400 transition-colors"
+            >
+              Join Telegram
+            </a>
           </div>
         </div>
       </section>

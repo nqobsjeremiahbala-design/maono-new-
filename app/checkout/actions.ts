@@ -3,6 +3,7 @@
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { CATALOG, enrollSlugsForItem } from '@/lib/checkout'
+import { canEnroll } from '@/lib/flags'
 import { sendPurchaseEmail, sendUpgradeEmail } from '@/lib/email'
 
 // Demo checkout: no real PSP. Records a COMPLETE purchase and enrols the buyer in
@@ -10,6 +11,12 @@ import { sendPurchaseEmail, sendUpgradeEmail } from '@/lib/email'
 export async function completeCheckout(itemKey: string): Promise<{ ok: boolean; error?: string }> {
   const session = await auth()
   if (!session?.user) return { ok: false, error: 'Not authenticated' }
+
+  // Go-live gate: enrollment is closed to new students (admins bypass for demos).
+  const role = (session.user as { role?: string }).role
+  if (!canEnroll(role)) {
+    return { ok: false, error: 'Enrollment is currently closed to new students.' }
+  }
 
   const userId = (session.user as { id: string }).id
   const item = CATALOG[itemKey]

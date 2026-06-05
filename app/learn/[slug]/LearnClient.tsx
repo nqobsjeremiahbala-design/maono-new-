@@ -236,15 +236,15 @@ function Sidebar({
                         <button
                           onClick={() => onSelect(l.slug)}
                           className={`
-                            w-full text-left px-3 py-3 rounded-md transition-colors press
-                            flex items-start gap-3
+                            w-full text-left px-3 py-2.5 rounded-md transition-colors press
+                            flex items-center gap-3
                             ${active ? 'bg-navy-800 text-white' : 'text-navy-300 hover:bg-navy-800/50 hover:text-white'}
                           `}
                           aria-current={active ? 'true' : undefined}
                         >
                           <span
                             className={`
-                              shrink-0 mt-0.5 w-5 h-5 rounded-full border-2 flex items-center justify-center text-[11px]
+                              shrink-0 flex h-6 w-6 items-center justify-center rounded-full border-2
                               ${done
                                 ? 'bg-gold-500 border-gold-500 text-navy-950'
                                 : active
@@ -253,11 +253,17 @@ function Sidebar({
                             `}
                             aria-hidden
                           >
-                            {done ? '✓' : l.type === 'video' ? '▶' : 'A'}
+                            {done ? (
+                              <IconCheck className="h-3.5 w-3.5" />
+                            ) : l.type === 'video' ? (
+                              <IconPlay className="h-3 w-3 translate-x-[1px]" />
+                            ) : (
+                              <IconDoc className="h-3 w-3" />
+                            )}
                           </span>
-                          <span className="flex-1 min-w-0">
+                          <span className="min-w-0 flex-1">
                             <span className="block text-sm leading-snug">{l.title}</span>
-                            <span className="block text-xs text-navy-500 mt-0.5">
+                            <span className="mt-0.5 block text-xs text-navy-500">
                               {l.type === 'video' ? 'Video' : 'Reading'} · {l.duration}
                             </span>
                           </span>
@@ -375,5 +381,30 @@ function LessonView({
         </button>
       </div>
     </article>
+  )
+}
+
+function IconPlay({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  )
+}
+
+function IconCheck({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  )
+}
+
+function IconDoc({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v6h6" />
+    </svg>
   )
 }
