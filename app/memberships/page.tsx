@@ -81,10 +81,10 @@ export default function MembershipsPage() {
           {BUNDLES.map(bundle => (
             <div
               key={bundle.name}
-              className={`relative rounded-xl p-6 flex flex-col text-navy-950 ${
+              className={`group relative rounded-xl p-6 flex flex-col border text-navy-950 transition-all duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.03] hover:border-navy-950 hover:ring-2 hover:ring-navy-900 hover:shadow-[0_24px_48px_-12px_rgba(10,15,30,0.45)] ${
                 bundle.highlighted
-                  ? 'bg-gradient-to-br from-gold-200 via-gold-400 to-gold-500 ring-2 ring-navy-900 shadow-xl'
-                  : 'bg-white border border-navy-200'
+                  ? 'border-navy-900 ring-2 ring-navy-900 bg-gradient-to-br from-gold-200 via-gold-400 to-gold-500 shadow-xl'
+                  : 'bg-white border-navy-200'
               }`}
             >
               {bundle.ribbon && (

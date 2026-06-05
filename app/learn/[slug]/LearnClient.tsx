@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import type { CourseCurriculum, Lesson } from '@/lib/courseLessons'
 import {
+  enroll,
   getEnrollment,
   isEnrolled,
   markLessonComplete,
@@ -16,9 +17,11 @@ type Props = {
   courseSlug: string
   courseTitle: string
   curriculum: CourseCurriculum
+  /** True when the signed-in account has a DB enrollment for this course. */
+  enrolledViaAccount?: boolean
 }
 
-export function LearnClient({ courseSlug, courseTitle, curriculum }: Props) {
+export function LearnClient({ courseSlug, courseTitle, curriculum, enrolledViaAccount = false }: Props) {
   const router = useRouter()
   const allLessons = useMemo(
     () => curriculum.modules.flatMap(m => m.lessons),
@@ -30,7 +33,12 @@ export function LearnClient({ courseSlug, courseTitle, curriculum }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
-    if (!isEnrolled(courseSlug)) {
+    // Account enrollment (DB) is authoritative; seed local storage so progress
+    // tracking works on this device. Otherwise fall back to the local record.
+    if (enrolledViaAccount && !isEnrolled(courseSlug)) {
+      enroll(courseSlug)
+    }
+    if (!enrolledViaAccount && !isEnrolled(courseSlug)) {
       setAccess('denied')
       return
     }
@@ -44,7 +52,7 @@ export function LearnClient({ courseSlug, courseTitle, curriculum }: Props) {
     }
     window.addEventListener('maono-enrollment-change', sync)
     return () => window.removeEventListener('maono-enrollment-change', sync)
-  }, [courseSlug])
+  }, [courseSlug, enrolledViaAccount])
 
   if (access === 'loading') {
     return (

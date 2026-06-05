@@ -37,14 +37,15 @@ export function BrokerOfChoice() {
       />
 
       <div className="relative z-10 max-w-3xl mx-auto text-center">
-        {/* MGM logo — single clean white card; border brightens with mouse proximity */}
-        <div className="flex justify-center mb-9">
+        {/* MGM logo — transparent dark-site art; sits directly on the navy, big and centred */}
+        <div className="mb-10 flex justify-center">
           <Image
-            src="/images/logo/mgm-broker-logo.jpeg"
+            src="/images/logo/maono_global_markets_clean_dark_site.png"
             alt={`${BROKER_OF_CHOICE.name} logo`}
-            width={420}
-            height={175}
-            className="h-[160px] w-auto rounded-2xl object-contain shadow-[0_0_0_1px_rgba(212,160,23,0.15),0_8px_40px_rgba(212,160,23,0.12)] ring-1 ring-gold-500/25 transition-[box-shadow] duration-300 group-hover:ring-gold-500/55 md:h-[204px]"
+            width={1220}
+            height={403}
+            priority
+            className="h-auto w-full max-w-[340px] object-contain drop-shadow-[0_8px_40px_rgba(212,160,23,0.18)] transition-transform duration-300 group-hover:scale-[1.02] sm:max-w-[460px] md:max-w-[560px]"
           />
         </div>
 
