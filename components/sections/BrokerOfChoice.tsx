@@ -4,17 +4,17 @@ import { BROKER_OF_CHOICE } from '@/lib/links'
 
 export function BrokerOfChoice() {
   return (
-    <section className="bg-[#0a0f1a] py-16 md:py-24 px-5 sm:px-6 border-y border-white/5">
+    <section className="bg-navy-950 py-16 md:py-24 px-5 sm:px-6 border-y border-white/5">
       <div className="max-w-3xl mx-auto text-center">
-        {/* MGM logo in a clean white container */}
-        <div className="flex justify-center mb-8">
-          <div className="rounded-2xl bg-white p-3 shadow-[0_10px_34px_-10px_rgba(0,0,0,0.7)]">
+        {/* MGM logo in a clean white container — large & prominent */}
+        <div className="flex justify-center mb-9">
+          <div className="rounded-2xl bg-white p-4 md:p-5 shadow-[0_14px_44px_-10px_rgba(0,0,0,0.7)]">
             <Image
               src="/images/logo/mgm-broker-logo.jpeg"
               alt={`${BROKER_OF_CHOICE.name} logo`}
-              width={260}
-              height={100}
-              className="h-[80px] md:h-[92px] w-auto object-contain"
+              width={360}
+              height={150}
+              className="h-[132px] md:h-[168px] w-auto object-contain"
             />
           </div>
         </div>
@@ -66,7 +66,7 @@ export function BrokerOfChoice() {
             href={BROKER_OF_CHOICE.signupUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="press inline-flex items-center justify-center px-8 py-4 min-h-[52px] rounded-md bg-gradient-to-r from-gold-400 to-amber-500 text-navy-950 font-bold text-base shadow-lg transition-all duration-200 hover:scale-[1.03] hover:brightness-110"
+            className="press inline-flex items-center justify-center px-8 py-4 min-h-[52px] rounded-md bg-gold-500 text-navy-950 font-bold text-base shadow-lg transition-all duration-200 hover:bg-gold-400 hover:scale-[1.03]"
           >
             Open a trading account →
           </Link>

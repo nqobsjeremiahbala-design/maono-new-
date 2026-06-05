@@ -126,7 +126,7 @@ export default function MembershipsPage() {
                 href={`/checkout?item=bundle-${bundle.name.toLowerCase()}`}
                 className={`press inline-flex items-center justify-center w-full px-4 py-3 min-h-[44px] rounded-md text-sm font-bold transition-colors ${
                   bundle.highlighted
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    ? 'bg-navy-950 text-white hover:bg-navy-800'
                     : 'border border-navy-800 text-navy-900 hover:bg-navy-950 hover:text-white'
                 }`}
               >

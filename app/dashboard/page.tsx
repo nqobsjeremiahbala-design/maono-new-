@@ -5,6 +5,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { generatePageMetadata } from '@/lib/metadata'
 import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
+import { DashboardSignOut } from './DashboardSignOut'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,10 +25,6 @@ const BUNDLE_LABELS: Record<string, { name: string; tier: string; tagline: strin
   'bundle-platinum': { name: 'Platinum Bundle', tier: 'Platinum', tagline: '1-on-1 mentorship · once-off' },
 }
 
-function ordinal(n: number) {
-  return new Intl.NumberFormat('en-ZA').format(n)
-}
-
 export default async function DashboardPage() {
   const session = await auth()
   if (!session?.user) {
@@ -36,27 +33,21 @@ export default async function DashboardPage() {
 
   const userId = (session.user as { id: string }).id
   const userName = session.user.name
+  const email = session.user.email
   const firstName = userName ? userName.split(' ')[0] : null
+  const initial = (firstName ?? email ?? 'U').charAt(0).toUpperCase()
 
   const [enrollments, bundlePurchase] = await Promise.all([
     prisma.enrollment.findMany({
       where: { userId },
       include: {
-        course: {
-          include: {
-            modules: { include: { _count: { select: { lessons: true } } } },
-          },
-        },
+        course: { include: { modules: { include: { _count: { select: { lessons: true } } } } } },
         completedLessons: true,
       },
       orderBy: { enrolledAt: 'desc' },
     }),
     prisma.purchase.findFirst({
-      where: {
-        userId,
-        status: 'COMPLETE',
-        itemKey: { startsWith: 'bundle-' },
-      },
+      where: { userId, status: 'COMPLETE', itemKey: { startsWith: 'bundle-' } },
       orderBy: { createdAt: 'desc' },
     }),
   ])
@@ -83,235 +74,240 @@ export default async function DashboardPage() {
     })
 
   const continueLearning = inProgress.find((i) => i.progress > 0 && i.progress < 100) ?? inProgress[0]
-
   const bundle = bundlePurchase ? BUNDLE_LABELS[bundlePurchase.itemKey] : null
+  const today = new Date().toLocaleDateString('en-ZA', { weekday: 'long', day: 'numeric', month: 'long' })
+
+  const navLinks = [
+    { href: '/dashboard', label: 'Dashboard', active: true },
+    { href: '/my-courses', label: 'My courses', badge: totalCourses || undefined },
+    { href: '/courses', label: 'Browse courses' },
+    { href: '/resources', label: 'Resources' },
+    { href: '/blog', label: 'Blog' },
+  ]
+
+  const stats = [
+    { v: String(totalCourses), k: 'Courses' },
+    { v: String(completedLessons), k: 'Lessons done' },
+    { v: `${overallProgress}%`, k: 'Overall' },
+    { v: bundle ? bundle.tier : 'Free', k: 'Plan' },
+  ]
 
   return (
-    <section className="bg-navy-950 min-h-dvh">
-      {/* Welcome header */}
-      <div className="relative overflow-hidden border-b border-navy-800">
-        <div className="absolute top-0 right-0 w-[36rem] h-[36rem] rounded-full bg-gold-500/10 blur-3xl -translate-y-1/3 translate-x-1/3" />
-        <div className="relative max-w-6xl mx-auto px-5 sm:px-6 md:px-10 pt-14 sm:pt-16 md:pt-20 pb-10 md:pb-14">
-          <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-3 sm:mb-4">Dashboard</p>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-white leading-[1.08] mb-3">
-            {firstName ? `Welcome back, ${firstName}.` : 'Welcome back.'}
-          </h1>
-          <p className="text-navy-300 text-base sm:text-lg max-w-2xl">
-            Pick up where you left off, track your progress, and stay close to the Telegram channel.
-          </p>
+    <div className="min-h-dvh bg-navy-950 text-white lg:flex">
+      {/* ── Sidebar ── */}
+      <aside className="hidden lg:flex w-64 shrink-0 flex-col gap-1 border-r border-navy-800 bg-gradient-to-b from-navy-950 to-[#080b16] px-4 py-6 sticky top-0 h-dvh">
+        <Link href="/" className="flex items-center gap-3 px-2 pb-6">
+          <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-gold-300 to-gold-600 font-serif text-[17px] font-bold text-navy-950 shadow-[0_6px_18px_-6px_rgba(201,168,76,0.6)]">
+            M
+          </span>
+          <span>
+            <span className="block font-serif text-base font-bold leading-none tracking-wide">MAONO</span>
+            <span className="mt-1 block text-[9px] font-semibold uppercase tracking-[0.26em] text-navy-500">Forex Trading</span>
+          </span>
+        </Link>
 
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-3xl">
-            <div className="bg-navy-900 border border-navy-800 rounded-xl p-4">
-              <p className="font-serif text-2xl sm:text-3xl text-gold-400">{ordinal(totalCourses)}</p>
-              <p className="text-[11px] uppercase tracking-wider text-navy-400 mt-1">Courses</p>
-            </div>
-            <div className="bg-navy-900 border border-navy-800 rounded-xl p-4">
-              <p className="font-serif text-2xl sm:text-3xl text-gold-400 tabular-nums">{ordinal(completedLessons)}</p>
-              <p className="text-[11px] uppercase tracking-wider text-navy-400 mt-1">Lessons done</p>
-            </div>
-            <div className="bg-navy-900 border border-navy-800 rounded-xl p-4">
-              <p className="font-serif text-2xl sm:text-3xl text-gold-400 tabular-nums">{overallProgress}%</p>
-              <p className="text-[11px] uppercase tracking-wider text-navy-400 mt-1">Overall</p>
-            </div>
-            <div className="bg-navy-900 border border-navy-800 rounded-xl p-4">
-              <p className="font-serif text-2xl sm:text-3xl text-gold-400">{bundle ? bundle.tier : 'Free'}</p>
-              <p className="text-[11px] uppercase tracking-wider text-navy-400 mt-1">Plan</p>
-            </div>
+        <p className="px-3 pb-2 pt-2 text-[10px] font-bold uppercase tracking-[0.2em] text-navy-500">Main</p>
+        {navLinks.map((l) => (
+          <Link
+            key={l.href}
+            href={l.href}
+            className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+              l.active
+                ? 'bg-gold-500/14 text-gold-300 before:absolute before:-left-4 before:top-1/2 before:h-5 before:w-[3px] before:-translate-y-1/2 before:rounded-r before:bg-gold-500'
+                : 'text-navy-300 hover:bg-white/[0.04] hover:text-white'
+            }`}
+          >
+            {l.label}
+            {l.badge ? (
+              <span className="ml-auto rounded-full bg-gold-500 px-2 py-0.5 text-[10px] font-bold text-navy-950">{l.badge}</span>
+            ) : null}
+          </Link>
+        ))}
+
+        <div className="flex-1" />
+
+        <div className="mb-3 rounded-xl border border-gold-400/20 bg-gradient-to-br from-gold-500/[0.13] to-gold-500/[0.03] p-4">
+          <div className="flex items-center justify-between">
+            <span className="font-serif text-[15px] font-bold">{bundle ? bundle.name : 'No bundle'}</span>
+            {bundle ? (
+              <span className="rounded-full bg-gold-500/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-gold-300">Owned</span>
+            ) : null}
+          </div>
+          <p className="mb-3 mt-2 text-xs leading-relaxed text-navy-400">
+            {bundle ? `${bundle.tagline} · lifetime access` : 'Pay once, learn forever. Pick a bundle to unlock the full library.'}
+          </p>
+          <Link
+            href="/memberships"
+            className="block rounded-lg bg-gradient-to-br from-gold-300 to-gold-500 py-2 text-center text-sm font-bold text-navy-950 transition-transform hover:-translate-y-0.5"
+          >
+            {bundle ? 'Upgrade →' : 'Browse bundles →'}
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-3 rounded-xl px-2 py-2">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-navy-700 bg-navy-800 font-serif font-semibold text-gold-300">
+            {initial}
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-[13.5px] font-semibold leading-tight">{userName ?? 'Student'}</p>
+            <p className="truncate text-[11px] text-navy-500">{email}</p>
           </div>
         </div>
-      </div>
+      </aside>
 
-      <div className="max-w-6xl mx-auto px-5 sm:px-6 md:px-10 py-10 md:py-14 space-y-10 md:space-y-12">
-        {/* Continue learning + Telegram CTA */}
-        <div className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <h2 className="font-serif text-xl sm:text-2xl text-white mb-4">Continue learning</h2>
+      {/* ── Main ── */}
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b border-navy-800 bg-navy-950/80 px-5 backdrop-blur md:px-8">
+          <div>
+            <p className="font-serif text-base font-semibold">Dashboard</p>
+            <p className="text-[11.5px] text-navy-500">{today}</p>
+          </div>
+          <div className="ml-auto">
+            <DashboardSignOut />
+          </div>
+        </header>
+
+        <div className="mx-auto w-full max-w-5xl space-y-10 px-5 py-8 md:px-8 md:py-10">
+          {/* Welcome + stats */}
+          <section>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold-400">Dashboard</p>
+            <h1 className="mb-2 font-serif text-3xl leading-tight md:text-4xl">
+              Welcome back, <span className="text-gold-400">{firstName ?? 'trader'}</span>.
+            </h1>
+            <p className="max-w-xl text-navy-300">
+              Jump back into your lesson, or browse the courses in your package below.
+            </p>
+
+            <div className="mt-7 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
+              {stats.map((s) => (
+                <div key={s.k} className="rounded-xl border border-navy-800 bg-navy-900 p-4">
+                  <p className="font-serif text-2xl text-gold-400 tabular-nums sm:text-3xl">{s.v}</p>
+                  <p className="mt-1 text-[11px] uppercase tracking-wider text-navy-400">{s.k}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Pick up where you left off */}
+          <section>
+            <h2 className="mb-4 font-serif text-xl text-white sm:text-2xl">Pick up where you left off</h2>
             {continueLearning ? (
               <Link
                 href={`/learn/${continueLearning.enrollment.course.slug}`}
-                className="press group block bg-navy-900 border border-navy-800 hover:border-gold-400 rounded-2xl overflow-hidden transition-colors"
+                className="press group block overflow-hidden rounded-2xl border border-gold-400/25 bg-gradient-to-br from-navy-900 to-[#0c1020] transition-colors hover:border-gold-400"
               >
-                <div className="grid sm:grid-cols-[200px_1fr]">
-                  <div className="relative aspect-[16/10] sm:aspect-auto sm:h-full bg-navy-800 overflow-hidden">
+                <div className="grid sm:grid-cols-[260px_1fr]">
+                  <div className="relative aspect-[16/10] overflow-hidden border-navy-800 bg-navy-800 sm:aspect-auto sm:border-r">
                     <Image
                       src={continueLearning.enrollment.course.image || `/images/courses/${continueLearning.enrollment.course.slug}.jpg`}
                       alt={continueLearning.enrollment.course.title}
                       fill
-                      sizes="(min-width: 640px) 200px, 100vw"
-                      className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                      sizes="(min-width: 640px) 260px, 100vw"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-navy-950/40 to-transparent" />
+                    <div className="absolute inset-0 grid place-items-center bg-navy-950/30">
+                      <span className="grid h-14 w-14 place-items-center rounded-full bg-gold-500 text-navy-950 shadow-[0_10px_30px_-8px_rgba(201,168,76,0.7)] transition-transform group-hover:scale-110">
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="ml-1 h-6 w-6"><path d="M8 5v14l11-7z" /></svg>
+                      </span>
+                    </div>
                   </div>
-                  <div className="p-5 sm:p-6">
-                    <p className="text-[11px] text-gold-400 font-semibold tracking-[0.15em] uppercase mb-2">
+                  <div className="p-6">
+                    <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-gold-400">
                       {continueLearning.enrollment.course.level} · {continueLearning.enrollment.course.duration}
                     </p>
-                    <h3 className="font-serif text-xl text-white leading-snug mb-2">
-                      {continueLearning.enrollment.course.title}
-                    </h3>
-                    <p className="text-navy-400 text-sm mb-4 line-clamp-2">
-                      {continueLearning.enrollment.course.description}
-                    </p>
-                    <div className="mb-3">
-                      <div className="flex items-center justify-between text-xs text-navy-400 mb-1.5">
-                        <span>{continueLearning.done} of {continueLearning.total} lessons</span>
-                        <span className="tabular-nums">{continueLearning.progress}%</span>
+                    <h3 className="mb-2 font-serif text-xl leading-snug text-white">{continueLearning.enrollment.course.title}</h3>
+                    <p className="mb-5 line-clamp-2 text-sm text-navy-400">{continueLearning.enrollment.course.description}</p>
+                    <div className="mb-5 flex items-center gap-3">
+                      <div className="h-2 flex-1 overflow-hidden rounded-full bg-white/10">
+                        <div className="h-full rounded-full bg-gradient-to-r from-gold-500 to-gold-300" style={{ width: `${continueLearning.progress}%` }} />
                       </div>
-                      <div className="h-1.5 bg-navy-800 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gold-500 rounded-full transition-[width] duration-500"
-                          style={{ width: `${continueLearning.progress}%` }}
-                        />
-                      </div>
+                      <span className="font-mono text-sm text-navy-200">{continueLearning.progress}%</span>
                     </div>
-                    <span className="inline-flex items-center gap-2 text-sm text-gold-400 font-semibold">
-                      {continueLearning.progress === 0
-                        ? 'Start learning'
-                        : continueLearning.progress === 100
-                          ? 'Review course'
-                          : 'Continue learning'}
-                      <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">→</span>
+                    <span className="inline-flex items-center gap-2 rounded-md bg-gradient-to-br from-gold-300 to-gold-500 px-5 py-2.5 text-sm font-bold text-navy-950">
+                      {continueLearning.progress === 0 ? 'Start learning' : continueLearning.progress === 100 ? 'Review course' : 'Resume lesson'}
+                      <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
                     </span>
                   </div>
                 </div>
               </Link>
             ) : (
-              <div className="bg-navy-900 border border-navy-800 rounded-2xl p-6 sm:p-8">
-                <p className="text-white font-semibold mb-2">No courses yet.</p>
-                <p className="text-navy-400 text-sm mb-5">
-                  Pick a bundle or a single course to start building a structured trading process.
-                </p>
+              <div className="rounded-2xl border border-navy-800 bg-navy-900 p-6 sm:p-8">
+                <p className="mb-2 font-semibold text-white">No courses yet.</p>
+                <p className="mb-5 text-sm text-navy-400">Pick a bundle or a single course to start building a structured trading process.</p>
                 <div className="flex flex-wrap gap-3">
-                  <Link
-                    href="/memberships"
-                    className="press inline-flex items-center justify-center px-5 py-3 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
-                  >
-                    Browse bundles →
-                  </Link>
-                  <Link
-                    href="/courses"
-                    className="press inline-flex items-center justify-center px-5 py-3 rounded-md border border-navy-700 text-navy-200 hover:border-gold-400 hover:text-gold-400 transition-colors"
-                  >
-                    All courses
-                  </Link>
+                  <Link href="/memberships" className="press inline-flex items-center justify-center rounded-md bg-gold-500 px-5 py-3 font-semibold text-navy-950 hover:bg-gold-400 transition-colors">Browse bundles →</Link>
+                  <Link href="/courses" className="press inline-flex items-center justify-center rounded-md border border-navy-700 px-5 py-3 text-navy-200 hover:border-gold-400 hover:text-gold-400 transition-colors">All courses</Link>
                 </div>
               </div>
             )}
-          </div>
+          </section>
 
-          {/* Telegram CTA */}
-          <aside className="bg-gradient-to-br from-navy-900 via-navy-900 to-gold-500/10 border border-gold-400/30 rounded-2xl p-6 md:p-7 flex flex-col">
-            <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-3">Telegram channel</p>
-            <h3 className="font-serif text-xl text-white mb-2 leading-snug">
-              Daily setups, live calls, and the Maono community.
-            </h3>
-            <p className="text-navy-300 text-sm mb-6 flex-1">
-              Every Maono student gets free access to the Telegram channel. Tap in for real-time breakdowns.
-            </p>
-            <Link
-              href={TELEGRAM_CHANNEL_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="press w-full inline-flex items-center justify-center px-5 py-3.5 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
-            >
-              Join the Telegram channel →
-            </Link>
-          </aside>
-        </div>
+          {/* Your courses */}
+          {enrollments.length > 0 && (
+            <section>
+              <div className="mb-5 flex items-end justify-between gap-3">
+                <h2 className="font-serif text-xl text-white sm:text-2xl">Your courses</h2>
+                <Link href="/my-courses" className="press text-sm text-navy-300 transition-colors hover:text-gold-400">Full library →</Link>
+              </div>
+              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {inProgress.map(({ enrollment, total, progress }) => {
+                  const course = enrollment.course
+                  return (
+                    <li key={enrollment.id}>
+                      <Link
+                        href={`/learn/${course.slug}`}
+                        className="press group flex h-full flex-col overflow-hidden rounded-xl border border-navy-800 bg-navy-900 transition-transform hover:-translate-y-1 hover:border-gold-400/60"
+                      >
+                        <div className="relative aspect-[16/9] overflow-hidden border-b border-navy-800 bg-navy-800">
+                          <Image
+                            src={course.image || `/images/courses/${course.slug}.jpg`}
+                            alt={course.title}
+                            fill
+                            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                          />
+                        </div>
+                        <div className="flex flex-1 flex-col p-4">
+                          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-gold-400">{course.level}</p>
+                          <h3 className="mb-3 mt-1.5 line-clamp-2 font-serif text-[15.5px] leading-snug text-white">{course.title}</h3>
+                          <div className="mt-auto">
+                            <div className="mb-2 flex items-center justify-between text-xs text-navy-400">
+                              <span>{total} lessons</span>
+                              <span className="tabular-nums">{progress}%</span>
+                            </div>
+                            <div className="h-1.5 overflow-hidden rounded-full bg-white/10">
+                              <div className="h-full rounded-full bg-gradient-to-r from-gold-500 to-gold-300" style={{ width: `${progress}%` }} />
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+          )}
 
-        {/* Bundle / plan strip */}
-        <div className="bg-navy-900 border border-navy-800 rounded-2xl p-6 md:p-7">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-2">Your plan</p>
-              {bundle ? (
-                <>
-                  <h3 className="font-serif text-2xl text-white mb-1">{bundle.name}</h3>
-                  <p className="text-navy-400 text-sm">{bundle.tagline} · lifetime access</p>
-                </>
-              ) : (
-                <>
-                  <h3 className="font-serif text-2xl text-white mb-1">No bundle yet</h3>
-                  <p className="text-navy-400 text-sm">Pay once, learn forever. Pick a bundle to unlock the full library.</p>
-                </>
-              )}
-            </div>
-            <Link
-              href="/memberships"
-              className="press inline-flex items-center justify-center px-5 py-3 rounded-md border border-navy-700 text-navy-200 hover:border-gold-400 hover:text-gold-400 transition-colors"
-            >
-              {bundle ? 'View all bundles' : 'Browse bundles'} →
-            </Link>
-          </div>
-        </div>
-
-        {/* All enrolled courses */}
-        {enrollments.length > 0 && (
-          <div>
-            <div className="flex items-end justify-between flex-wrap gap-3 mb-5">
-              <h2 className="font-serif text-xl sm:text-2xl text-white">All enrolled courses</h2>
+          {/* Telegram */}
+          <section className="rounded-2xl border border-gold-400/30 bg-gradient-to-br from-navy-900 via-navy-900 to-gold-500/10 p-6 md:p-7">
+            <div className="flex flex-wrap items-center justify-between gap-5">
+              <div className="max-w-lg">
+                <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-gold-400">Telegram channel</p>
+                <h3 className="mb-1 font-serif text-xl leading-snug text-white">Daily setups, live calls, and the Maono community.</h3>
+                <p className="text-sm text-navy-300">Every Maono student gets free access. Tap in for real-time breakdowns.</p>
+              </div>
               <Link
-                href="/my-courses"
-                className="press text-sm text-navy-300 hover:text-gold-400 transition-colors"
+                href={TELEGRAM_CHANNEL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="press inline-flex items-center justify-center rounded-md bg-gold-500 px-6 py-3.5 font-semibold text-navy-950 hover:bg-gold-400 transition-colors"
               >
-                Full library →
+                Join the channel →
               </Link>
             </div>
-            <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
-              {inProgress.map(({ enrollment, total, progress }) => {
-                const course = enrollment.course
-                return (
-                  <li key={enrollment.id}>
-                    <Link
-                      href={`/learn/${course.slug}`}
-                      className="press group block bg-navy-900 border border-navy-800 hover:border-gold-400 rounded-xl p-5 transition-colors h-full"
-                    >
-                      <p className="text-[10px] text-gold-400 font-semibold tracking-[0.15em] uppercase mb-2">
-                        {course.level}
-                      </p>
-                      <h3 className="font-serif text-base text-white leading-snug mb-3 line-clamp-2">
-                        {course.title}
-                      </h3>
-                      <div className="flex items-center justify-between text-xs text-navy-400 mb-1.5">
-                        <span>{total} lessons</span>
-                        <span className="tabular-nums">{progress}%</span>
-                      </div>
-                      <div className="h-1 bg-navy-800 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gold-500 rounded-full"
-                          style={{ width: `${progress}%` }}
-                        />
-                      </div>
-                    </Link>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        )}
-
-        {/* Quick links */}
-        <div>
-          <h2 className="font-serif text-xl sm:text-2xl text-white mb-5">Quick links</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            {[
-              { href: '/courses', label: 'Browse courses', sub: 'Add to your library' },
-              { href: '/resources', label: 'Free resources', sub: 'Guides & cheatsheets' },
-              { href: '/blog', label: 'Trading blog', sub: 'Insights from the desk' },
-              { href: '/memberships', label: 'Course bundles', sub: 'Pay once, learn forever' },
-            ].map((q) => (
-              <Link
-                key={q.href}
-                href={q.href}
-                className="press group block bg-navy-900 border border-navy-800 hover:border-gold-400 rounded-xl p-5 transition-colors"
-              >
-                <p className="font-semibold text-white mb-1 group-hover:text-gold-400 transition-colors">{q.label}</p>
-                <p className="text-xs text-navy-400">{q.sub}</p>
-              </Link>
-            ))}
-          </div>
+          </section>
         </div>
       </div>
-    </section>
+    </div>
   )
 }

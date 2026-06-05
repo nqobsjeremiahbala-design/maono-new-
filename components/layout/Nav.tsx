@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { Logo } from './Logo'
 import { getAllEnrollments } from '@/lib/enrollment'
@@ -17,6 +18,7 @@ export function Nav() {
   const [open, setOpen] = useState(false)
   const [hasEnrollments, setHasEnrollments] = useState(false)
   const { data: session, status } = useSession()
+  const pathname = usePathname()
 
   useEffect(() => {
     function sync() {
@@ -30,6 +32,9 @@ export function Nav() {
       window.removeEventListener('storage', sync)
     }
   }, [])
+
+  // The dashboard has its own standalone app shell + sidebar.
+  if (pathname?.startsWith('/dashboard')) return null
 
   const isLoggedIn = status === 'authenticated' && session?.user
   const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN'

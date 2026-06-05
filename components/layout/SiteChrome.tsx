@@ -6,7 +6,10 @@ import { SignalsPopup } from './SignalsPopup'
 
 export function SiteChrome() {
   const pathname = usePathname()
-  const hideAll = pathname?.startsWith('/learn/') || pathname?.startsWith('/admin')
+  const hideAll =
+    pathname?.startsWith('/learn/') ||
+    pathname?.startsWith('/admin') ||
+    pathname?.startsWith('/dashboard')
   if (hideAll) return null
 
   const suppressPopup =

@@ -1,0 +1,41 @@
+'use server'
+
+import { auth } from '@/lib/auth'
+import { prisma } from '@/lib/db'
+import { CATALOG, enrollSlugsForItem } from '@/lib/checkout'
+
+// Demo checkout: no real PSP. Records a COMPLETE purchase and enrols the buyer in
+// every course the item unlocks, so the courses appear on their dashboard.
+export async function completeCheckout(itemKey: string): Promise<{ ok: boolean; error?: string }> {
+  const session = await auth()
+  if (!session?.user) return { ok: false, error: 'Not authenticated' }
+
+  const userId = (session.user as { id: string }).id
+  const item = CATALOG[itemKey]
+  if (!item) return { ok: false, error: 'Unknown item' }
+
+  const slugs = enrollSlugsForItem(itemKey)
+  const courses = slugs.length
+    ? await prisma.course.findMany({ where: { slug: { in: slugs } }, select: { id: true } })
+    : []
+
+  await prisma.purchase.create({
+    data: {
+      userId,
+      itemKey,
+      amountCents: Math.round(item.price * 100),
+      status: 'COMPLETE',
+      paymentMethod: 'demo',
+    },
+  })
+
+  for (const c of courses) {
+    await prisma.enrollment.upsert({
+      where: { userId_courseId: { userId, courseId: c.id } },
+      create: { userId, courseId: c.id },
+      update: {},
+    })
+  }
+
+  return { ok: true }
+}
