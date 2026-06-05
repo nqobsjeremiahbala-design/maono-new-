@@ -17,10 +17,13 @@ function readMdx(dir: string, slug: string) {
 
 function getSlugs(dir: string): string[] {
   const folder = path.join(contentDir, dir)
-  if (!fs.existsSync(folder)) return []
-  return fs.readdirSync(folder)
-    .filter(f => f.endsWith('.mdx'))
-    .map(f => f.replace('.mdx', ''))
+  const exists = fs.existsSync(folder)
+  const slugs = exists
+    ? fs.readdirSync(folder).filter(f => f.endsWith('.mdx')).map(f => f.replace('.mdx', ''))
+    : []
+  // Build-time diagnostic: surfaces in CI logs why blog/resources can read empty.
+  console.log(`[content] dir=${dir} cwd=${process.cwd()} folder=${folder} exists=${exists} count=${slugs.length}`)
+  return slugs
 }
 
 export function getCourses(): Course[] {
