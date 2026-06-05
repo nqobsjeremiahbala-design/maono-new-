@@ -1,49 +1,71 @@
+'use client'
+import { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { BROKER_OF_CHOICE } from '@/lib/links'
 
 export function BrokerOfChoice() {
+  const ref = useRef<HTMLElement>(null)
+  const raf = useRef(0)
+
+  function handleMove(e: React.MouseEvent<HTMLElement>) {
+    const el = ref.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    cancelAnimationFrame(raf.current)
+    raf.current = requestAnimationFrame(() => {
+      el.style.setProperty('--mx', `${x}px`)
+      el.style.setProperty('--my', `${y}px`)
+    })
+  }
+
   return (
-    <section className="relative overflow-hidden bg-navy-950 py-16 md:py-24 px-5 sm:px-6 border-y border-white/5">
-      {/* Subtle warm "lit from above" gold glow behind the heading */}
+    <section
+      ref={ref}
+      onMouseMove={handleMove}
+      onMouseEnter={() => ref.current?.style.setProperty('--glow', '1')}
+      onMouseLeave={() => ref.current?.style.setProperty('--glow', '0')}
+      className="broker-spotlight group relative overflow-hidden bg-navy-950 py-16 md:py-24 px-5 sm:px-6 border-y border-white/5"
+    >
+      {/* Static warm gold glow behind the heading */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 z-0"
         style={{ background: 'radial-gradient(ellipse 700px 350px at 50% 35%, rgba(212,160,23,0.06) 0%, transparent 70%)' }}
       />
 
-      <div className="relative max-w-3xl mx-auto text-center">
-        {/* MGM logo — single clean white card (the artwork already sits on white) */}
+      <div className="relative z-10 max-w-3xl mx-auto text-center">
+        {/* MGM logo — single clean white card; border brightens with mouse proximity */}
         <div className="flex justify-center mb-9">
           <Image
             src="/images/logo/mgm-broker-logo.jpeg"
             alt={`${BROKER_OF_CHOICE.name} logo`}
-            width={360}
-            height={150}
-            className="h-[132px] md:h-[168px] w-auto object-contain rounded-2xl ring-1 ring-gold-500/25 shadow-[0_0_0_1px_rgba(212,160,23,0.15),0_8px_40px_rgba(212,160,23,0.12)]"
+            width={420}
+            height={175}
+            className="h-[160px] w-auto rounded-2xl object-contain shadow-[0_0_0_1px_rgba(212,160,23,0.15),0_8px_40px_rgba(212,160,23,0.12)] ring-1 ring-gold-500/25 transition-[box-shadow] duration-300 group-hover:ring-gold-500/55 md:h-[204px]"
           />
         </div>
 
-        <p className="text-gold-500 text-xs font-semibold tracking-[0.2em] uppercase mb-5">
+        <p className="mb-5 text-sm font-bold uppercase tracking-[0.22em] text-gold-500 sm:text-base">
           Broker of Choice
         </p>
 
-        <h2 className="font-serif font-extrabold text-5xl sm:text-6xl md:text-7xl text-white leading-[1.03] mb-6">
+        <h2 className="mb-6 font-serif text-5xl font-extrabold leading-[1.03] text-white sm:text-6xl md:text-7xl">
           {BROKER_OF_CHOICE.name}
         </h2>
 
-        {/* FSCA Regulated — white copy (not a card), with a slow pulsing gold dot */}
-        <div className="flex items-center justify-center gap-2.5 mb-7">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-gold-500 broker-pulse" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-gold-500" />
+        {/* FSCA Regulated — prominent white copy (not a card) with a pulsing gold dot */}
+        <div className="mb-8 flex items-center justify-center gap-3">
+          <span className="relative flex h-3 w-3">
+            <span className="broker-pulse absolute inline-flex h-full w-full rounded-full bg-gold-500" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-gold-500" />
           </span>
-          <span className="text-white font-semibold tracking-wide text-sm sm:text-base">FSCA Regulated</span>
+          <span className="text-lg font-bold uppercase tracking-[0.12em] text-white sm:text-xl">FSCA Regulated</span>
         </div>
 
-        <p className="text-navy-300 text-base sm:text-lg max-w-xl mx-auto">
-          {BROKER_OF_CHOICE.blurb}
-        </p>
+        <p className="mx-auto max-w-xl text-base text-navy-300 sm:text-lg">{BROKER_OF_CHOICE.blurb}</p>
 
         {/* Gold gradient separator */}
         <div
@@ -52,15 +74,15 @@ export function BrokerOfChoice() {
           style={{ background: 'linear-gradient(90deg, transparent, #c9a84c, transparent)' }}
         />
 
-        <ul className="space-y-3.5 mb-10 max-w-md mx-auto text-left border-l-2 border-gold-500/20 pl-4">
+        <ul className="mx-auto mb-10 max-w-md space-y-3.5 border-l-2 border-gold-500/20 pl-4 text-left">
           {[
             'Tight institutional spreads',
             'Fast execution, low slippage',
             'ZAR-friendly funding & withdrawals',
             'Trusted by the Maono community',
-          ].map(item => (
-            <li key={item} className="flex items-center gap-3 text-[15px] sm:text-base text-navy-100">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500/12 text-gold-500 text-sm font-bold">
+          ].map((item) => (
+            <li key={item} className="flex items-center gap-3 text-[15px] text-navy-100 sm:text-base">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500/12 text-sm font-bold text-gold-500">
                 ✓
               </span>
               {item}
@@ -68,12 +90,12 @@ export function BrokerOfChoice() {
           ))}
         </ul>
 
-        <div className="flex flex-wrap gap-4 justify-center">
+        <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={BROKER_OF_CHOICE.signupUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="press inline-flex h-[52px] w-[220px] items-center justify-center rounded-md bg-gold-500 text-navy-950 font-bold text-base shadow-lg transition-all duration-200 hover:brightness-110 hover:scale-[1.02]"
+            className="press inline-flex h-[52px] w-[220px] items-center justify-center rounded-md bg-gold-500 text-base font-bold text-navy-950 shadow-lg transition-all duration-200 hover:scale-[1.02] hover:brightness-110"
           >
             Open a trading account →
           </Link>
@@ -81,7 +103,7 @@ export function BrokerOfChoice() {
             href={BROKER_OF_CHOICE.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="press inline-flex h-[52px] w-[220px] items-center justify-center rounded-md border border-gold-500/50 text-gold-500 font-semibold transition-colors hover:bg-gold-500/[0.08]"
+            className="press inline-flex h-[52px] w-[220px] items-center justify-center rounded-md border border-gold-500/50 font-semibold text-gold-500 transition-colors hover:bg-gold-500/[0.08]"
           >
             Visit {BROKER_OF_CHOICE.name.split(' ')[0]} site
           </Link>

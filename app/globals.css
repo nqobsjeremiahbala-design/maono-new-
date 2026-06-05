@@ -201,3 +201,20 @@
   50% { transform: scale(1.4); opacity: 0.4; }
 }
 .broker-pulse { animation: broker-pulse 2s ease-in-out infinite; }
+
+/* Broker section: white spotlight that follows the cursor (vars set in JS via rAF) */
+.broker-spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    600px circle at var(--mx, 50%) var(--my, 30%),
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 30%,
+    transparent 70%
+  );
+  opacity: var(--glow, 0);
+  transition: opacity 0.4s ease;
+}

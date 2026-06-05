@@ -1,10 +1,9 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { Logo } from './Logo'
-import { getAllEnrollments } from '@/lib/enrollment'
 
 const links = [
   { href: '/', label: 'Home' },
@@ -16,22 +15,8 @@ const links = [
 
 export function Nav() {
   const [open, setOpen] = useState(false)
-  const [hasEnrollments, setHasEnrollments] = useState(false)
   const { data: session, status } = useSession()
   const pathname = usePathname()
-
-  useEffect(() => {
-    function sync() {
-      setHasEnrollments(getAllEnrollments().length > 0)
-    }
-    sync()
-    window.addEventListener('maono-enrollment-change', sync)
-    window.addEventListener('storage', sync)
-    return () => {
-      window.removeEventListener('maono-enrollment-change', sync)
-      window.removeEventListener('storage', sync)
-    }
-  }, [])
 
   // The dashboard has its own standalone app shell + sidebar.
   if (pathname?.startsWith('/dashboard')) return null
@@ -55,7 +40,7 @@ export function Nav() {
               </Link>
             </li>
           ))}
-          {(hasEnrollments || isLoggedIn) && (
+          {isLoggedIn && (
             <li>
               <Link
                 href="/dashboard"
@@ -133,7 +118,7 @@ export function Nav() {
                 </Link>
               </li>
             ))}
-            {(hasEnrollments || isLoggedIn) && (
+            {isLoggedIn && (
               <li>
                 <Link
                   href="/dashboard"
