@@ -29,7 +29,11 @@
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",
-      "id": "cf503cb8448a455d8c64fb69d3081df8"
+      "id": "cf503cb8448a455d8c64fb69d3081df8",
+      // Placeholder only — used by wrangler's local emulation so `wrangler deploy`
+      // (OpenNext) doesn't error in CI. Production uses the real DB via the `id` above;
+      // local dev overrides this via CLOUDFLARE_HYPERDRIVE_LOCAL_CONNECTION_STRING_HYPERDRIVE.
+      "localConnectionString": "postgresql://placeholder:placeholder@localhost:5432/placeholder"
     }
   ]
 }
