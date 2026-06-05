@@ -5,6 +5,8 @@ import {
   mapOzowStatus,
   type OzowWebhookPayload,
 } from '@/lib/payments/ozow'
+import { CATALOG } from '@/lib/checkout'
+import { sendPurchaseEmail, sendUpgradeEmail, sendPaymentFailedEmail } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   let payload: OzowWebhookPayload
@@ -59,6 +61,18 @@ export async function POST(request: NextRequest) {
   }
 
   console.log(`[ozow-webhook] ${purchaseId} → ${status} (Ozow: ${payload.Status})`)
+
+  // Notify the customer by email (best-effort; no-ops if RESEND_API_KEY unset).
+  const buyer = await prisma.user.findUnique({ where: { id: purchase.userId }, select: { email: true } })
+  const itemLabel = CATALOG[purchase.itemKey]?.label ?? 'your order'
+  if (buyer?.email) {
+    if (status === 'COMPLETE') {
+      if (purchase.itemKey.startsWith('bundle-')) await sendUpgradeEmail(buyer.email, itemLabel)
+      else await sendPurchaseEmail(buyer.email, itemLabel)
+    } else if (status === 'CANCELLED' || status === 'ERROR') {
+      await sendPaymentFailedEmail(buyer.email, itemLabel)
+    }
+  }
 
   // 4. On successful payment, grant enrollment (idempotent via upsert).
   if (status === 'COMPLETE' && purchase.courseId) {

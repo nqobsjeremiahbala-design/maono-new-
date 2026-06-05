@@ -18,6 +18,8 @@ export function SiteChrome() {
     pathname?.startsWith('/my-courses') ||
     pathname?.startsWith('/login') ||
     pathname?.startsWith('/register') ||
+    pathname?.startsWith('/forgot-password') ||
+    pathname?.startsWith('/reset-password') ||
     pathname?.startsWith('/dashboard')
 
   return (

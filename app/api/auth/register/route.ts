@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/db'
+import { sendWelcomeEmail } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,6 +36,9 @@ export async function POST(request: NextRequest) {
         phone,
       },
     })
+
+    // Welcome email (best-effort; no-ops if RESEND_API_KEY is unset).
+    await sendWelcomeEmail(email, name)
 
     return NextResponse.json({ id: user.id, email: user.email }, { status: 201 })
   } catch (error) {

@@ -3,6 +3,7 @@
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { CATALOG, enrollSlugsForItem } from '@/lib/checkout'
+import { sendPurchaseEmail, sendUpgradeEmail } from '@/lib/email'
 
 // Demo checkout: no real PSP. Records a COMPLETE purchase and enrols the buyer in
 // every course the item unlocks, so the courses appear on their dashboard.
@@ -35,6 +36,13 @@ export async function completeCheckout(itemKey: string): Promise<{ ok: boolean; 
       create: { userId, courseId: c.id },
       update: {},
     })
+  }
+
+  // Confirmation email (best-effort; bundles get the "plan upgrade" version).
+  const to = session.user.email
+  if (to) {
+    if (itemKey.startsWith('bundle-')) await sendUpgradeEmail(to, item.label)
+    else await sendPurchaseEmail(to, item.label)
   }
 
   return { ok: true }
