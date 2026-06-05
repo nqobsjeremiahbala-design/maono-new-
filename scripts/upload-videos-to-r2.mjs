@@ -12,6 +12,7 @@ import { execFileSync } from 'node:child_process'
 const ROOT = process.cwd()
 const VIDEO_DIR = join(ROOT, 'uploads', 'videos')
 const BUCKET = 'maono-media'
+const WRANGLER_BIN = join(ROOT, 'node_modules', 'wrangler', 'bin', 'wrangler.js')
 
 function walk(dir) {
   const out = []
@@ -45,10 +46,13 @@ for (const file of files) {
 
   process.stdout.write(`Uploading ${rel} (${(size / 1024 / 1024).toFixed(1)} MB) … `)
   try {
+    // Invoke wrangler's JS entry directly with `node` and shell:false so paths
+    // containing spaces (this project lives under "Maono Global Forex Trading")
+    // are passed through verbatim instead of being split by the shell.
     execFileSync(
-      'npx',
+      process.execPath, // the current node binary
       [
-        'wrangler',
+        WRANGLER_BIN,
         'r2',
         'object',
         'put',
@@ -57,7 +61,7 @@ for (const file of files) {
         `--content-type=${contentType}`,
         '--remote',
       ],
-      { stdio: ['ignore', 'ignore', 'inherit'], shell: process.platform === 'win32' },
+      { stdio: ['ignore', 'ignore', 'inherit'], shell: false },
     )
     console.log('done')
     uploaded++
