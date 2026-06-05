@@ -81,53 +81,53 @@ export default function MembershipsPage() {
           {BUNDLES.map(bundle => (
             <div
               key={bundle.name}
-              className={`relative rounded-xl p-6 flex flex-col ${
+              className={`relative rounded-xl p-6 flex flex-col text-navy-950 ${
                 bundle.highlighted
-                  ? 'bg-navy-950 text-white ring-2 ring-gold-500'
-                  : 'bg-white border border-navy-100'
+                  ? 'bg-gradient-to-br from-gold-200 via-gold-400 to-gold-500 ring-2 ring-navy-900 shadow-xl'
+                  : 'bg-white border border-navy-200'
               }`}
             >
               {bundle.ribbon && (
-                <span className="absolute -top-3 left-6 bg-gold-500 text-navy-950 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded">
+                <span className="absolute -top-3 left-6 bg-navy-950 text-gold-300 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow">
                   {bundle.ribbon}
                 </span>
               )}
-              <p className={`text-sm font-semibold mb-1 ${bundle.highlighted ? 'text-gold-400' : 'text-navy-500'}`}>
+              <p className="text-sm font-bold mb-1 text-navy-900">
                 {bundle.name}
               </p>
               {bundle.badge && (
-                <p className="text-[11px] font-bold uppercase tracking-wider text-gold-500 mb-2">{bundle.badge}</p>
+                <p className="text-[11px] font-bold uppercase tracking-wider text-navy-900 mb-2">{bundle.badge}</p>
               )}
               <div className="flex items-baseline gap-2 mb-1">
-                <p className={`font-serif text-3xl ${bundle.highlighted ? 'text-white' : 'text-navy-900'}`}>
+                <p className="font-serif font-bold text-3xl text-navy-950">
                   R{bundle.price.toLocaleString()}
                 </p>
                 {bundle.originalPrice && (
-                  <p className={`text-sm line-through ${bundle.highlighted ? 'text-navy-400' : 'text-navy-400'}`}>
+                  <p className={`text-sm line-through ${bundle.highlighted ? 'text-navy-900/55' : 'text-navy-400'}`}>
                     R{bundle.originalPrice.toLocaleString()}
                   </p>
                 )}
               </div>
-              <p className="text-xs text-navy-400 mb-4">Once-off · lifetime access</p>
-              <p className={`text-sm mb-5 ${bundle.highlighted ? 'text-navy-300' : 'text-navy-500'}`}>
+              <p className={`text-xs mb-4 ${bundle.highlighted ? 'text-navy-900/70' : 'text-navy-500'}`}>Once-off · lifetime access</p>
+              <p className={`text-sm mb-5 font-medium ${bundle.highlighted ? 'text-navy-900/90' : 'text-navy-700'}`}>
                 {bundle.description}
               </p>
               <ul className="space-y-2 flex-1 mb-6">
                 {bundle.courses.map(c => (
-                  <li key={c} className={`text-xs flex gap-2 ${bundle.highlighted ? 'text-navy-300' : 'text-navy-600'}`}>
-                    <span className="text-gold-500 shrink-0">✓</span> {c}
+                  <li key={c} className={`text-xs flex gap-2 font-medium ${bundle.highlighted ? 'text-navy-900/90' : 'text-navy-800'}`}>
+                    <span className="text-navy-900 shrink-0 font-bold">✓</span> {c}
                   </li>
                 ))}
-                <li className={`text-xs flex gap-2 font-semibold ${bundle.highlighted ? 'text-gold-400' : 'text-navy-900'}`}>
-                  <span className="text-gold-500 shrink-0">✓</span> Unlimited student support after completion
+                <li className="text-xs flex gap-2 font-bold text-navy-900">
+                  <span className="text-navy-900 shrink-0 font-bold">✓</span> Unlimited student support after completion
                 </li>
               </ul>
               <Link
                 href={`/checkout?item=bundle-${bundle.name.toLowerCase()}`}
-                className={`press inline-flex items-center justify-center w-full px-4 py-3 min-h-[44px] rounded-md text-sm font-semibold transition-colors ${
+                className={`press inline-flex items-center justify-center w-full px-4 py-3 min-h-[44px] rounded-md text-sm font-bold transition-colors ${
                   bundle.highlighted
-                    ? 'bg-gold-500 text-navy-950 hover:bg-gold-400'
-                    : 'border border-navy-700 text-navy-900 hover:bg-navy-950 hover:text-white'
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'border border-navy-800 text-navy-900 hover:bg-navy-950 hover:text-white'
                 }`}
               >
                 Buy {bundle.name} →

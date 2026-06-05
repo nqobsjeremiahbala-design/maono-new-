@@ -41,15 +41,15 @@ export function MembershipsPreview() {
     <section className="py-16 md:py-20 px-5 sm:px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10 md:mb-14">
-          <p className="text-gold-600 text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+          <p className="text-gold-600 text-sm sm:text-base font-semibold tracking-[0.2em] uppercase mb-3">
             Course Bundles
           </p>
           <h2 className="font-serif font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] text-navy-900 leading-[1.04] tracking-tight mb-4">
-            Once-off Course Bundles.<br className="hidden sm:block" />{' '}
-            <span className="text-gold-600">Lifetime access.</span>
+            Pay once.{' '}
+            <span className="text-gold-600">Learn forever.</span>
           </h2>
           <p className="text-navy-600 max-w-xl mx-auto text-lg sm:text-xl font-medium">
-            Pay once, learn forever — unlimited student support, no subscriptions.
+            Once-off course bundles, lifetime access, unlimited student support.
           </p>
         </div>
 
@@ -58,7 +58,7 @@ export function MembershipsPreview() {
             <Link
               key={t.name}
               href="/memberships"
-              className={`press group relative rounded-xl p-5 sm:p-6 border transition-all duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.03] hover:shadow-[0_24px_48px_-12px_rgba(201,168,76,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-900 focus-visible:ring-offset-2 text-navy-950 ${
+              className={`press group relative rounded-xl p-5 sm:p-6 border transition-all duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.03] hover:border-navy-950 hover:ring-2 hover:ring-navy-900 hover:shadow-[0_24px_48px_-12px_rgba(201,168,76,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-900 focus-visible:ring-offset-2 text-navy-950 ${
                 t.highlight
                   ? 'border-navy-900 ring-2 ring-navy-900 bg-gradient-to-br from-gold-200 via-gold-400 to-gold-500 shadow-xl sm:scale-[1.03]'
                   : 'border-gold-300 bg-gradient-to-br from-gold-300 to-gold-500'
