@@ -4,33 +4,28 @@ import Link from 'next/link'
 export function Logo({ variant = 'default' }: { variant?: 'default' | 'footer' }) {
   const isFooter = variant === 'footer'
 
-  // The brand mark is roughly square (442x382). In the header it scales with the
-  // viewport but stays within the existing nav height so the bar never grows.
-  // The wordmark stays legible because the source whitespace is trimmed tight.
-  const heightClass = isFooter
-    ? 'h-[112px]'
-    : 'h-[52px] md:h-[80px] lg:h-[96px]'
+  // Transparent brand marks — light (navy bull) for the white header, dark
+  // (white bull) for the navy footer — so there's never a white box behind it.
+  // The header scales with the viewport but stays within the existing nav
+  // height so the bar never grows.
+  const src = isFooter
+    ? '/images/logo/maono_forex_trading_logo_transparent_dark_site.png'
+    : '/images/logo/maono_forex_trading_logo_transparent_light_site.png'
 
-  const img = (
-    <Image
-      src="/images/logo/maono-forex-trading-logo.png"
-      alt="Maono Forex Trading"
-      width={442}
-      height={382}
-      priority={!isFooter}
-      className={`${heightClass} w-auto object-contain`}
-    />
-  )
+  const heightClass = isFooter
+    ? 'h-[120px]'
+    : 'h-[52px] md:h-[80px] lg:h-[96px]'
 
   return (
     <Link href="/" className="inline-flex items-center" aria-label="Maono Forex Trading">
-      {isFooter ? (
-        // The logo art is navy; on the dark footer it sits in a clean white badge
-        // so every part of the mark stays visible.
-        <span className="inline-flex rounded-xl bg-white p-3 shadow-sm">{img}</span>
-      ) : (
-        img
-      )}
+      <Image
+        src={src}
+        alt="Maono Forex Trading"
+        width={525}
+        height={463}
+        priority={!isFooter}
+        className={`${heightClass} w-auto object-contain`}
+      />
     </Link>
   )
 }

@@ -5,8 +5,25 @@ import { getLesson } from '@/lib/courseLessons'
 
 export const dynamic = 'force-dynamic'
 
-const IPFS_GATEWAY = 'https://ipfs.io/ipfs'
-const IPFS_ROOT_CID = 'QmSiZD35puBGmJCKew1znuG8PdHZSiLAgDFXgeJ6qZ7Jn8'
+// Videos live in the R2 bucket (bound as MEDIA_BUCKET) under `videos/<videoUrl>`.
+// In production (Cloudflare Workers) we stream from R2; in local dev we stream
+// from the raw files in `uploads/videos/<videoUrl>`.
+function r2Key(videoUrl: string) {
+  return `videos/${videoUrl}`
+}
+
+function parseRange(header: string | null): { offset?: number; length?: number; suffix?: number } | null {
+  if (!header) return null
+  const m = /bytes=(\d*)-(\d*)/.exec(header)
+  if (!m) return null
+  const startRaw = m[1]
+  const endRaw = m[2]
+  if (startRaw === '' && endRaw === '') return null
+  if (startRaw === '') return { suffix: parseInt(endRaw, 10) }
+  const offset = parseInt(startRaw, 10)
+  if (endRaw === '') return { offset }
+  return { offset, length: parseInt(endRaw, 10) - offset + 1 }
+}
 
 export async function GET(
   request: NextRequest,
@@ -40,35 +57,105 @@ export async function GET(
     return new Response('Not found', { status: 404 })
   }
 
-  // 4. Proxy the video from IPFS gateway
-  const ipfsUrl = `${IPFS_GATEWAY}/${IPFS_ROOT_CID}/${lesson.videoUrl}`
+  const rangeHeader = request.headers.get('range')
 
-  const headers: Record<string, string> = {}
-  const range = request.headers.get('range')
-  if (range) {
-    headers['Range'] = range
+  // 4a. Local dev: stream straight from the raw upload files.
+  if (process.env.NODE_ENV !== 'production') {
+    return serveFromLocalFile(lesson.videoUrl, rangeHeader)
   }
 
-  const ipfsRes = await fetch(ipfsUrl, { headers })
+  // 4b. Production: stream from R2.
+  return serveFromR2(r2Key(lesson.videoUrl), rangeHeader)
+}
 
-  if (!ipfsRes.ok && ipfsRes.status !== 206) {
+async function serveFromR2(key: string, rangeHeader: string | null): Promise<Response> {
+  const { getCloudflareContext } = await import('@opennextjs/cloudflare')
+  const bucket = getCloudflareContext()?.env?.MEDIA_BUCKET as
+    | {
+        get: (
+          k: string,
+          opts?: { range?: { offset?: number; length?: number; suffix?: number } },
+        ) => Promise<{
+          body: ReadableStream
+          size: number
+          range?: { offset?: number; length?: number; suffix?: number }
+          writeHttpMetadata: (h: Headers) => void
+        } | null>
+      }
+    | undefined
+
+  if (!bucket) {
+    return new Response('Video storage unavailable', { status: 503 })
+  }
+
+  const range = parseRange(rangeHeader)
+  const object = await bucket.get(key, range ? { range } : undefined)
+  if (!object) {
     return new Response('Video file not found', { status: 404 })
   }
 
-  const resHeaders = new Headers({
+  const headers = new Headers()
+  object.writeHttpMetadata(headers)
+  if (!headers.get('Content-Type')) headers.set('Content-Type', 'video/mp4')
+  headers.set('Accept-Ranges', 'bytes')
+  headers.set('Cache-Control', 'private, max-age=3600')
+
+  const total = object.size
+  if (rangeHeader && object.range) {
+    const offset = object.range.offset ?? 0
+    const length = object.range.length ?? total - offset
+    headers.set('Content-Range', `bytes ${offset}-${offset + length - 1}/${total}`)
+    headers.set('Content-Length', String(length))
+    return new Response(object.body, { status: 206, headers })
+  }
+
+  headers.set('Content-Length', String(total))
+  return new Response(object.body, { status: 200, headers })
+}
+
+async function serveFromLocalFile(videoUrl: string, rangeHeader: string | null): Promise<Response> {
+  const { createReadStream, statSync } = await import('node:fs')
+  const { join } = await import('node:path')
+  const { Readable } = await import('node:stream')
+
+  const filePath = join(process.cwd(), 'uploads', 'videos', videoUrl)
+  let size: number
+  try {
+    size = statSync(filePath).size
+  } catch {
+    return new Response('Video file not found', { status: 404 })
+  }
+
+  // Git LFS pointer files are tiny text stubs — surface a clear hint instead of
+  // streaming garbage to the <video> element.
+  if (size < 1024) {
+    return new Response(
+      'Video content not available locally. Run "git lfs pull" to fetch the real files.',
+      { status: 503 },
+    )
+  }
+
+  let start = 0
+  let end = size - 1
+  let status = 200
+  if (rangeHeader) {
+    const m = /bytes=(\d*)-(\d*)/.exec(rangeHeader)
+    if (m) {
+      if (m[1]) start = parseInt(m[1], 10)
+      if (m[2]) end = parseInt(m[2], 10)
+      if (end >= size) end = size - 1
+      status = 206
+    }
+  }
+
+  const nodeStream = createReadStream(filePath, { start, end })
+  const headers = new Headers({
     'Content-Type': 'video/mp4',
     'Accept-Ranges': 'bytes',
+    'Content-Length': String(end - start + 1),
     'Cache-Control': 'private, max-age=3600',
   })
+  if (status === 206) headers.set('Content-Range', `bytes ${start}-${end}/${size}`)
 
-  const contentLength = ipfsRes.headers.get('content-length')
-  if (contentLength) resHeaders.set('Content-Length', contentLength)
-
-  const contentRange = ipfsRes.headers.get('content-range')
-  if (contentRange) resHeaders.set('Content-Range', contentRange)
-
-  return new Response(ipfsRes.body, {
-    status: ipfsRes.status,
-    headers: resHeaders,
-  })
+  return new Response(Readable.toWeb(nodeStream) as unknown as ReadableStream, { status, headers })
 }

@@ -37,8 +37,13 @@ export function BrokerOfChoice() {
       />
 
       <div className="relative z-10 max-w-3xl mx-auto text-center">
+        {/* Heading — big and bold at the top */}
+        <h2 className="mb-9 font-serif text-5xl font-extrabold leading-[1.03] text-white sm:text-6xl md:text-7xl">
+          Broker of Choice
+        </h2>
+
         {/* MGM logo — transparent dark-site art; sits directly on the navy, big and centred */}
-        <div className="mb-10 flex justify-center">
+        <div className="mb-9 flex justify-center">
           <Image
             src="/images/logo/maono_global_markets_clean_dark_site.png"
             alt={`${BROKER_OF_CHOICE.name} logo`}
@@ -49,21 +54,13 @@ export function BrokerOfChoice() {
           />
         </div>
 
-        <p className="mb-5 text-sm font-bold uppercase tracking-[0.22em] text-gold-500 sm:text-base">
-          Broker of Choice
-        </p>
-
-        <h2 className="mb-6 font-serif text-5xl font-extrabold leading-[1.03] text-white sm:text-6xl md:text-7xl">
-          {BROKER_OF_CHOICE.name}
-        </h2>
-
-        {/* FSCA Regulated — prominent white copy (not a card) with a pulsing gold dot */}
+        {/* FSCA Regulated Broker — prominent white copy (not a card) with a pulsing gold dot */}
         <div className="mb-8 flex items-center justify-center gap-3">
-          <span className="relative flex h-3 w-3">
+          <span className="relative flex h-3.5 w-3.5">
             <span className="broker-pulse absolute inline-flex h-full w-full rounded-full bg-gold-500" />
-            <span className="relative inline-flex h-3 w-3 rounded-full bg-gold-500" />
+            <span className="relative inline-flex h-3.5 w-3.5 rounded-full bg-gold-500" />
           </span>
-          <span className="text-lg font-bold uppercase tracking-[0.12em] text-white sm:text-xl">FSCA Regulated</span>
+          <span className="text-xl font-bold uppercase tracking-[0.12em] text-white sm:text-2xl">FSCA Regulated Broker</span>
         </div>
 
         <p className="mx-auto max-w-xl text-base text-navy-300 sm:text-lg">{BROKER_OF_CHOICE.blurb}</p>
