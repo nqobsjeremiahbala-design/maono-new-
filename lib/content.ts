@@ -1,26 +1,19 @@
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
 import type { Course, BlogPost, Resource } from './types'
+// Content is baked into a JSON module at build time (scripts/gen-content.mjs) so it
+// ships inside the JS bundle — Cloudflare Workers have no filesystem at runtime.
+import contentData from './__content.generated.json'
 
-const contentDir = path.join(process.cwd(), 'content')
+type Entry = { data: Record<string, unknown>; content: string }
+const CONTENT = contentData as unknown as Record<string, Record<string, Entry>>
 
-function readMdx(dir: string, slug: string) {
-  const file = path.join(contentDir, dir, `${slug}.mdx`)
-  try {
-    const raw = fs.readFileSync(file, 'utf8')
-    return matter(raw)
-  } catch {
-    throw new Error(`Content file not found: ${dir}/${slug}.mdx`)
-  }
+function readMdx(dir: string, slug: string): Entry {
+  const entry = CONTENT[dir]?.[slug]
+  if (!entry) throw new Error(`Content file not found: ${dir}/${slug}.mdx`)
+  return entry
 }
 
 function getSlugs(dir: string): string[] {
-  const folder = path.join(contentDir, dir)
-  if (!fs.existsSync(folder)) return []
-  return fs.readdirSync(folder)
-    .filter(f => f.endsWith('.mdx'))
-    .map(f => f.replace('.mdx', ''))
+  return Object.keys(CONTENT[dir] ?? {})
 }
 
 export function getCourses(): Course[] {

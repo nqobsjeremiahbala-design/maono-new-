@@ -12,14 +12,12 @@ const nextConfig: NextConfig = {
   // Keep Prisma + the pg driver external so the OpenNext adapter can patch them for
   // workerd and so pg's runtime `require('pg-cloudflare')` survives bundling intact.
   serverExternalPackages: ['@prisma/client', '.prisma/client', '@prisma/adapter-pg', 'pg', 'pg-cloudflare'],
-  // Two dynamic-read cases the file tracer can't follow, so we force-include them in
-  // the Worker bundle:
-  //  - pg lazily require()s pg-cloudflare only on Workers.
-  //  - lib/content.ts reads content/*.mdx via fs at request time (pages re-render on
-  //    the Worker since there's no incremental cache); without this, blog/resources
-  //    read empty and their detail pages 404.
+  // pg lazily require()s pg-cloudflare only on Workers; that dynamic require isn't
+  // followed by the file tracer, so force-include the package in the bundle.
+  // (Content is baked into a JSON module via scripts/gen-content.mjs, so it no longer
+  // needs filesystem tracing.)
   outputFileTracingIncludes: {
-    '/**/*': ['./node_modules/pg-cloudflare/**/*', './content/**/*'],
+    '/**/*': ['./node_modules/pg-cloudflare/**/*'],
   },
   images: {
     formats: ['image/avif', 'image/webp'],
