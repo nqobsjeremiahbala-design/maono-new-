@@ -194,3 +194,10 @@
     transform: none;
   }
 }
+
+/* Broker "FSCA Regulated" live trust-signal dot */
+@keyframes broker-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.4; }
+}
+.broker-pulse { animation: broker-pulse 2s ease-in-out infinite; }

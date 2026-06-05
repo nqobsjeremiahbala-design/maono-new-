@@ -18,10 +18,24 @@ const LEVEL_COPY: Record<string, string> = {
   advanced: 'Advanced',
 }
 
+// Display order for the courses catalogue (client-requested).
+const COURSE_ORDER = [
+  'forex-trading-introduction',
+  'price-action-trading',
+  'trading-tools',
+  'trading-strategies',
+  'institutional-trading-concepts',
+  'trading-psychology',
+]
+
 export default function CoursesPage() {
-  const courses = getCourses()
-  const featured = courses.find(c => c.featured) ?? courses[0]
-  const rest = courses.filter(c => c.slug !== featured.slug)
+  const courses = [...getCourses()].sort((a, b) => {
+    const ia = COURSE_ORDER.indexOf(a.slug)
+    const ib = COURSE_ORDER.indexOf(b.slug)
+    return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib)
+  })
+  const featured = courses[0]
+  const rest = courses.slice(1)
 
   return (
     <>
