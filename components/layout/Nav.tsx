@@ -36,7 +36,7 @@ export function Nav() {
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-navy-100 shadow-sm">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 md:h-28 lg:h-32 flex items-center justify-between">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-24 lg:h-28 flex items-center justify-between">
         <Logo />
 
         <ul className="hidden md:flex items-center gap-6 lg:gap-7">

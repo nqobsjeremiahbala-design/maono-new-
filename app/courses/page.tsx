@@ -64,9 +64,6 @@ export default function CoursesPage() {
                 ))}
               </ul>
               <div className="flex flex-wrap items-center gap-4 mb-2">
-                <span className="font-serif text-3xl text-navy-900">
-                  R{featured.price.toLocaleString()}
-                </span>
                 <span className="text-navy-400 text-sm">
                   {featured.duration} · {featured.lessons} lessons
                 </span>
@@ -155,9 +152,6 @@ export default function CoursesPage() {
                       </h3>
                       <p className="text-navy-500 text-sm mb-5 line-clamp-2">{c.description}</p>
                       <div className="mt-auto flex items-center justify-between pt-4 border-t border-navy-100">
-                        <span className="text-navy-900 font-semibold">
-                          R{c.price.toLocaleString()}
-                        </span>
                         <span className="text-xs text-navy-400">{c.duration} · {c.lessons} lessons</span>
                       </div>
                     </div>

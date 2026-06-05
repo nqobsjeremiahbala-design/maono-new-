@@ -6,8 +6,8 @@ export function Logo({ variant = 'default' }: { variant?: 'default' | 'footer' }
   // so the brand reads on desktop without breaking the mobile nav height.
   const heightClass =
     variant === 'footer'
-      ? 'h-[96px]'
-      : 'h-[72px] md:h-[96px] lg:h-[112px]'
+      ? 'h-[128px]'
+      : 'h-[64px] md:h-[92px] lg:h-[108px]'
 
   return (
     <Link href="/" className="inline-flex items-center" aria-label="Maono Forex Trading">

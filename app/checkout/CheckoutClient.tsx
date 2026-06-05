@@ -53,15 +53,46 @@ const CATALOG: Record<string, Item> = {
   'course-trading-psychology': { label: 'Trading Psychology', sub: 'All levels', price: 1299, period: 'once' },
   'course-trading-strategies': { label: 'Trading Strategies', sub: 'Intermediate course', price: 1499, period: 'once' },
   'course-trading-tools': { label: 'Trading Tools', sub: 'Beginner course', price: 999, period: 'once' },
+
+  // Course bundles (linked from /memberships). Gold = the "Recommended" promo at R1999.
+  'bundle-bronze': { label: 'Bronze Bundle', sub: 'Forex Intro, Price Action & Trading Tools — lifetime access', price: 899, period: 'once' },
+  'bundle-silver': { label: 'Silver Bundle', sub: 'Adds risk & money management — lifetime access', price: 1299, period: 'once' },
+  'bundle-gold': { label: 'Gold Bundle', sub: 'Full course library — lifetime access', price: 1999, period: 'once' },
+  'bundle-platinum': { label: 'Platinum Bundle', sub: 'Full library + 1-on-1 mentorship', price: 6499, period: 'once' },
 }
 
 const FORMSPREE_ID = 'xpwzeygk'
 
 const COURSES_WITH_PLAYER = new Set(['forex-trading-introduction', 'trading-psychology'])
 
-function courseSlugFromKey(itemKey: string): string | null {
-  if (!itemKey.startsWith('course-')) return null
-  return itemKey.slice('course-'.length)
+// Every paid course slug on the site.
+const ALL_COURSES = [
+  'forex-trading-introduction',
+  'price-action-trading',
+  'trading-tools',
+  'trading-strategies',
+  'trading-psychology',
+  'institutional-trading-concepts',
+]
+
+// Which course(s) each purchasable item unlocks on the learner's dashboard.
+const ENROLL_SLUGS: Record<string, string[]> = {
+  'bundle-bronze': ['forex-trading-introduction', 'price-action-trading', 'trading-tools'],
+  'bundle-silver': ['forex-trading-introduction', 'price-action-trading', 'trading-tools', 'trading-strategies'],
+  'bundle-gold': ALL_COURSES,
+  'bundle-platinum': ALL_COURSES,
+  'path-beginner': ['forex-trading-introduction', 'trading-psychology', 'trading-tools'],
+  'path-intermediate': ['price-action-trading', 'trading-strategies', 'trading-psychology'],
+  'path-advanced': ['institutional-trading-concepts', 'trading-strategies', 'price-action-trading'],
+  'tier-bronze': ['forex-trading-introduction'],
+  'tier-silver': ['forex-trading-introduction', 'price-action-trading'],
+  'tier-gold': ALL_COURSES,
+  'tier-platinum': ALL_COURSES,
+}
+
+function enrollSlugsForItem(itemKey: string): string[] {
+  if (itemKey.startsWith('course-')) return [itemKey.slice('course-'.length)]
+  return ENROLL_SLUGS[itemKey] ?? []
 }
 
 export function CheckoutClient() {
@@ -125,11 +156,16 @@ export function CheckoutClient() {
     const name = String(data.get('name') || '')
     const email = String(data.get('email') || '')
 
-    const courseSlug = courseSlugFromKey(itemKey)
-    if (courseSlug) {
-      enroll(courseSlug, { name, email })
-      setEnrolledSlug(courseSlug)
+    const slugs = enrollSlugsForItem(itemKey)
+    if (slugs.length) {
+      slugs.forEach(s => enroll(s, { name, email }))
+      setEnrolledSlug(slugs[0])
     }
+
+    // Never transmit the (demo) card fields anywhere.
+    data.delete('card_number')
+    data.delete('card_expiry')
+    data.delete('card_cvc')
 
     try {
       await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
@@ -274,6 +310,26 @@ export function CheckoutClient() {
                   </label>
                 ))}
               </div>
+
+              {method === 'card' && (
+                <div className="mt-4 grid sm:grid-cols-2 gap-4 rounded-md border border-navy-100 bg-navy-50/40 p-4">
+                  <div className="sm:col-span-2">
+                    <label htmlFor="co-card" className="block text-sm font-medium text-navy-700 mb-1.5">Card number</label>
+                    <Input id="co-card" name="card_number" inputMode="numeric" autoComplete="off" placeholder="4242 4242 4242 4242" required />
+                  </div>
+                  <div>
+                    <label htmlFor="co-exp" className="block text-sm font-medium text-navy-700 mb-1.5">Expiry (MM/YY)</label>
+                    <Input id="co-exp" name="card_expiry" autoComplete="off" placeholder="08/28" required />
+                  </div>
+                  <div>
+                    <label htmlFor="co-cvc" className="block text-sm font-medium text-navy-700 mb-1.5">CVC</label>
+                    <Input id="co-cvc" name="card_cvc" inputMode="numeric" autoComplete="off" placeholder="123" required />
+                  </div>
+                  <p className="sm:col-span-2 text-xs text-navy-400">
+                    Demo checkout — no real payment is processed. Enter any numbers to complete the order.
+                  </p>
+                </div>
+              )}
             </div>
 
             <div>

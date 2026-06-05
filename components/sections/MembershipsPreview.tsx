@@ -23,7 +23,8 @@ const BUNDLES: Bundle[] = [
   },
   {
     name: 'Gold',
-    price: 'R3,500',
+    price: 'R1,999',
+    originalPrice: 'R3,500',
     blurb: 'Full course library, lifetime access.',
     badge: 'Recommended',
     highlight: true,
@@ -39,15 +40,16 @@ export function MembershipsPreview() {
   return (
     <section className="py-16 md:py-20 px-5 sm:px-6 bg-white">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-10 md:mb-12">
+        <div className="text-center mb-10 md:mb-14">
           <p className="text-gold-600 text-xs font-semibold tracking-[0.2em] uppercase mb-3">
             Course Bundles
           </p>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl text-navy-900 leading-tight mb-3">
-            Pay once. Learn forever.
+          <h2 className="font-serif font-bold text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] text-navy-900 leading-[1.04] tracking-tight mb-4">
+            Once-off Course Bundles.<br className="hidden sm:block" />{' '}
+            <span className="text-gold-600">Lifetime access.</span>
           </h2>
-          <p className="text-navy-500 max-w-xl mx-auto text-base sm:text-lg">
-            Once-off course bundles, lifetime access, unlimited student support.
+          <p className="text-navy-600 max-w-xl mx-auto text-lg sm:text-xl font-medium">
+            Pay once, learn forever — unlimited student support, no subscriptions.
           </p>
         </div>
 
@@ -56,44 +58,30 @@ export function MembershipsPreview() {
             <Link
               key={t.name}
               href="/memberships"
-              className={`press group relative rounded-xl p-5 sm:p-6 border-2 transition-all duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.03] hover:shadow-[0_20px_40px_-12px_rgba(201,168,76,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-400 focus-visible:ring-offset-2 ${
+              className={`press group relative rounded-xl p-5 sm:p-6 border transition-all duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.03] hover:shadow-[0_24px_48px_-12px_rgba(201,168,76,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy-900 focus-visible:ring-offset-2 text-navy-950 ${
                 t.highlight
-                  ? 'border-gold-500 bg-navy-950 text-white hover:border-gold-300 hover:bg-navy-900'
-                  : 'border-navy-100 bg-white hover:border-gold-500 hover:bg-[#fbf6e7]'
+                  ? 'border-navy-900 ring-2 ring-navy-900 bg-gradient-to-br from-gold-200 via-gold-400 to-gold-500 shadow-xl sm:scale-[1.03]'
+                  : 'border-gold-300 bg-gradient-to-br from-gold-300 to-gold-500'
               }`}
             >
               {t.badge && (
-                <span className="absolute -top-2.5 left-4 bg-gold-500 text-navy-950 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded shadow-sm transition-transform duration-200 group-hover:scale-110">
+                <span className="absolute -top-2.5 left-4 bg-navy-950 text-gold-400 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded shadow-md transition-transform duration-200 group-hover:scale-110">
                   {t.badge}
                 </span>
               )}
-              <p
-                className={`font-semibold text-sm mb-1 transition-colors ${
-                  t.highlight
-                    ? 'text-gold-400 group-hover:text-gold-300'
-                    : 'text-navy-900 group-hover:text-gold-600'
-                }`}
-              >
+              <p className="font-bold text-sm mb-1 text-navy-900">
                 {t.name}
               </p>
               <div className="flex items-baseline gap-2 mb-2">
-                <p
-                  className={`font-serif text-2xl sm:text-3xl transition-colors ${
-                    t.highlight ? 'text-white' : 'text-navy-900 group-hover:text-navy-950'
-                  }`}
-                >
+                <p className="font-serif font-bold text-2xl sm:text-3xl text-navy-950">
                   {t.price}
                 </p>
                 {t.originalPrice && (
-                  <p className="text-xs line-through text-navy-400">{t.originalPrice}</p>
+                  <p className="text-xs line-through text-navy-900/55">{t.originalPrice}</p>
                 )}
               </div>
-              <p className="text-[11px] uppercase tracking-wider mb-3 text-navy-400">Once-off</p>
-              <p
-                className={`text-xs leading-relaxed transition-colors ${
-                  t.highlight ? 'text-navy-200' : 'text-navy-500 group-hover:text-navy-700'
-                }`}
-              >
+              <p className="text-[11px] uppercase tracking-wider mb-3 font-semibold text-navy-900/70">Once-off</p>
+              <p className="text-xs leading-relaxed text-navy-900/80">
                 {t.blurb}
               </p>
             </Link>

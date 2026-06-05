@@ -34,7 +34,8 @@ const BUNDLES: Bundle[] = [
   },
   {
     name: 'Gold',
-    price: 3500,
+    price: 1999,
+    originalPrice: 3500,
     ribbon: 'Recommended',
     description: 'Full course library, lifetime access. Stack everything we teach in one bundle.',
     courses: [
