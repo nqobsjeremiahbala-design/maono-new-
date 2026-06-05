@@ -5,7 +5,7 @@ import {
   mapOzowStatus,
   type OzowWebhookPayload,
 } from '@/lib/payments/ozow'
-import { CATALOG } from '@/lib/checkout'
+import { CATALOG, enrollSlugsForItem } from '@/lib/checkout'
 import { sendPurchaseEmail, sendUpgradeEmail, sendPaymentFailedEmail } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
@@ -74,22 +74,26 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // 4. On successful payment, grant enrollment (idempotent via upsert).
-  if (status === 'COMPLETE' && purchase.courseId) {
-    await prisma.enrollment.upsert({
-      where: {
-        userId_courseId: {
-          userId: purchase.userId,
-          courseId: purchase.courseId,
-        },
-      },
-      update: {},
-      create: {
-        userId: purchase.userId,
-        courseId: purchase.courseId,
-      },
-    })
-    console.log(`[ozow-webhook] Enrolled user ${purchase.userId} in course ${purchase.courseId}`)
+  // 4. On successful payment, grant enrollment in every course the item unlocks
+  // (idempotent via upsert). Bundles/paths/tiers expand to multiple courses.
+  if (status === 'COMPLETE') {
+    const slugs = enrollSlugsForItem(purchase.itemKey)
+    const courses = slugs.length
+      ? await prisma.course.findMany({ where: { slug: { in: slugs } }, select: { id: true } })
+      : []
+
+    // Union the expanded courses with any courseId recorded on the purchase.
+    const courseIds = new Set(courses.map((c) => c.id))
+    if (purchase.courseId) courseIds.add(purchase.courseId)
+
+    for (const courseId of courseIds) {
+      await prisma.enrollment.upsert({
+        where: { userId_courseId: { userId: purchase.userId, courseId } },
+        update: {},
+        create: { userId: purchase.userId, courseId },
+      })
+    }
+    console.log(`[ozow-webhook] Enrolled user ${purchase.userId} in ${courseIds.size} course(s)`)
   }
 
   return new Response('OK', { status: 200 })
