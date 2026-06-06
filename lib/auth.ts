@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import Google from 'next-auth/providers/google'
+// Google sign-in is disabled for now (see providers below). Re-add the
+// `next-auth/providers/google` import + provider when OAuth creds are ready.
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from './db'
 import bcrypt from 'bcryptjs'
@@ -20,14 +21,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt', maxAge: 7 * 24 * 60 * 60 },
   providers: [
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET,
-      // Google verifies email ownership, so link a Google sign-in to an existing
-      // account with the same email instead of throwing OAuthAccountNotLinked.
-      // This lets existing (incl. migrated WordPress) users sign in with Google.
-      allowDangerousEmailAccountLinking: true,
-    }),
+    // Google OAuth disabled for now to keep launch simple. To re-enable: restore
+    // the `import Google from 'next-auth/providers/google'` and add:
+    //   Google({
+    //     clientId: process.env.AUTH_GOOGLE_ID,
+    //     clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    //     allowDangerousEmailAccountLinking: true,
+    //   }),
     Credentials({
       credentials: {
         email: { label: 'Email', type: 'email' },
