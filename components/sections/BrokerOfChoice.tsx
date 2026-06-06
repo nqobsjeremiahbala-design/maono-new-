@@ -75,10 +75,7 @@ export function BrokerOfChoice() {
           }}
         />
 
-        <ul
-          className="relative mx-auto mb-10 max-w-md space-y-3.5 pl-6 text-left"
-          style={{ boxShadow: 'inset 3px 0 0 0 #d4a017, -2px 0 16px -4px rgba(212,168,55,0.55)' }}
-        >
+        <ul className="mx-auto mb-10 max-w-md space-y-3.5 text-left">
           {[
             'Tight institutional spreads',
             'Fast execution, low slippage',
