@@ -95,17 +95,27 @@ async function serveFromR2(key: string, rangeHeader: string | null): Promise<Res
   }
 
   const headers = new Headers()
-  object.writeHttpMetadata(headers)
-  if (!headers.get('Content-Type')) headers.set('Content-Type', 'video/mp4')
+  // Force a known, iOS-friendly video type (all assets are H.264/AAC mp4/m4v).
+  headers.set('Content-Type', 'video/mp4')
   headers.set('Accept-Ranges', 'bytes')
   headers.set('Cache-Control', 'private, max-age=3600')
 
   const total = object.size
-  if (rangeHeader && object.range) {
-    const offset = object.range.offset ?? 0
-    const length = object.range.length ?? total - offset
-    headers.set('Content-Range', `bytes ${offset}-${offset + length - 1}/${total}`)
-    headers.set('Content-Length', String(length))
+  if (range) {
+    // R2 already returned only the requested bytes in object.body; compute the
+    // served range deterministically from the request so we ALWAYS answer a
+    // range request with 206 + Content-Range (required by iOS Safari).
+    let start: number
+    let end: number
+    if (range.suffix != null) {
+      start = Math.max(0, total - range.suffix)
+      end = total - 1
+    } else {
+      start = range.offset ?? 0
+      end = range.length != null ? Math.min(start + range.length - 1, total - 1) : total - 1
+    }
+    headers.set('Content-Range', `bytes ${start}-${end}/${total}`)
+    headers.set('Content-Length', String(end - start + 1))
     return new Response(object.body, { status: 206, headers })
   }
 

@@ -1,10 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/db'
+import { ENROLLMENT_OPEN } from '@/lib/flags'
 import { sendWelcomeEmail } from '@/lib/email'
 
 export async function POST(request: NextRequest) {
   try {
+    // Registration is closed during the existing-clients launch. Only the
+    // migrated WordPress clients (and staff/admin) have accounts. New sign-ups
+    // are blocked here so a direct POST can't bypass the UI.
+    if (!ENROLLMENT_OPEN) {
+      return NextResponse.json({ error: 'Registration is currently closed.' }, { status: 403 })
+    }
+
     const { name, email, password, phone } = (await request.json()) as {
       name?: string
       email?: string

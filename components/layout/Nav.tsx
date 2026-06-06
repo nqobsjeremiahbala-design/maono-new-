@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSession, signOut } from 'next-auth/react'
 import { Logo } from './Logo'
+import { ENROLLMENT_OPEN } from '@/lib/flags'
 
 const links = [
   { href: '/', label: 'Home' },
@@ -79,16 +80,18 @@ export function Nav() {
             <>
               <Link
                 href="/login"
-                className="press px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md text-navy-900 border border-navy-300 hover:bg-navy-50 transition-colors"
+                className="press px-5 py-2 text-sm font-bold uppercase tracking-wide rounded-md bg-gold-500 text-navy-950 hover:bg-gold-400 transition-colors"
               >
                 Login
               </Link>
-              <Link
-                href="/register"
-                className="press px-5 py-2 text-sm font-bold uppercase tracking-wide rounded-md bg-gold-500 text-navy-950 hover:bg-gold-400 transition-colors"
-              >
-                Register
-              </Link>
+              {ENROLLMENT_OPEN && (
+                <Link
+                  href="/register"
+                  className="press px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md text-navy-900 border border-navy-300 hover:bg-navy-50 transition-colors"
+                >
+                  Register
+                </Link>
+              )}
             </>
           )}
         </div>
@@ -152,18 +155,20 @@ export function Nav() {
                 <>
                   <Link
                     href="/login"
-                    className="press flex-1 text-center px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md border border-navy-300 text-navy-900"
+                    className="press flex-1 text-center px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md bg-gold-500 text-navy-950"
                     onClick={() => setOpen(false)}
                   >
                     Login
                   </Link>
-                  <Link
-                    href="/register"
-                    className="press flex-1 text-center px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md bg-gold-500 text-navy-950"
-                    onClick={() => setOpen(false)}
-                  >
-                    Register
-                  </Link>
+                  {ENROLLMENT_OPEN && (
+                    <Link
+                      href="/register"
+                      className="press flex-1 text-center px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md border border-navy-300 text-navy-900"
+                      onClick={() => setOpen(false)}
+                    >
+                      Register
+                    </Link>
+                  )}
                 </>
               )}
             </li>
