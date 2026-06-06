@@ -107,13 +107,13 @@ export default async function DashboardPage() {
     <div className="min-h-dvh bg-navy-950 text-white lg:flex">
       {/* ── Sidebar ── */}
       <aside className="hidden lg:flex w-64 shrink-0 flex-col gap-1 border-r border-navy-800 bg-gradient-to-b from-navy-950 to-[#080b16] px-4 py-6 sticky top-0 h-dvh">
-        <Link href="/" className="flex items-center px-2 pb-6" aria-label="Maono Forex Trading">
+        <Link href="/" className="flex items-center justify-center px-2 pb-6" aria-label="Maono Forex Trading">
           <Image
             src="/images/logo/maono_forex_trading_logo_transparent_dark_site.png"
             alt="Maono Forex Trading"
             width={525}
             height={463}
-            className="h-14 w-auto object-contain"
+            className="h-24 w-auto object-contain"
           />
         </Link>
 
