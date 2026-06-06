@@ -39,9 +39,8 @@ function layout(opts: { heading: string; body: string; cta?: { label: string; hr
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0f1e;padding:32px 16px">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#0d1426;border:1px solid #1a2d50;border-radius:16px;overflow:hidden">
-        <tr><td style="padding:28px 32px 8px">
-          <span style="display:inline-block;font-weight:800;letter-spacing:.04em;color:#c9a84c;font-size:20px">MAONO</span>
-          <span style="display:block;color:#8a9cbd;font-size:10px;letter-spacing:.26em;text-transform:uppercase;margin-top:4px">Forex Trading</span>
+        <tr><td align="center" style="background:#ffffff;padding:24px 32px">
+          <img src="${appUrl()}/images/logo/maono_forex_trading_logo_transparent_light_site.png" alt="Maono Forex Trading" width="156" style="display:inline-block;width:156px;max-width:55%;height:auto;border:0;outline:none;text-decoration:none" />
         </td></tr>
         <tr><td style="padding:8px 32px 4px">
           <h1 style="color:#ffffff;font-size:22px;line-height:1.25;margin:0 0 12px">${heading}</h1>
