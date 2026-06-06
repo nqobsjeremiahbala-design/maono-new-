@@ -65,14 +65,20 @@ export function BrokerOfChoice() {
 
         <p className="mx-auto max-w-xl text-base text-navy-300 sm:text-lg">{BROKER_OF_CHOICE.blurb}</p>
 
-        {/* Gold gradient separator */}
+        {/* Gold gradient separator — prominent, with a soft glow */}
         <div
           aria-hidden
-          className="mx-auto my-9 h-px w-[200px] opacity-50"
-          style={{ background: 'linear-gradient(90deg, transparent, #c9a84c, transparent)' }}
+          className="mx-auto my-9 h-[3px] w-[280px] rounded-full"
+          style={{
+            background: 'linear-gradient(90deg, transparent, #e8c558 45%, #d4a017 55%, transparent)',
+            boxShadow: '0 0 14px rgba(212,168,55,0.55)',
+          }}
         />
 
-        <ul className="mx-auto mb-10 max-w-md space-y-3.5 border-l-2 border-gold-500/20 pl-4 text-left">
+        <ul
+          className="relative mx-auto mb-10 max-w-md space-y-3.5 pl-6 text-left"
+          style={{ boxShadow: 'inset 3px 0 0 0 #d4a017, -2px 0 16px -4px rgba(212,168,55,0.55)' }}
+        >
           {[
             'Tight institutional spreads',
             'Fast execution, low slippage',
@@ -80,7 +86,7 @@ export function BrokerOfChoice() {
             'Trusted by the Maono community',
           ].map((item) => (
             <li key={item} className="flex items-center gap-3 text-[15px] text-navy-100 sm:text-base">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500/12 text-sm font-bold text-gold-500">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold-500/20 text-sm font-bold text-gold-400 ring-1 ring-gold-500/40">
                 ✓
               </span>
               {item}
