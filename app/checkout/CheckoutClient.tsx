@@ -111,17 +111,24 @@ export function CheckoutClient() {
     const name = String(data.get('name') || '')
     const email = String(data.get('email') || '')
 
-    const slugs = enrollSlugsForItem(itemKey)
-    if (slugs.length) {
-      slugs.forEach(s => enroll(s, { name, email }))
-      setEnrolledSlug(slugs[0])
+    // 1. Server is authoritative: record the purchase + DB enrolments first.
+    // If this is blocked (go-live gate) or fails, we do NOT touch local state.
+    const result = await completeCheckout(itemKey)
+    if (!result.ok) {
+      setStatus('error')
+      return
     }
+
+    // 2. Only after a confirmed purchase: mirror every unlocked course locally
+    // (so progress tracking works on this device) and notify the team.
+    const slugs = enrollSlugsForItem(itemKey)
+    slugs.forEach(s => enroll(s, { name, email }))
+    setEnrolledSlug(slugs[0] ?? null)
 
     // Never transmit the (demo) card fields anywhere.
     data.delete('card_number')
     data.delete('card_expiry')
     data.delete('card_cvc')
-
     try {
       await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
         method: 'POST',
@@ -132,13 +139,6 @@ export function CheckoutClient() {
       // Demo mode: form submission is best-effort, don't block the journey.
     }
 
-    // Record the purchase + enrolments in the database so the courses appear on
-    // the buyer's dashboard, then take them straight there.
-    const result = await completeCheckout(itemKey)
-    if (!result.ok) {
-      setStatus('error')
-      return
-    }
     setStatus('success')
     router.push('/dashboard')
     router.refresh()
