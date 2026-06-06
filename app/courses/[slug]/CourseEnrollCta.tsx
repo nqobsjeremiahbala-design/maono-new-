@@ -3,17 +3,17 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { getEnrollment, getProgress, isEnrolled } from '@/lib/enrollment'
+import { bundlesForCourse } from '@/lib/checkout'
 import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
 
 type Props = {
   slug: string
   title: string
-  price: number
   totalLessons: number
   hasPlayer: boolean
 }
 
-export function CourseEnrollCta({ slug, price, totalLessons, hasPlayer }: Props) {
+export function CourseEnrollCta({ slug, totalLessons, hasPlayer }: Props) {
   const [mounted, setMounted] = useState(false)
   const [enrolled, setEnrolled] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -35,7 +35,7 @@ export function CourseEnrollCta({ slug, price, totalLessons, hasPlayer }: Props)
   }, [slug, totalLessons])
 
   if (!mounted) {
-    return <EnrollCard price={price} slug={slug} />
+    return <EnrollCard slug={slug} />
   }
 
   if (enrolled && hasPlayer) {
@@ -78,23 +78,34 @@ export function CourseEnrollCta({ slug, price, totalLessons, hasPlayer }: Props)
     )
   }
 
-  return <EnrollCard price={price} slug={slug} />
+  return <EnrollCard slug={slug} />
 }
 
-function EnrollCard({ price, slug }: { price: number; slug: string }) {
+function EnrollCard({ slug }: { slug: string }) {
+  // Courses are only sold inside bundles — show which bundles unlock this one.
+  const bundles = bundlesForCourse(slug)
   return (
     <aside className="bg-navy-900 border border-navy-800 rounded-2xl p-6 md:p-7 shadow-elevated">
-      <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-3">Enrol now</p>
-      <p className="font-serif text-4xl text-white mb-1">
-        R{price.toLocaleString()}
+      <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-3">Included in</p>
+      <div className="flex flex-wrap gap-2 mb-4">
+        {bundles.map((b) => (
+          <span
+            key={b.id}
+            className="inline-flex items-center rounded-full border border-gold-400/40 bg-gold-500/10 px-3 py-1 text-xs font-semibold text-gold-300"
+          >
+            {b.name}
+          </span>
+        ))}
+      </div>
+      <p className="text-navy-300 text-sm mb-6">
+        Choose a bundle to unlock this course (and the others it includes) — once-off, lifetime access.
       </p>
-      <p className="text-navy-400 text-sm mb-6">One-off · lifetime access</p>
 
       <Link
-        href={`/checkout?item=course-${slug}`}
+        href="/memberships"
         className="press w-full inline-flex items-center justify-center px-5 py-3.5 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
       >
-        Enrol now <span aria-hidden className="ml-2">→</span>
+        Choose a plan <span aria-hidden className="ml-2">→</span>
       </Link>
 
       <ul className="mt-6 space-y-2.5 text-sm text-navy-300">

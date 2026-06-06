@@ -90,10 +90,10 @@ export default function CoursesPage() {
                   View course details
                 </Link>
                 <Link
-                  href={`/checkout?item=course-${featured.slug}`}
+                  href="/memberships"
                   className="press inline-flex items-center justify-center px-6 py-3.5 min-h-[48px] rounded-md border border-navy-200 text-navy-900 font-semibold hover:border-gold-500 hover:text-gold-600 transition-colors"
                 >
-                  Enrol now
+                  Choose a plan
                 </Link>
               </div>
             </div>
@@ -130,7 +130,8 @@ export default function CoursesPage() {
               </h2>
             </div>
             <p className="text-navy-600 text-base sm:text-lg max-w-sm mt-4 md:mt-0">
-              Each course stands on its own. Or bundle three into a learning path for a lower combined price.
+              Courses are unlocked through bundles. Pick the bundle that fits and get every course inside it,
+              once-off with lifetime access.
             </p>
           </div>
 

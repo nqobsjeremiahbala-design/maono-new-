@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { enroll } from '@/lib/enrollment'
-import { CATALOG, COURSES_WITH_PLAYER, enrollSlugsForItem } from '@/lib/checkout'
+import { CATALOG, COURSE_TITLES, COURSES_WITH_PLAYER, enrollSlugsForItem } from '@/lib/checkout'
 import { canEnroll } from '@/lib/flags'
 import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
 import { completeCheckout } from './actions'
@@ -149,10 +149,10 @@ export function CheckoutClient() {
       <section className="bg-navy-950 min-h-screen py-16 md:py-20 px-5 sm:px-6">
         <div className="max-w-xl mx-auto text-center">
           <h1 className="font-serif text-3xl text-white mb-4">Nothing selected</h1>
-          <p className="text-navy-300 mb-8">Pick a course, path, or membership tier to continue.</p>
+          <p className="text-navy-300 mb-8">Choose a bundle to unlock your courses and continue.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg"><Link href="/courses">Browse courses</Link></Button>
-            <Button size="lg" variant="outline"><Link href="/memberships">See memberships</Link></Button>
+            <Button size="lg"><Link href="/memberships">Choose a plan</Link></Button>
+            <Button size="lg" variant="outline"><Link href="/courses">Browse courses</Link></Button>
           </div>
         </div>
       </section>
@@ -216,7 +216,6 @@ export function CheckoutClient() {
     )
   }
 
-  const periodSuffix = item.period === 'month' ? ' / month' : ''
 
   return (
     <section className="bg-white min-h-screen py-12 md:py-16 px-5 sm:px-6">
@@ -316,7 +315,7 @@ export function CheckoutClient() {
             )}
 
             <Button type="submit" size="lg" className="w-full" disabled={status === 'sending'}>
-              {status === 'sending' ? 'Submitting…' : `Place order, R${item.price.toLocaleString()}${periodSuffix}`}
+              {status === 'sending' ? 'Submitting…' : `Place order, R${item.price.toLocaleString()}`}
             </Button>
 
             <p className="text-xs text-navy-400 text-center">
@@ -335,7 +334,7 @@ export function CheckoutClient() {
             </div>
             <div className="flex justify-between items-baseline mb-2">
               <span className="text-sm text-navy-600">Subtotal</span>
-              <span className="text-navy-900 font-semibold">R{item.price.toLocaleString()}{periodSuffix}</span>
+              <span className="text-navy-900 font-semibold">R{item.price.toLocaleString()}</span>
             </div>
             <div className="flex justify-between items-baseline mb-4">
               <span className="text-sm text-navy-600">VAT included</span>
@@ -343,12 +342,20 @@ export function CheckoutClient() {
             </div>
             <div className="flex justify-between items-baseline border-t border-navy-100 pt-4">
               <span className="font-semibold text-navy-900">Total</span>
-              <span className="font-serif text-2xl text-navy-900">R{item.price.toLocaleString()}{periodSuffix}</span>
+              <span className="font-serif text-2xl text-navy-900">R{item.price.toLocaleString()}</span>
             </div>
-            <div className="mt-6 space-y-2 text-xs text-navy-500">
-              <p>✓ 7-day access guarantee</p>
-              <p>✓ Cancel membership any time</p>
-              <p>✓ Support from a real human</p>
+            <div className="mt-6">
+              <p className="text-xs font-bold uppercase tracking-wider text-navy-500 mb-2">Courses you&apos;ll unlock</p>
+              <ul className="space-y-1.5">
+                {enrollSlugsForItem(itemKey).map(slug => (
+                  <li key={slug} className="text-xs text-navy-700 flex gap-2">
+                    <span className="text-gold-600 shrink-0 font-bold">✓</span> {COURSE_TITLES[slug]}
+                  </li>
+                ))}
+                <li className="text-xs text-navy-700 flex gap-2">
+                  <span className="text-gold-600 shrink-0 font-bold">✓</span> Lifetime access + unlimited student support
+                </li>
+              </ul>
             </div>
           </aside>
         </div>

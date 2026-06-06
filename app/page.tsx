@@ -16,7 +16,7 @@ import { generatePageMetadata } from '@/lib/metadata'
 
 export const metadata = generatePageMetadata({
   title: 'Maono Forex Trading',
-  description: 'Institutional-grade forex education for South African traders. Telegram channel, structured courses, and live seminars.',
+  description: 'Institutional-grade forex education for South African traders. Telegram channel, structured course bundles, and real mentorship.',
 })
 
 export default function HomePage() {

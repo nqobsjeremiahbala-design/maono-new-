@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation'
 import { Footer } from './Footer'
-import { SignalsPopup } from './SignalsPopup'
 
 export function SiteChrome() {
   const pathname = usePathname()
@@ -12,20 +11,5 @@ export function SiteChrome() {
     pathname?.startsWith('/dashboard')
   if (hideAll) return null
 
-  const suppressPopup =
-    pathname?.startsWith('/signals') ||
-    pathname?.startsWith('/checkout') ||
-    pathname?.startsWith('/my-courses') ||
-    pathname?.startsWith('/login') ||
-    pathname?.startsWith('/register') ||
-    pathname?.startsWith('/forgot-password') ||
-    pathname?.startsWith('/reset-password') ||
-    pathname?.startsWith('/dashboard')
-
-  return (
-    <>
-      <Footer />
-      {!suppressPopup && <SignalsPopup />}
-    </>
-  )
+  return <Footer />
 }

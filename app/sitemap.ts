@@ -6,9 +6,7 @@ const BASE = 'https://maonoforextrading.co.za'
 export default function sitemap(): MetadataRoute.Sitemap {
   const highPriorityRoutes = [
     '', '/courses', '/memberships',
-    '/about', '/resources', '/blog', '/seminars', '/contact',
-    '/mentorship', '/signals',
-    '/paths/beginner', '/paths/intermediate', '/paths/advanced',
+    '/about', '/resources', '/blog', '/contact',
   ].map(path => ({
     url: `${BASE}${path}`,
     lastModified: new Date(),

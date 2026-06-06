@@ -96,7 +96,6 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
           <CourseEnrollCta
             slug={slug}
             title={meta!.title}
-            price={meta!.price}
             totalLessons={totalLessons}
             hasPlayer={!!curriculum}
           />
