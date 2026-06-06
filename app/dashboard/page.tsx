@@ -147,7 +147,38 @@ export default async function DashboardPage() {
 
       {/* ── Main ── */}
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b border-navy-800 bg-navy-950/80 px-5 backdrop-blur md:px-8">
+        {/* Mobile top bar + nav — the sidebar is hidden below lg */}
+        <div className="lg:hidden sticky top-0 z-20 border-b border-navy-800 bg-navy-950/90 backdrop-blur">
+          <div className="flex items-center justify-between px-5 py-3">
+            <Link href="/" aria-label="Maono Forex Trading">
+              <Image
+                src="/images/logo/maono_forex_trading_logo_transparent_dark_site.png"
+                alt="Maono Forex Trading"
+                width={525}
+                height={463}
+                className="h-9 w-auto object-contain"
+              />
+            </Link>
+            <DashboardSignOut />
+          </div>
+          <nav className="flex gap-1 overflow-x-auto px-3 pb-2">
+            {navLinks.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                {...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                className={`whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium ${
+                  l.active ? 'bg-gold-500/14 text-gold-300' : 'text-navy-300 hover:text-white'
+                }`}
+              >
+                {l.label}
+                {l.external && <span className="ml-1.5 inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 align-middle" />}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        <header className="hidden lg:flex sticky top-0 z-10 h-16 items-center gap-4 border-b border-navy-800 bg-navy-950/80 px-5 backdrop-blur md:px-8">
           <div>
             <p className="font-serif text-base font-semibold">Dashboard</p>
             <p className="text-[11.5px] text-navy-500">{today}</p>

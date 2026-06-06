@@ -31,6 +31,13 @@ export function LearnClient({ courseSlug, courseTitle, curriculum, enrolledViaAc
   const [completed, setCompleted] = useState<string[]>([])
   const [access, setAccess] = useState<'loading' | 'granted' | 'denied'>('loading')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  // Fraction (0–1) of the active video watched — feeds the live progress bar.
+  const [watched, setWatched] = useState(0)
+
+  // Reset the live watch fraction whenever the active lesson changes.
+  useEffect(() => {
+    setWatched(0)
+  }, [activeSlug])
 
   useEffect(() => {
     // Account enrollment (DB) is authoritative; seed local storage so progress
@@ -93,12 +100,26 @@ export function LearnClient({ courseSlug, courseTitle, curriculum, enrolledViaAc
   const prev = activeIndex > 0 ? allLessons[activeIndex - 1] : null
   const next = activeIndex >= 0 && activeIndex < allLessons.length - 1 ? allLessons[activeIndex + 1] : null
   const isComplete = completed.includes(activeLesson.slug)
-  const completionPercent = Math.round((completed.length / allLessons.length) * 100)
+  // The bar reflects completed lessons plus how far through the current video the
+  // learner is, so it advances live as they watch.
+  const activeContribution = isComplete ? 0 : Math.min(Math.max(watched, 0), 1)
+  const completionPercent = Math.min(
+    100,
+    Math.round(((completed.length + activeContribution) / allLessons.length) * 100),
+  )
 
   function toggleComplete() {
     if (isComplete) {
       markLessonIncomplete(courseSlug, activeLesson.slug)
     } else {
+      markLessonComplete(courseSlug, activeLesson.slug)
+    }
+  }
+
+  // Called as the video plays; auto-marks the lesson complete once mostly watched.
+  function handleWatchProgress(fraction: number) {
+    setWatched(fraction)
+    if (fraction >= 0.9 && !completed.includes(activeLesson.slug)) {
       markLessonComplete(courseSlug, activeLesson.slug)
     }
   }
@@ -178,6 +199,7 @@ export function LearnClient({ courseSlug, courseTitle, curriculum, enrolledViaAc
             totalLessons={allLessons.length}
             isComplete={isComplete}
             onToggleComplete={toggleComplete}
+            onWatchProgress={handleWatchProgress}
             prev={prev}
             next={next}
             onNavigate={goToLesson}
@@ -288,6 +310,7 @@ function LessonView({
   totalLessons,
   isComplete,
   onToggleComplete,
+  onWatchProgress,
   prev,
   next,
   onNavigate,
@@ -298,6 +321,7 @@ function LessonView({
   totalLessons: number
   isComplete: boolean
   onToggleComplete: () => void
+  onWatchProgress: (fraction: number) => void
   prev: Lesson | null
   next: Lesson | null
   onNavigate: (slug: string) => void
@@ -323,7 +347,12 @@ function LessonView({
               src={`/api/video/${courseSlug}/${lesson.slug}`}
               controls
               playsInline
-              className="w-full h-full object-cover"
+              onTimeUpdate={(e) => {
+                const v = e.currentTarget
+                if (v.duration > 0) onWatchProgress(v.currentTime / v.duration)
+              }}
+              onEnded={() => onWatchProgress(1)}
+              className="w-full h-full object-contain"
             >
               Your browser does not support the video tag.
             </video>
