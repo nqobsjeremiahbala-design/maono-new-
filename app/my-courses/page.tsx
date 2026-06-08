@@ -40,8 +40,22 @@ export default async function MyCoursesPage() {
       },
       completedLessons: true,
     },
-    orderBy: { enrolledAt: 'desc' },
   })
+
+  // Display courses in the fixed learning sequence (module 1 → 6), same as the dashboard.
+  const COURSE_ORDER = [
+    'forex-trading-introduction',
+    'price-action-trading',
+    'trading-tools',
+    'trading-strategies',
+    'institutional-trading-concepts',
+    'trading-psychology',
+  ]
+  const rank = (slug: string) => {
+    const i = COURSE_ORDER.indexOf(slug)
+    return i === -1 ? 999 : i
+  }
+  enrollments.sort((a, b) => rank(a.course.slug) - rank(b.course.slug))
 
   if (enrollments.length === 0) {
     return (

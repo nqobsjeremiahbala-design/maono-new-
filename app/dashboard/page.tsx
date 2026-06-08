@@ -26,6 +26,20 @@ const BUNDLE_LABELS: Record<string, { name: string; tier: string }> = {
   'bundle-platinum': { name: 'Platinum Bundle', tier: 'Platinum' },
 }
 
+// Fixed learning sequence (module 1 → 6) — courses always display in this order.
+const COURSE_ORDER = [
+  'forex-trading-introduction',
+  'price-action-trading',
+  'trading-tools',
+  'trading-strategies',
+  'institutional-trading-concepts',
+  'trading-psychology',
+]
+const courseRank = (slug: string) => {
+  const i = COURSE_ORDER.indexOf(slug)
+  return i === -1 ? 999 : i
+}
+
 // Inline icons (stroke = currentColor)
 const IconBook = (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-6 w-6"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" /></svg>
@@ -81,11 +95,12 @@ export default async function DashboardPage() {
       const progress = total > 0 ? Math.round((e.completedLessons.length / total) * 100) : 0
       return { slug: e.course.slug, title: e.course.title, level: e.course.level, total, progress, image: e.course.image }
     })
-    .sort((a, b) => b.progress - a.progress)
+    .sort((a, b) => courseRank(a.slug) - courseRank(b.slug))
 
   const inProgress = ranked.filter((c) => c.progress < 100)
   const done = ranked.filter((c) => c.progress === 100)
-  const continueLearning = ranked.find((c) => c.progress > 0 && c.progress < 100) ?? ranked[0]
+  // Pick up where you left off = the first not-yet-finished course in sequence.
+  const continueLearning = ranked.find((c) => c.progress < 100) ?? ranked[0]
 
   const bundle = bundlePurchase ? BUNDLE_LABELS[bundlePurchase.itemKey] : null
   const today = new Date().toLocaleDateString('en-ZA', { weekday: 'long', day: 'numeric', month: 'long' })
