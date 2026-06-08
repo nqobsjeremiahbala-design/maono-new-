@@ -8,9 +8,11 @@
 
 import { readFileSync, writeFileSync } from 'node:fs'
 import pg from 'pg'
+import { writeXlsx } from './lib/xlsx-mini.mjs'
 
 const PURCHASES_IN = process.argv[2] || 'C:\\Users\\Nqobile Bala\\Downloads\\wpwy_posts.csv'
 const OUT = process.argv[3] || 'C:\\Users\\Nqobile Bala\\Downloads\\maono-clients-master.csv'
+const OUT_XLSX = OUT.replace(/\.csv$/i, '') + '.xlsx'
 
 const COURSES = [
   ['forex-trading-introduction', 'Forex Introduction'],
@@ -133,19 +135,29 @@ const head = [
   ...COURSES.map(([, t]) => t),
   'Completed Purchase', 'Plan Purchased', 'Amount Paid (ZAR)', 'Last Purchase Date', 'Total Orders',
 ]
+// Typed rows: numbers stay numeric so Excel right-aligns/sums them.
+const dataRows = out.map((r) => [
+  r.email, r.name, r.plan, r.count,
+  ...COURSES.map(([slug]) => (r.slugs.has(slug) ? 'Yes' : '')),
+  r.completed, r.planPurchased, r.paid === '' ? '' : Number(r.paid), r.lastDate, r.orders,
+])
+
+// 1) real Excel workbook (every field is its own column — no delimiter guessing)
+const widths = [34, 24, 18, 13, 16, 13, 13, 16, 19, 13, 17, 22, 16, 16, 12]
+writeXlsx(OUT_XLSX, 'Clients', [head, ...dataRows], widths)
+
+// 2) CSV fallback (UTF-8 BOM) for anyone who prefers it
 const lines = [head.map(cell).join(',')]
-for (const r of out) {
-  lines.push([
-    cell(r.email), cell(r.name), cell(r.plan), r.count,
-    ...COURSES.map(([slug]) => cell(r.slugs.has(slug) ? 'Yes' : '')),
-    cell(r.completed), cell(r.planPurchased), cell(r.paid), cell(r.lastDate), r.orders,
-  ].join(','))
+for (const r of dataRows) lines.push(r.map(cell).join(','))
+try {
+  writeFileSync(OUT, '﻿' + lines.join('\r\n'), 'utf8')
+} catch (e) {
+  console.warn(`(CSV not written — ${OUT} is locked/open. The .xlsx was written fine.)`)
 }
-writeFileSync(OUT, '﻿' + lines.join('\r\n'), 'utf8') // BOM for Excel
 
 const withAccess = out.filter((r) => r.count > 0)
 const paid = withAccess.filter((r) => r.completed === 'Yes').length
-console.log(`Wrote ${out.length} rows to:\n  ${OUT}\n`)
+console.log(`Wrote ${out.length} rows to:\n  ${OUT_XLSX}  (Excel — open this one)\n  ${OUT}  (CSV fallback)\n`)
 console.log(`Columns (${head.length}): ${head.join(' | ')}\n`)
 console.log(`Clients with course access: ${withAccess.length}`)
 console.log(`  ...of those, with a COMPLETED WooCommerce purchase: ${paid}`)
