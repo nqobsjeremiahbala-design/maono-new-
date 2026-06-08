@@ -9,7 +9,6 @@ const navItems = [
   { href: '/admin/users', label: 'Users' },
   { href: '/admin/access', label: 'Client Access' },
   { href: '/admin/purchases', label: 'Purchases' },
-  { href: '/admin/subscriptions', label: 'Subscriptions' },
 ]
 
 export function AdminSidebar() {

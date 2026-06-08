@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db'
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboard() {
-  const [userCount, enrollmentCount, purchaseStats, subCount] = await Promise.all([
+  const [userCount, enrollmentCount, purchaseStats, completeCount] = await Promise.all([
     prisma.user.count(),
     prisma.enrollment.count(),
     prisma.purchase.aggregate({
@@ -11,7 +11,7 @@ export default async function AdminDashboard() {
       _sum: { amountCents: true },
       _count: true,
     }),
-    prisma.subscription.count({ where: { status: 'ACTIVE' } }),
+    prisma.purchase.count({ where: { status: 'COMPLETE' } }),
   ])
 
   const revenueCents = purchaseStats._sum.amountCents || 0
@@ -21,7 +21,7 @@ export default async function AdminDashboard() {
     { label: 'Total Users', value: userCount.toLocaleString() },
     { label: 'Active Enrollments', value: enrollmentCount.toLocaleString() },
     { label: 'Revenue (Total)', value: revenueDisplay },
-    { label: 'Active Subscriptions', value: subCount.toLocaleString() },
+    { label: 'Paid Orders', value: completeCount.toLocaleString() },
   ]
 
   const recentPurchases = await prisma.purchase.findMany({

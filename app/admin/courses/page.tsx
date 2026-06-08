@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { prisma } from '@/lib/db'
+import { bundlesForCourse } from '@/lib/checkout'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,7 +33,7 @@ export default async function AdminCoursesPage() {
             <tr className="border-b border-navy-800 text-left">
               <th className="px-4 py-3 text-navy-400 font-medium">Title</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Level</th>
-              <th className="px-4 py-3 text-navy-400 font-medium">Price</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Bundles</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Modules</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Enrollments</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Status</th>
@@ -50,7 +51,7 @@ export default async function AdminCoursesPage() {
                   <td className="px-4 py-3 text-white">{course.title}</td>
                   <td className="px-4 py-3 text-navy-300 capitalize">{course.level}</td>
                   <td className="px-4 py-3 text-navy-300">
-                    R{(course.price / 100).toLocaleString()}
+                    {bundlesForCourse(course.slug).map((b) => b.name).join(', ') || '—'}
                   </td>
                   <td className="px-4 py-3 text-navy-300">
                     {course.modules.length} modules, {lessonCount} lessons

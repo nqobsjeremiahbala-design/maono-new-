@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/db'
+import { bundlesForCourse } from '@/lib/checkout'
 
 export const dynamic = 'force-dynamic'
 import {
@@ -94,15 +95,15 @@ export default async function EditCoursePage({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-navy-300 mb-1.5">Price (ZAR)</label>
-            <input
-              name="price"
-              type="number"
-              step="0.01"
-              required
-              defaultValue={course.price / 100}
-              className="w-full rounded-md border border-navy-700 bg-navy-900 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-gold-500 transition"
-            />
+            <label className="block text-sm font-medium text-navy-300 mb-1.5">Bundles</label>
+            <div className="w-full rounded-md border border-navy-800 bg-navy-900/60 px-4 py-3 text-navy-300 text-sm">
+              {bundlesForCourse(course.slug).map((b) => b.name).join(', ') || '—'}
+              <span className="block text-xs text-navy-500 mt-1">
+                Sold via bundles only — change pricing on the Memberships plans.
+              </span>
+            </div>
+            {/* Course isn't sold individually; preserve the stored value untouched. */}
+            <input type="hidden" name="price" defaultValue={course.price / 100} />
           </div>
           <div>
             <label className="block text-sm font-medium text-navy-300 mb-1.5">Duration</label>

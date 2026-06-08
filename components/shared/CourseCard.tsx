@@ -3,9 +3,12 @@ import Image from 'next/image'
 import { Card } from '@/components/ui/Card'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
+import { bundlesForCourse } from '@/lib/checkout'
 import type { Course } from '@/lib/types'
 
 export function CourseCard({ course }: { course: Course }) {
+  // Courses are sold only inside bundles — show the entry bundle, not a price.
+  const entryBundle = bundlesForCourse(course.slug)[0]?.name
   return (
     <Card className="flex flex-col overflow-hidden">
       <div className="relative h-48 bg-navy-800">
@@ -26,8 +29,10 @@ export function CourseCard({ course }: { course: Course }) {
         </div>
         <h3 className="font-serif text-lg text-navy-900 mb-2">{course.title}</h3>
         <p className="text-sm text-navy-500 mb-4 flex-1">{course.description}</p>
-        <div className="flex items-center justify-between">
-          <span className="font-semibold text-navy-900">R{course.price.toLocaleString()}</span>
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-xs text-navy-500">
+            {entryBundle ? `Included in the ${entryBundle} bundle` : 'Available in bundles'}
+          </span>
           <Button asChild size="sm">
             <Link href={`/courses/${course.slug}`}>View course</Link>
           </Button>
