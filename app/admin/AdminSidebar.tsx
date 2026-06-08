@@ -7,6 +7,7 @@ const navItems = [
   { href: '/admin', label: 'Dashboard', exact: true },
   { href: '/admin/courses', label: 'Courses' },
   { href: '/admin/users', label: 'Users' },
+  { href: '/admin/access', label: 'Client Access' },
   { href: '/admin/purchases', label: 'Purchases' },
   { href: '/admin/subscriptions', label: 'Subscriptions' },
 ]
