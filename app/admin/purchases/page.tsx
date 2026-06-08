@@ -1,6 +1,16 @@
 import { prisma } from '@/lib/db'
+import { BUNDLE_BY_ID, COURSE_TITLES } from '@/lib/checkout'
 
 export const dynamic = 'force-dynamic'
+
+// Human-readable plan/item name from the stored itemKey.
+function planLabel(itemKey: string, courseTitle?: string | null): string {
+  if (itemKey.startsWith('bundle-')) return BUNDLE_BY_ID[itemKey]?.name ?? itemKey
+  return courseTitle || COURSE_TITLES[itemKey] || itemKey
+}
+
+const fmtDate = (d: Date) =>
+  new Date(d).toLocaleDateString('en-ZA', { day: '2-digit', month: 'short', year: 'numeric' })
 
 export default async function AdminPurchasesPage() {
   const purchases = await prisma.purchase.findMany({
@@ -33,16 +43,18 @@ export default async function AdminPurchasesPage() {
         ))}
       </div>
 
-      <div className="bg-navy-900 border border-navy-800 rounded-lg overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="bg-navy-900 border border-navy-800 rounded-lg overflow-x-auto">
+        <table className="w-full text-sm whitespace-nowrap">
           <thead>
             <tr className="border-b border-navy-800 text-left">
               <th className="px-4 py-3 text-navy-400 font-medium">Customer</th>
-              <th className="px-4 py-3 text-navy-400 font-medium">Item</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Email</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Plan</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Amount</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Country</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Status</th>
-              <th className="px-4 py-3 text-navy-400 font-medium">Method</th>
-              <th className="px-4 py-3 text-navy-400 font-medium">Date</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Gateway</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Paid / Created</th>
             </tr>
           </thead>
           <tbody>
@@ -51,9 +63,13 @@ export default async function AdminPurchasesPage() {
                 key={p.id}
                 className="border-b border-navy-800/50 hover:bg-navy-800/30 transition-colors"
               >
-                <td className="px-4 py-3 text-white">{p.user.name || p.user.email}</td>
-                <td className="px-4 py-3 text-navy-300">{p.course?.title || p.itemKey}</td>
-                <td className="px-4 py-3 text-navy-300">R{(p.amountCents / 100).toLocaleString()}</td>
+                <td className="px-4 py-3 text-white">{p.user.name || '—'}</td>
+                <td className="px-4 py-3 text-navy-400">{p.user.email}</td>
+                <td className="px-4 py-3 text-navy-300">{planLabel(p.itemKey, p.course?.title)}</td>
+                <td className="px-4 py-3 text-navy-300">
+                  R{(p.amountCents / 100).toLocaleString('en-ZA')}
+                </td>
+                <td className="px-4 py-3 text-navy-400">{p.country || '—'}</td>
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2 py-0.5 rounded-full ${
                     p.status === 'COMPLETE' ? 'bg-green-900/50 text-green-400' :
@@ -63,9 +79,15 @@ export default async function AdminPurchasesPage() {
                     {p.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-navy-400">{p.paymentMethod || '—'}</td>
                 <td className="px-4 py-3 text-navy-400">
-                  {new Date(p.createdAt).toLocaleDateString()}
+                  {p.gateway || p.paymentMethod || '—'}
+                </td>
+                <td className="px-4 py-3 text-navy-400">
+                  {p.paidAt ? (
+                    <span className="text-green-400">{fmtDate(p.paidAt)}</span>
+                  ) : (
+                    <span className="text-navy-500">{fmtDate(p.createdAt)}</span>
+                  )}
                 </td>
               </tr>
             ))}

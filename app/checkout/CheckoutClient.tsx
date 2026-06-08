@@ -1,27 +1,31 @@
 'use client'
 import { useState } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
-import { enroll } from '@/lib/enrollment'
-import { CATALOG, COURSE_TITLES, COURSES_WITH_PLAYER, enrollSlugsForItem } from '@/lib/checkout'
+import { CATALOG, COURSE_TITLES, enrollSlugsForItem } from '@/lib/checkout'
 import { canEnroll } from '@/lib/flags'
 import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
-import { completeCheckout } from './actions'
+import { startNetcashCheckout } from './actions'
 
 const FORMSPREE_ID = 'xpwzeygk'
 
+const COUNTRIES = [
+  'South Africa', 'Namibia', 'Botswana', 'Zimbabwe', 'Zambia', 'Lesotho',
+  'Eswatini', 'Mozambique', 'Kenya', 'Nigeria', 'Ghana',
+  'United Kingdom', 'United States', 'Other',
+]
+
 export function CheckoutClient() {
   const sp = useSearchParams()
-  const router = useRouter()
   const itemKey = sp.get('item') || ''
   const item = CATALOG[itemKey]
   const { data: session, status: authStatus } = useSession()
-  const [method, setMethod] = useState<'card' | 'eft'>('card')
-  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
-  const [enrolledSlug, setEnrolledSlug] = useState<string | null>(null)
+  const [country, setCountry] = useState('South Africa')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'error'>('idle')
+  const returnStatus = sp.get('status') // set when Netcash redirects back
 
   if (authStatus === 'loading') {
     return (
@@ -101,47 +105,39 @@ export function CheckoutClient() {
     e.preventDefault()
     if (!item) return
     setStatus('sending')
-    const form = e.currentTarget
-    const data = new FormData(form)
+    const data = new FormData(e.currentTarget)
     data.append('item', itemKey)
     data.append('label', item.label)
     data.append('price', String(item.price))
-    data.append('payment_method', method)
+    data.append('country', country)
 
-    const name = String(data.get('name') || '')
-    const email = String(data.get('email') || '')
+    // Best-effort lead capture; keepalive lets it survive the redirect.
+    try {
+      fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: 'POST', body: data, headers: { Accept: 'application/json' }, keepalive: true,
+      }).catch(() => null)
+    } catch {
+      // non-blocking
+    }
 
-    // 1. Server is authoritative: record the purchase + DB enrolments first.
-    // If this is blocked (go-live gate) or fails, we do NOT touch local state.
-    const result = await completeCheckout(itemKey)
-    if (!result.ok) {
+    // Record a PENDING order, then POST the browser to the Netcash Pay Now page.
+    const res = await startNetcashCheckout(itemKey, country)
+    if (!res.ok || !res.url || !res.fields) {
       setStatus('error')
       return
     }
-
-    // 2. Only after a confirmed purchase: mirror every unlocked course locally
-    // (so progress tracking works on this device) and notify the team.
-    const slugs = enrollSlugsForItem(itemKey)
-    slugs.forEach(s => enroll(s, { name, email }))
-    setEnrolledSlug(slugs[0] ?? null)
-
-    // Never transmit the (demo) card fields anywhere.
-    data.delete('card_number')
-    data.delete('card_expiry')
-    data.delete('card_cvc')
-    try {
-      await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-        method: 'POST',
-        body: data,
-        headers: { Accept: 'application/json' },
-      }).catch(() => null)
-    } catch {
-      // Demo mode: form submission is best-effort, don't block the journey.
+    const pay = document.createElement('form')
+    pay.method = 'POST'
+    pay.action = res.url
+    for (const [k, v] of Object.entries(res.fields)) {
+      const input = document.createElement('input')
+      input.type = 'hidden'
+      input.name = k
+      input.value = v
+      pay.appendChild(input)
     }
-
-    setStatus('success')
-    router.push('/dashboard')
-    router.refresh()
+    document.body.appendChild(pay)
+    pay.submit()
   }
 
   if (!item) {
@@ -159,57 +155,31 @@ export function CheckoutClient() {
     )
   }
 
-  if (status === 'success') {
-    const hasPlayer = enrolledSlug && COURSES_WITH_PLAYER.has(enrolledSlug)
+  if (returnStatus === 'success') {
     return (
       <section className="bg-navy-950 min-h-dvh py-16 md:py-20 px-5 sm:px-6">
         <div className="max-w-xl mx-auto text-center hero-reveal">
-          <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-5">
-            {enrolledSlug ? 'You’re enrolled' : 'Order received'}
-          </p>
+          <p className="text-gold-400 text-xs font-semibold tracking-[0.2em] uppercase mb-5">Payment received</p>
           <h1 className="font-serif text-4xl md:text-5xl text-white mb-5 leading-[1.08]">
-            {enrolledSlug
-              ? 'Welcome to the course.'
-              : 'Thanks, we’ll be in touch.'}
+            Thank you — you’re all set.
           </h1>
           <p className="text-navy-300 text-lg mb-8">
-            {enrolledSlug ? (
-              <>You now have access to <strong className="text-white">{item.label}</strong>. Jump straight in — your progress saves automatically.</>
-            ) : (
-              <>We’ve received your order for <strong className="text-white">{item.label}</strong>. Our team will reach out within 24 hours with next steps.</>
-            )}
+            Your payment is confirmed. Your courses will appear in your dashboard within a minute —
+            refresh once if you don’t see them straight away.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            {hasPlayer && enrolledSlug ? (
-              <>
-                <Link
-                  href={`/learn/${enrolledSlug}`}
-                  className="press inline-flex items-center justify-center px-7 py-4 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
-                >
-                  Start the course <span aria-hidden className="ml-2">→</span>
-                </Link>
-                <Link
-                  href="/my-courses"
-                  className="press inline-flex items-center justify-center px-7 py-4 rounded-md border border-navy-700 text-white hover:border-gold-400 hover:text-gold-400 transition-colors"
-                >
-                  Go to my courses
-                </Link>
-              </>
-            ) : enrolledSlug ? (
-              <Link
-                href="/my-courses"
-                className="press inline-flex items-center justify-center px-7 py-4 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
-              >
-                Go to my courses
-              </Link>
-            ) : (
-              <Link
-                href="/"
-                className="press inline-flex items-center justify-center px-7 py-4 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
-              >
-                Back to home
-              </Link>
-            )}
+            <Link
+              href="/my-courses"
+              className="press inline-flex items-center justify-center px-7 py-4 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
+            >
+              Go to my courses
+            </Link>
+            <Link
+              href="/dashboard"
+              className="press inline-flex items-center justify-center px-7 py-4 rounded-md border border-navy-700 text-white hover:border-gold-400 hover:text-gold-400 transition-colors"
+            >
+              My dashboard
+            </Link>
           </div>
         </div>
       </section>
@@ -224,7 +194,7 @@ export function CheckoutClient() {
           ← Back
         </Link>
         <h1 className="font-serif text-3xl md:text-4xl text-navy-900 mb-2">Checkout</h1>
-        <p className="text-navy-500 mb-10">Secure your spot. We&apos;ll confirm payment details by email within 24 hours.</p>
+        <p className="text-navy-500 mb-10">Secure your spot — you&apos;ll complete payment securely via Netcash.</p>
 
         <div className="grid md:grid-cols-[1fr_320px] gap-10">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -247,52 +217,28 @@ export function CheckoutClient() {
             </div>
 
             <div>
-              <h2 className="font-serif text-xl text-navy-900 mb-4">Payment method</h2>
-              <div className="grid sm:grid-cols-2 gap-3">
-                {(['card', 'eft'] as const).map(m => (
-                  <label
-                    key={m}
-                    className={`block border rounded-md p-4 cursor-pointer transition ${
-                      method === m ? 'border-gold-500 bg-white' : 'border-navy-200 bg-white hover:border-navy-400'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="method"
-                      value={m}
-                      checked={method === m}
-                      onChange={() => setMethod(m)}
-                      className="sr-only"
-                    />
-                    <p className="font-semibold text-navy-900 text-sm">
-                      {m === 'card' ? 'Card' : 'EFT / Bank Transfer'}
-                    </p>
-                    <p className="text-xs text-navy-500 mt-1">
-                      {m === 'card' ? 'Visa, Mastercard, debit & credit' : 'Manual EFT, we send banking details'}
-                    </p>
-                  </label>
-                ))}
+              <h2 className="font-serif text-xl text-navy-900 mb-4">Country &amp; payment</h2>
+              <div className="sm:w-1/2">
+                <label htmlFor="co-country" className="block text-sm font-medium text-navy-700 mb-1.5">Country</label>
+                <select
+                  id="co-country"
+                  name="country"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className="w-full rounded-md border border-navy-200 bg-white px-4 py-3 text-navy-900 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition"
+                >
+                  {COUNTRIES.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
               </div>
-
-              {method === 'card' && (
-                <div className="mt-4 grid sm:grid-cols-2 gap-4 rounded-md border border-navy-100 bg-navy-50/40 p-4">
-                  <div className="sm:col-span-2">
-                    <label htmlFor="co-card" className="block text-sm font-medium text-navy-700 mb-1.5">Card number</label>
-                    <Input id="co-card" name="card_number" inputMode="numeric" autoComplete="off" placeholder="4242 4242 4242 4242" required />
-                  </div>
-                  <div>
-                    <label htmlFor="co-exp" className="block text-sm font-medium text-navy-700 mb-1.5">Expiry (MM/YY)</label>
-                    <Input id="co-exp" name="card_expiry" autoComplete="off" placeholder="08/28" required />
-                  </div>
-                  <div>
-                    <label htmlFor="co-cvc" className="block text-sm font-medium text-navy-700 mb-1.5">CVC</label>
-                    <Input id="co-cvc" name="card_cvc" inputMode="numeric" autoComplete="off" placeholder="123" required />
-                  </div>
-                  <p className="sm:col-span-2 text-xs text-navy-400">
-                    Demo checkout — no real payment is processed. Enter any numbers to complete the order.
-                  </p>
-                </div>
-              )}
+              <div className="mt-4 rounded-md border border-navy-100 bg-navy-50/40 p-4 flex items-start gap-3">
+                <span className="text-gold-600 text-lg leading-none">🔒</span>
+                <p className="text-xs text-navy-500">
+                  You’ll be securely redirected to <strong className="text-navy-700">Netcash</strong> to pay
+                  by card or instant EFT. We never see or store your card details.
+                </p>
+              </div>
             </div>
 
             <div>
@@ -308,14 +254,19 @@ export function CheckoutClient() {
               />
             </div>
 
+            {(returnStatus === 'declined' || returnStatus === 'cancelled' || returnStatus === 'error') && (
+              <p className="text-amber-600 text-sm">
+                Your payment was {returnStatus === 'cancelled' ? 'cancelled' : 'not completed'}. You can try again below.
+              </p>
+            )}
             {status === 'error' && (
               <p className="text-red-500 text-sm">
-                Something went wrong. WhatsApp us at +27 81 436 9770 and we&apos;ll finish the order for you.
+                Something went wrong starting the payment. WhatsApp us at +27 81 436 9770 and we&apos;ll finish the order for you.
               </p>
             )}
 
             <Button type="submit" size="lg" className="w-full" disabled={status === 'sending'}>
-              {status === 'sending' ? 'Submitting…' : `Place order, R${item.price.toLocaleString()}`}
+              {status === 'sending' ? 'Redirecting to Netcash…' : `Continue to payment · R${item.price.toLocaleString()}`}
             </Button>
 
             <p className="text-xs text-navy-400 text-center">

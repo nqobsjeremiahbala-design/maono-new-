@@ -193,7 +193,11 @@ model Purchase {
   status          PaymentStatus @default(PENDING)
   ozowTransId     String?       @unique // Ozow TransactionId for reconciliation
   ozowReference   String?       // Ozow SiteReference
-  paymentMethod   String?       // "ozow_eft", "ozow_card", "manual_eft"
+  netcashRef      String?       @unique // Netcash RequestTrace for reconciliation
+  gateway         String?       // "netcash", "ozow", "manual_eft", "demo"
+  country         String?       // billing country captured at checkout
+  paymentMethod   String?       // "netcash", "ozow_eft", "ozow_card", "manual_eft"
+  paidAt          DateTime?     // when payment was confirmed (gateway notify)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -202,6 +206,7 @@ model Purchase {
 
   @@index([userId])
   @@index([ozowTransId])
+  @@index([netcashRef])
   @@map("purchases")
 }
 
