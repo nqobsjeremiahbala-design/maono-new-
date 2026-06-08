@@ -25,7 +25,7 @@ export function CourseCard({ course }: { course: Course }) {
           <Badge variant={course.level === 'advanced' ? 'navy' : course.level === 'intermediate' ? 'gold' : 'default'}>
             {course.level}
           </Badge>
-          <span className="text-xs text-navy-400">{course.duration} · {course.lessons} lessons</span>
+          <span className="text-xs text-navy-400">{course.duration ? `${course.duration} · ` : ''}{course.lessons} lessons</span>
         </div>
         <h3 className="font-serif text-lg text-navy-900 mb-2">{course.title}</h3>
         <p className="text-sm text-navy-500 mb-4 flex-1">{course.description}</p>

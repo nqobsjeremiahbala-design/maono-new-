@@ -81,8 +81,12 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ s
               {meta!.description}
             </p>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-navy-300">
-              <span>{meta!.duration}</span>
-              <span aria-hidden className="text-navy-700">·</span>
+              {meta!.duration && (
+                <>
+                  <span>{meta!.duration}</span>
+                  <span aria-hidden className="text-navy-700">·</span>
+                </>
+              )}
               <span>{totalLessons} lessons</span>
               {curriculum && (
                 <>

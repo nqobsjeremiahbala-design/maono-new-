@@ -79,7 +79,7 @@ export default function CoursesPage() {
               </ul>
               <div className="flex flex-wrap items-center gap-4 mb-2">
                 <span className="text-navy-400 text-sm">
-                  {featured.duration} · {featured.lessons} lessons
+                  {featured.duration ? `${featured.duration} · ` : ''}{featured.lessons} lessons
                 </span>
               </div>
               <div className="flex flex-col sm:flex-row gap-3 mt-6">
@@ -113,7 +113,7 @@ export default function CoursesPage() {
                   {LEVEL_COPY[featured.level]}
                 </p>
                 <p className="text-navy-900 font-semibold mb-1 text-sm md:text-base">{featured.lessons} lessons</p>
-                <p className="text-navy-500 text-xs md:text-sm">{featured.duration} of structured content</p>
+                <p className="text-navy-500 text-xs md:text-sm">{featured.duration ? `${featured.duration} of structured content` : 'Structured video content'}</p>
               </div>
             </div>
           </div>
@@ -167,7 +167,7 @@ export default function CoursesPage() {
                       </h3>
                       <p className="text-navy-500 text-sm mb-5 line-clamp-2">{c.description}</p>
                       <div className="mt-auto flex items-center justify-between pt-4 border-t border-navy-100">
-                        <span className="text-xs text-navy-400">{c.duration} · {c.lessons} lessons</span>
+                        <span className="text-xs text-navy-400">{c.duration ? `${c.duration} · ` : ''}{c.lessons} lessons</span>
                       </div>
                     </div>
                   </Link>
