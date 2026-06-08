@@ -2,8 +2,11 @@ import { NextRequest } from 'next/server'
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { getLesson } from '@/lib/courseLessons'
+import { isR2PresignConfigured, presignR2GetUrl } from '@/lib/r2-presign'
 
 export const dynamic = 'force-dynamic'
+
+const R2_BUCKET = 'maono-media'
 
 // Videos live in the R2 bucket (bound as MEDIA_BUCKET) under `videos/<videoUrl>`.
 // In production (Cloudflare Workers) we stream from R2; in local dev we stream
@@ -64,7 +67,23 @@ export async function GET(
     return serveFromLocalFile(lesson.videoUrl, rangeHeader)
   }
 
-  // 4b. Production: stream from R2.
+  // 4b. Production preferred path: authorize here, then hand the (large) bytes to
+  // R2 directly via a short-lived presigned URL. This keeps the Worker off the
+  // byte path — proxying video through the Worker burns CPU and trips the 1102
+  // "exceeded CPU time limit" error on big files.
+  if (isR2PresignConfigured()) {
+    try {
+      const url = await presignR2GetUrl(R2_BUCKET, r2Key(lesson.videoUrl), 3600)
+      return new Response(null, {
+        status: 302,
+        headers: { Location: url, 'Cache-Control': 'private, no-store' },
+      })
+    } catch {
+      // fall through to the proxy if signing fails for any reason
+    }
+  }
+
+  // 4c. Fallback: proxy-stream from R2 (used until R2 API keys are configured).
   return serveFromR2(r2Key(lesson.videoUrl), rangeHeader)
 }
 
