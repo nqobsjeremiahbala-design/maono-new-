@@ -4,9 +4,22 @@ import { bundlesForCourse } from '@/lib/checkout'
 
 export const dynamic = 'force-dynamic'
 
+// Canonical learning sequence (module 1 → 6), used everywhere courses are listed.
+const COURSE_ORDER = [
+  'forex-trading-introduction',
+  'price-action-trading',
+  'trading-tools',
+  'trading-strategies',
+  'institutional-trading-concepts',
+  'trading-psychology',
+]
+const courseRank = (slug: string) => {
+  const i = COURSE_ORDER.indexOf(slug)
+  return i === -1 ? COURSE_ORDER.length : i
+}
+
 export default async function AdminCoursesPage() {
   const courses = await prisma.course.findMany({
-    orderBy: { createdAt: 'desc' },
     include: {
       modules: {
         include: { _count: { select: { lessons: true } } },
@@ -14,6 +27,7 @@ export default async function AdminCoursesPage() {
       _count: { select: { enrollments: true } },
     },
   })
+  courses.sort((a, b) => courseRank(a.slug) - courseRank(b.slug))
 
   return (
     <>
