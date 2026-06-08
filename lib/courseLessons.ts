@@ -91,7 +91,7 @@ const PRICE_ACTION: CourseCurriculum = {
   instructor: INSTRUCTOR,
   modules: [
     {
-      title: 'Module 1 · Price Action Fundamentals',
+      title: 'Module 2 · Price Action Fundamentals',
       lessons: [
         {
           slug: 'intro-to-price-action',
@@ -153,7 +153,7 @@ const TRADING_TOOLS: CourseCurriculum = {
   instructor: INSTRUCTOR,
   modules: [
     {
-      title: 'Module 1 · TradingView & Fibonacci Tools',
+      title: 'Module 3 · TradingView & Fibonacci Tools',
       lessons: [
         {
           slug: 'tradingview-setup',
@@ -223,7 +223,7 @@ const TRADING_STRATEGIES: CourseCurriculum = {
   instructor: INSTRUCTOR,
   modules: [
     {
-      title: 'Module 1 · Breakout Strategies',
+      title: 'Module 4 · Breakout Strategies',
       lessons: [
         {
           slug: 'box-breakout',
@@ -261,7 +261,7 @@ const INSTITUTIONAL_CONCEPTS: CourseCurriculum = {
   instructor: INSTRUCTOR,
   modules: [
     {
-      title: 'Module 1 · Smart Money Concepts',
+      title: 'Module 5 · Smart Money Concepts',
       lessons: [
         {
           slug: 'intro-to-smart-money',
@@ -291,7 +291,7 @@ const TRADING_PSYCHOLOGY: CourseCurriculum = {
   instructor: INSTRUCTOR,
   modules: [
     {
-      title: 'Module 1 · The mindset problem',
+      title: 'Module 6 · The mindset problem',
       lessons: [
         {
           slug: 'why-psychology-matters',
@@ -344,7 +344,7 @@ Rules beat willpower. Write them. Follow them. Review them.`,
       ],
     },
     {
-      title: 'Module 2 · Building the habit',
+      title: 'Module 7 · Building the habit',
       lessons: [
         {
           slug: 'the-pre-trade-ritual',
