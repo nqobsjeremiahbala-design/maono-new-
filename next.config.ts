@@ -43,7 +43,7 @@ const nextConfig: NextConfig = {
               "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://s3.tradingview.com https://*.tradingview.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https:",
-              "media-src 'self' blob:",
+              "media-src 'self' blob: https://*.r2.cloudflarestorage.com",
               "font-src 'self' https://fonts.gstatic.com",
               "connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com https://www.google.com https://*.tradingview.com",
               "frame-src 'self' https://*.tradingview.com https://www.youtube.com https://t.me",
