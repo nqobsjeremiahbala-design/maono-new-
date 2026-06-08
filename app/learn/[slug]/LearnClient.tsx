@@ -19,9 +19,11 @@ type Props = {
   curriculum: CourseCurriculum
   /** True when the signed-in account has a DB enrollment for this course. */
   enrolledViaAccount?: boolean
+  /** The next course in the learner's sequence, shown after the last lesson. */
+  nextCourse?: { slug: string; title: string } | null
 }
 
-export function LearnClient({ courseSlug, courseTitle, curriculum, enrolledViaAccount = false }: Props) {
+export function LearnClient({ courseSlug, courseTitle, curriculum, enrolledViaAccount = false, nextCourse = null }: Props) {
   const router = useRouter()
   const allLessons = useMemo(
     () => curriculum.modules.flatMap(m => m.lessons),
@@ -202,6 +204,7 @@ export function LearnClient({ courseSlug, courseTitle, curriculum, enrolledViaAc
             onWatchProgress={handleWatchProgress}
             prev={prev}
             next={next}
+            nextCourse={nextCourse}
             onNavigate={goToLesson}
           />
         </main>
@@ -313,6 +316,7 @@ function LessonView({
   onWatchProgress,
   prev,
   next,
+  nextCourse,
   onNavigate,
 }: {
   courseSlug: string
@@ -324,6 +328,7 @@ function LessonView({
   onWatchProgress: (fraction: number) => void
   prev: Lesson | null
   next: Lesson | null
+  nextCourse: { slug: string; title: string } | null
   onNavigate: (slug: string) => void
 }) {
   return (
@@ -398,16 +403,29 @@ function LessonView({
             {prev?.title ?? 'You’re at the start'}
           </span>
         </button>
-        <button
-          onClick={() => next && onNavigate(next.slug)}
-          disabled={!next}
-          className="press flex-1 group text-right px-5 py-4 rounded-md border border-navy-800 bg-navy-900/50 hover:bg-navy-900 hover:border-navy-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          <span className="block text-xs text-gold-400 tracking-[0.15em] uppercase mb-1">Next →</span>
-          <span className="block text-sm text-white font-medium truncate">
-            {next?.title ?? 'Course complete'}
-          </span>
-        </button>
+        {next ? (
+          <button
+            onClick={() => onNavigate(next.slug)}
+            className="press flex-1 group text-right px-5 py-4 rounded-md border border-navy-800 bg-navy-900/50 hover:bg-navy-900 hover:border-navy-700 transition-colors"
+          >
+            <span className="block text-xs text-gold-400 tracking-[0.15em] uppercase mb-1">Next →</span>
+            <span className="block text-sm text-white font-medium truncate">{next.title}</span>
+          </button>
+        ) : nextCourse ? (
+          // End of this course — move on to the next course in the sequence.
+          <Link
+            href={`/learn/${nextCourse.slug}`}
+            className="press flex-1 text-right px-5 py-4 rounded-md bg-gold-500 hover:bg-gold-400 transition-colors"
+          >
+            <span className="block text-xs font-bold text-navy-950/70 tracking-[0.15em] uppercase mb-1">Next course →</span>
+            <span className="block text-sm text-navy-950 font-bold truncate">{nextCourse.title}</span>
+          </Link>
+        ) : (
+          <div className="flex-1 text-right px-5 py-4 rounded-md border border-navy-800 bg-navy-900/50 opacity-50">
+            <span className="block text-xs text-gold-400 tracking-[0.15em] uppercase mb-1">Next →</span>
+            <span className="block text-sm text-white font-medium truncate">Course complete 🎉</span>
+          </div>
+        )}
       </div>
     </article>
   )

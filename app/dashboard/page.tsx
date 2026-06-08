@@ -5,6 +5,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { generatePageMetadata } from '@/lib/metadata'
 import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
+import { planForCourseCount } from '@/lib/plan'
 import { DashboardSignOut } from './DashboardSignOut'
 import { DashboardTabs, type DashCourse } from './DashboardTabs'
 
@@ -17,13 +18,6 @@ export const metadata = {
     path: '/dashboard',
   }),
   robots: { index: false, follow: false },
-}
-
-const BUNDLE_LABELS: Record<string, { name: string; tier: string }> = {
-  'bundle-bronze': { name: 'Bronze Bundle', tier: 'Bronze' },
-  'bundle-silver': { name: 'Silver Bundle', tier: 'Silver' },
-  'bundle-gold': { name: 'Gold Bundle', tier: 'Gold' },
-  'bundle-platinum': { name: 'Platinum Bundle', tier: 'Platinum' },
 }
 
 // Fixed learning sequence (module 1 → 6) — courses always display in this order.
@@ -66,20 +60,14 @@ export default async function DashboardPage() {
   const firstName = userName ? userName.split(' ')[0] : null
   const initial = (firstName ?? email ?? 'U').charAt(0).toUpperCase()
 
-  const [enrollments, bundlePurchase] = await Promise.all([
-    prisma.enrollment.findMany({
-      where: { userId },
-      include: {
-        course: { include: { modules: { include: { _count: { select: { lessons: true } } } } } },
-        completedLessons: true,
-      },
-      orderBy: { enrolledAt: 'desc' },
-    }),
-    prisma.purchase.findFirst({
-      where: { userId, status: 'COMPLETE', itemKey: { startsWith: 'bundle-' } },
-      orderBy: { createdAt: 'desc' },
-    }),
-  ])
+  const enrollments = await prisma.enrollment.findMany({
+    where: { userId },
+    include: {
+      course: { include: { modules: { include: { _count: { select: { lessons: true } } } } } },
+      completedLessons: true,
+    },
+    orderBy: { enrolledAt: 'desc' },
+  })
 
   const totalCourses = enrollments.length
   const totalLessons = enrollments.reduce(
@@ -102,7 +90,9 @@ export default async function DashboardPage() {
   // Pick up where you left off = the first not-yet-finished course in sequence.
   const continueLearning = ranked.find((c) => c.progress < 100) ?? ranked[0]
 
-  const bundle = bundlePurchase ? BUNDLE_LABELS[bundlePurchase.itemKey] : null
+  // Plan comes from the client's actual course entitlement (migrated clients
+  // have no purchase record). Anyone with >=1 course is never "Free".
+  const bundle = planForCourseCount(totalCourses)
   const today = new Date().toLocaleDateString('en-ZA', { weekday: 'long', day: 'numeric', month: 'long' })
 
   const navLinks = [
