@@ -14,8 +14,8 @@ export default async function AdminUsersPage() {
     <>
       <h1 className="font-serif text-3xl text-white mb-8">Users</h1>
 
-      <div className="bg-navy-900 border border-navy-800 rounded-lg overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="bg-navy-900 border border-navy-800 rounded-lg overflow-x-auto">
+        <table className="w-full text-sm whitespace-nowrap">
           <thead>
             <tr className="border-b border-navy-800 text-left">
               <th className="px-4 py-3 text-navy-400 font-medium">Name</th>

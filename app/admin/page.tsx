@@ -53,7 +53,8 @@ export default async function AdminDashboard() {
         {recentPurchases.length === 0 ? (
           <p className="text-navy-400 text-sm">No purchases yet.</p>
         ) : (
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm whitespace-nowrap">
             <thead>
               <tr className="border-b border-navy-800 text-left">
                 <th className="px-3 py-2 text-navy-400 font-medium">Customer</th>
@@ -83,6 +84,7 @@ export default async function AdminDashboard() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </>

@@ -54,15 +54,23 @@ export default async function LearnPage({ params }: { params: Promise<{ slug: st
   const session = await auth()
   let enrolledViaAccount = false
   let nextCourse: { slug: string; title: string } | null = null
+  let completedSlugs: string[] = []
   if (session?.user) {
     const userId = (session.user as { id: string }).id
     const role = (session.user as { role?: string }).role
     const enr = await prisma.enrollment.findMany({
       where: { userId },
-      select: { course: { select: { slug: true } } },
+      select: {
+        course: { select: { slug: true } },
+        completedLessons: { select: { lesson: { select: { slug: true } } } },
+      },
     })
     const enrolledSlugs = new Set(enr.map((e) => e.course.slug))
     enrolledViaAccount = role === 'ADMIN' || enrolledSlugs.has(slug)
+
+    // Completed lessons for THIS course (server-side source of truth for progress).
+    const thisEnrollment = enr.find((e) => e.course.slug === slug)
+    completedSlugs = thisEnrollment?.completedLessons.map((cl) => cl.lesson.slug) ?? []
 
     // Next course = the next one in the learning sequence that the client also has
     // (admins see the full sequence).
@@ -90,6 +98,7 @@ export default async function LearnPage({ params }: { params: Promise<{ slug: st
       curriculum={safeCurriculum}
       enrolledViaAccount={enrolledViaAccount}
       nextCourse={nextCourse}
+      completedSlugs={completedSlugs}
     />
   )
 }

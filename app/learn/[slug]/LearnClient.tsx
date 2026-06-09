@@ -1,17 +1,10 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useMemo, useState, useTransition } from 'react'
 import Link from 'next/link'
 import type { CourseCurriculum, Lesson } from '@/lib/courseLessons'
-import {
-  enroll,
-  getEnrollment,
-  isEnrolled,
-  markLessonComplete,
-  markLessonIncomplete,
-} from '@/lib/enrollment'
 import { Markdown } from '@/lib/markdown'
+import { setLessonComplete } from './actions'
 
 type Props = {
   courseSlug: string
@@ -21,55 +14,31 @@ type Props = {
   enrolledViaAccount?: boolean
   /** The next course in the learner's sequence, shown after the last lesson. */
   nextCourse?: { slug: string; title: string } | null
+  /** Lesson slugs already completed (from the DB) — the source of truth. */
+  completedSlugs?: string[]
 }
 
-export function LearnClient({ courseSlug, courseTitle, curriculum, enrolledViaAccount = false, nextCourse = null }: Props) {
-  const router = useRouter()
+export function LearnClient({ courseSlug, courseTitle, curriculum, enrolledViaAccount = false, nextCourse = null, completedSlugs = [] }: Props) {
   const allLessons = useMemo(
     () => curriculum.modules.flatMap(m => m.lessons),
     [curriculum]
   )
   const [activeSlug, setActiveSlug] = useState<string>(allLessons[0]?.slug ?? '')
-  const [completed, setCompleted] = useState<string[]>([])
-  const [access, setAccess] = useState<'loading' | 'granted' | 'denied'>('loading')
+  // Progress comes from the DB (completedSlugs) and is persisted via a server
+  // action, so it syncs across sign-outs and devices.
+  const [completed, setCompleted] = useState<string[]>(completedSlugs)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   // Fraction (0–1) of the active video watched — feeds the live progress bar.
   const [watched, setWatched] = useState(0)
+  const [, startSave] = useTransition()
 
   // Reset the live watch fraction whenever the active lesson changes.
   useEffect(() => {
     setWatched(0)
   }, [activeSlug])
 
-  useEffect(() => {
-    // Account enrollment (DB) is authoritative; seed local storage so progress
-    // tracking works on this device. Otherwise fall back to the local record.
-    if (enrolledViaAccount && !isEnrolled(courseSlug)) {
-      enroll(courseSlug)
-    }
-    if (!enrolledViaAccount && !isEnrolled(courseSlug)) {
-      setAccess('denied')
-      return
-    }
-    const e = getEnrollment(courseSlug)
-    setCompleted(e?.completedLessons ?? [])
-    setAccess('granted')
-
-    const sync = () => {
-      const e2 = getEnrollment(courseSlug)
-      setCompleted(e2?.completedLessons ?? [])
-    }
-    window.addEventListener('maono-enrollment-change', sync)
-    return () => window.removeEventListener('maono-enrollment-change', sync)
-  }, [courseSlug, enrolledViaAccount])
-
-  if (access === 'loading') {
-    return (
-      <div className="min-h-dvh bg-navy-950 flex items-center justify-center">
-        <p className="text-navy-300 text-sm">Loading your course…</p>
-      </div>
-    )
-  }
+  // Access is decided server-side (DB enrollment, admins included).
+  const access: 'granted' | 'denied' = enrolledViaAccount ? 'granted' : 'denied'
 
   if (access === 'denied') {
     return (
@@ -110,19 +79,24 @@ export function LearnClient({ courseSlug, courseTitle, curriculum, enrolledViaAc
     Math.round(((completed.length + activeContribution) / allLessons.length) * 100),
   )
 
+  function persist(slug: string, complete: boolean) {
+    setCompleted((prev) =>
+      complete ? Array.from(new Set([...prev, slug])) : prev.filter((s) => s !== slug),
+    )
+    startSave(() => {
+      setLessonComplete(courseSlug, slug, complete)
+    })
+  }
+
   function toggleComplete() {
-    if (isComplete) {
-      markLessonIncomplete(courseSlug, activeLesson.slug)
-    } else {
-      markLessonComplete(courseSlug, activeLesson.slug)
-    }
+    persist(activeLesson.slug, !isComplete)
   }
 
   // Called as the video plays; auto-marks the lesson complete once mostly watched.
   function handleWatchProgress(fraction: number) {
     setWatched(fraction)
     if (fraction >= 0.9 && !completed.includes(activeLesson.slug)) {
-      markLessonComplete(courseSlug, activeLesson.slug)
+      persist(activeLesson.slug, true)
     }
   }
 

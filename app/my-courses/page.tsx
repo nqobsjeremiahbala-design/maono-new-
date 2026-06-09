@@ -122,7 +122,7 @@ export default async function MyCoursesPage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-navy-950/20 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
                       <span className="text-[11px] text-gold-400 font-semibold tracking-[0.15em] uppercase">
-                        {course.level} · {course.duration}
+                        {course.level}{course.duration ? ` · ${course.duration}` : ''}
                       </span>
                       <span className="text-xs text-white bg-navy-950/80 px-2.5 py-1 rounded-full tabular-nums">
                         {progress}%
