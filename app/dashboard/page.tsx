@@ -5,7 +5,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { generatePageMetadata } from '@/lib/metadata'
 import { TELEGRAM_CHANNEL_URL } from '@/lib/links'
-import { planForCourseCount } from '@/lib/plan'
+import { resolvePlan } from '@/lib/plan'
 import { DashboardSignOut } from './DashboardSignOut'
 import { DashboardTabs, type DashCourse } from './DashboardTabs'
 
@@ -60,14 +60,17 @@ export default async function DashboardPage() {
   const firstName = userName ? userName.split(' ')[0] : null
   const initial = (firstName ?? email ?? 'U').charAt(0).toUpperCase()
 
-  const enrollments = await prisma.enrollment.findMany({
-    where: { userId },
-    include: {
-      course: { include: { modules: { include: { _count: { select: { lessons: true } } } } } },
-      completedLessons: true,
-    },
-    orderBy: { enrolledAt: 'desc' },
-  })
+  const [enrollments, dbUser] = await Promise.all([
+    prisma.enrollment.findMany({
+      where: { userId },
+      include: {
+        course: { include: { modules: { include: { _count: { select: { lessons: true } } } } } },
+        completedLessons: true,
+      },
+      orderBy: { enrolledAt: 'desc' },
+    }),
+    prisma.user.findUnique({ where: { id: userId }, select: { planTier: true } }),
+  ])
 
   const totalCourses = enrollments.length
   const totalLessons = enrollments.reduce(
@@ -90,9 +93,9 @@ export default async function DashboardPage() {
   // Pick up where you left off = the first not-yet-finished course in sequence.
   const continueLearning = ranked.find((c) => c.progress < 100) ?? ranked[0]
 
-  // Plan comes from the client's actual course entitlement (migrated clients
-  // have no purchase record). Anyone with >=1 course is never "Free".
-  const bundle = planForCourseCount(totalCourses)
+  // Plan: an explicitly-provisioned tier (e.g. Platinum) wins; otherwise derive
+  // from the course count (migrated clients have no explicit tier).
+  const bundle = resolvePlan(dbUser?.planTier, totalCourses)
   const today = new Date().toLocaleDateString('en-ZA', { weekday: 'long', day: 'numeric', month: 'long' })
 
   const navLinks = [

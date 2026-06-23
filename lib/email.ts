@@ -127,3 +127,17 @@ export function sendPasswordResetEmail(to: string, resetUrl: string) {
     }),
   })
 }
+
+// ─── 6. Account invite (admin-provisioned client sets their password) ──────
+export function sendClientInviteEmail(to: string, name: string | null | undefined, setupUrl: string) {
+  return sendEmail({
+    to,
+    subject: 'Your Maono Forex Trading account is ready',
+    html: layout({
+      preheader: 'Set your password to access your courses.',
+      heading: `Welcome${name ? `, ${name.split(' ')[0]}` : ''} 👋`,
+      body: `<p>An account has been created for you at Maono Forex Trading and your courses are unlocked. To get in, set your password using the button below, then sign in with this email address.</p><p>This link is valid for <strong style="color:#fff">7 days</strong>. If it expires, use “Forgot password” on the login page.</p>`,
+      cta: { label: 'Set your password', href: setupUrl },
+    }),
+  })
+}

@@ -11,3 +11,15 @@ export function planForCourseCount(count: number): { tier: string; name: string 
   if (count >= 1) return { tier: 'Member', name: 'Lifetime access' }
   return null
 }
+
+// The plan to DISPLAY: an explicitly-provisioned tier (set when an admin assigns
+// a bundle, or on purchase) wins — this is the only way to tell Platinum from
+// Gold, since both unlock the same 6 courses. Falls back to the derived plan for
+// migrated clients with no explicit tier.
+export function resolvePlan(
+  planTier: string | null | undefined,
+  count: number,
+): { tier: string; name: string } | null {
+  if (planTier) return { tier: planTier, name: planTier }
+  return planForCourseCount(count)
+}

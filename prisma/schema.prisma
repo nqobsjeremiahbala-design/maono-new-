@@ -30,6 +30,7 @@ model User {
   image               String?
   phone         String?
   role          Role      @default(STUDENT)
+  planTier      String?   // explicit bundle tier (Bronze/Silver/Gold/Platinum) when provisioned; else derived from course count
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

@@ -43,21 +43,26 @@ export async function assignBundle(userId: string, bundleId: string) {
     where: { slug: { in: bundle.courseSlugs } },
     select: { id: true },
   })
-  await prisma.$transaction(
-    courses.map((c) =>
+  await prisma.$transaction([
+    ...courses.map((c) =>
       prisma.enrollment.upsert({
         where: { userId_courseId: { userId, courseId: c.id } },
         update: {},
         create: { userId, courseId: c.id },
       }),
     ),
-  )
+    // Record the explicit tier so the dashboard shows the real plan (e.g. Platinum).
+    prisma.user.update({ where: { id: userId }, data: { planTier: bundle.name } }),
+  ])
   revalidatePath('/admin/access')
 }
 
-// Remove all course access for a client.
+// Remove all course access for a client (and clear their explicit plan tier).
 export async function clearAccess(userId: string) {
   await assertAdmin()
-  await prisma.enrollment.deleteMany({ where: { userId } })
+  await prisma.$transaction([
+    prisma.enrollment.deleteMany({ where: { userId } }),
+    prisma.user.update({ where: { id: userId }, data: { planTier: null } }),
+  ])
   revalidatePath('/admin/access')
 }

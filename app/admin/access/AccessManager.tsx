@@ -1,18 +1,22 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { planForCourseCount } from '@/lib/plan'
+import { resolvePlan } from '@/lib/plan'
 import { setCourseAccess, assignBundle, clearAccess } from './actions'
 
 type Props = {
   user: { id: string; email: string; name: string | null }
   courses: [string, string][] // [slug, title] in learning order
   enrolledSlugs: string[]
+  planTier?: string | null
   bundles: { id: string; name: string; slugs: string[] }[]
 }
 
-export function AccessManager({ user, courses, enrolledSlugs, bundles }: Props) {
+export function AccessManager({ user, courses, enrolledSlugs, planTier = null, bundles }: Props) {
   const [slugs, setSlugs] = useState<Set<string>>(new Set(enrolledSlugs))
+  // Explicit plan tier (set when a bundle is assigned) — shown in the badge and
+  // on the client's dashboard. Tracked locally so the badge updates instantly.
+  const [tier, setTier] = useState<string | null>(planTier)
   const [pending, startTransition] = useTransition()
   const [saved, setSaved] = useState(false)
 
@@ -32,8 +36,9 @@ export function AccessManager({ user, courses, enrolledSlugs, bundles }: Props) 
     })
   }
 
-  const applyBundle = (b: { id: string; slugs: string[] }) => {
+  const applyBundle = (b: { id: string; name: string; slugs: string[] }) => {
     setSlugs(new Set(b.slugs))
+    setTier(b.name)
     startTransition(async () => {
       await assignBundle(user.id, b.id)
       flash()
@@ -42,13 +47,14 @@ export function AccessManager({ user, courses, enrolledSlugs, bundles }: Props) 
 
   const clearAll = () => {
     setSlugs(new Set())
+    setTier(null)
     startTransition(async () => {
       await clearAccess(user.id)
       flash()
     })
   }
 
-  const plan = planForCourseCount(slugs.size)
+  const plan = resolvePlan(tier, slugs.size)
 
   return (
     <div className="bg-navy-900 border border-navy-800 rounded-lg p-5">

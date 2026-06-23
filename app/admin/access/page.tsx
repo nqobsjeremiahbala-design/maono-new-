@@ -25,7 +25,7 @@ export default async function AdminAccessPage({
   const { q } = await searchParams
   const query = (q || '').trim()
 
-  let users: { id: string; email: string; name: string | null; slugs: string[] }[] = []
+  let users: { id: string; email: string; name: string | null; planTier: string | null; slugs: string[] }[] = []
   if (query) {
     const found = await prisma.user.findMany({
       where: {
@@ -42,6 +42,7 @@ export default async function AdminAccessPage({
       id: u.id,
       email: u.email,
       name: u.name,
+      planTier: u.planTier,
       slugs: u.enrollments.map((e) => e.course.slug),
     }))
   }
@@ -84,6 +85,7 @@ export default async function AdminAccessPage({
               user={{ id: u.id, email: u.email, name: u.name }}
               courses={COURSE_ORDER}
               enrolledSlugs={u.slugs}
+              planTier={u.planTier}
               bundles={BUNDLE_OPTIONS}
             />
           ))}
