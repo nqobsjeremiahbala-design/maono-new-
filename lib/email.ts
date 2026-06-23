@@ -11,7 +11,28 @@ function fromAddress() {
   return process.env.EMAIL_FROM || 'Maono Forex Trading <onboarding@resend.dev>'
 }
 
-export async function sendEmail(opts: { to: string; subject: string; html: string }): Promise<boolean> {
+function replyToAddress() {
+  return process.env.EMAIL_REPLY_TO || 'support@maonoforextrading.co.za'
+}
+
+// Derive a readable plain-text version from the HTML. A text/plain alternative
+// materially improves inbox placement (HTML-only is a spam signal).
+function htmlToText(html: string): string {
+  return html
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<head[\s\S]*?<\/head>/gi, '')
+    .replace(/<a[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/gi, '$2 ($1)')
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|tr|div|h[1-6]|li)>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').replace(/&#39;|&rsquo;/g, "'").replace(/&quot;/g, '"')
+    .replace(/[ \t]+/g, ' ')
+    .replace(/\n[ \t]+/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
+export async function sendEmail(opts: { to: string; subject: string; html: string; text?: string }): Promise<boolean> {
   const key = process.env.RESEND_API_KEY
   if (!key) {
     console.warn(`[email] RESEND_API_KEY not set — skipped "${opts.subject}" -> ${opts.to}`)
@@ -21,7 +42,14 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
     const res = await fetch(RESEND_ENDPOINT, {
       method: 'POST',
       headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from: fromAddress(), to: [opts.to], subject: opts.subject, html: opts.html }),
+      body: JSON.stringify({
+        from: fromAddress(),
+        to: [opts.to],
+        reply_to: replyToAddress(),
+        subject: opts.subject,
+        html: opts.html,
+        text: opts.text ?? htmlToText(opts.html),
+      }),
     })
     if (!res.ok) console.error('[email] resend error', res.status, await res.text().catch(() => ''))
     return res.ok
