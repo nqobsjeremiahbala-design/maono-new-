@@ -19,8 +19,8 @@ export function Nav() {
   const { data: session, status } = useSession()
   const pathname = usePathname()
 
-  // The dashboard has its own standalone app shell + sidebar.
-  if (pathname?.startsWith('/dashboard')) return null
+  // The dashboard and admin portal have their own standalone app shells + nav.
+  if (pathname?.startsWith('/dashboard') || pathname?.startsWith('/admin')) return null
 
   const isLoggedIn = status === 'authenticated' && session?.user
   const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN'
