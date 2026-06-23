@@ -325,6 +325,9 @@ function LessonView({
               key={lesson.slug}
               src={`/api/video/${courseSlug}/${lesson.slug}`}
               controls
+              controlsList="nodownload noplaybackrate noremoteplayback"
+              disablePictureInPicture
+              onContextMenu={(e) => e.preventDefault()}
               playsInline
               onTimeUpdate={(e) => {
                 const v = e.currentTarget

@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db'
 import { resolvePlan } from '@/lib/plan'
+import { DeleteUserButton } from './DeleteUserButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -102,6 +103,7 @@ export default async function AdminUsersPage({
               <th className="px-4 py-3 text-navy-400 font-medium">Courses</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Purchases</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Joined</th>
+              <th className="px-4 py-3 text-navy-400 font-medium text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -128,6 +130,13 @@ export default async function AdminUsersPage({
                   <td className="px-4 py-3 text-navy-300">{user._count.purchases}</td>
                   <td className="px-4 py-3 text-navy-400">
                     {new Date(user.createdAt).toLocaleDateString('en-ZA')}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    {user.role === 'ADMIN' ? (
+                      <span className="text-xs text-navy-600">—</span>
+                    ) : (
+                      <DeleteUserButton userId={user.id} email={user.email} />
+                    )}
                   </td>
                 </tr>
               )
