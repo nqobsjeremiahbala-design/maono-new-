@@ -138,7 +138,8 @@ model Lesson {
   type        LessonType
   duration    String
   description String
-  videoUrl    String?    // signed URL or storage key (see video strategy)
+  videoUrl    String?    // legacy R2 storage key (kept for fallback / reference)
+  streamUid   String?    // Cloudflare Stream video UID (DRM-protected playback)
   content     String?    // markdown for text lessons
   position    Int        // ordering within module
 

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import type { CourseCurriculum, Lesson } from '@/lib/courseLessons'
 import { Markdown } from '@/lib/markdown'
 import { setLessonComplete } from './actions'
+import { StreamLesson } from './StreamLesson'
 
 type Props = {
   courseSlug: string
@@ -321,23 +322,12 @@ function LessonView({
       <div className="mb-8 md:mb-10">
         {lesson.type === 'video' ? (
           <div className="relative aspect-video rounded-2xl overflow-hidden bg-black shadow-elevated">
-            <video
+            <StreamLesson
               key={lesson.slug}
-              src={`/api/video/${courseSlug}/${lesson.slug}`}
-              controls
-              controlsList="nodownload noplaybackrate noremoteplayback"
-              disablePictureInPicture
-              onContextMenu={(e) => e.preventDefault()}
-              playsInline
-              onTimeUpdate={(e) => {
-                const v = e.currentTarget
-                if (v.duration > 0) onWatchProgress(v.currentTime / v.duration)
-              }}
-              onEnded={() => onWatchProgress(1)}
-              className="w-full h-full object-contain"
-            >
-              Your browser does not support the video tag.
-            </video>
+              courseSlug={courseSlug}
+              lessonSlug={lesson.slug}
+              onWatchProgress={onWatchProgress}
+            />
           </div>
         ) : (
           <div className="rounded-2xl bg-white px-5 sm:px-6 md:px-12 py-8 sm:py-10 md:py-14 shadow-elevated">
