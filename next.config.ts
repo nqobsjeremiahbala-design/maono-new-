@@ -40,13 +40,13 @@ const nextConfig: NextConfig = {
             // TradingView and Telegram embeds need their script/frame origins allowlisted.
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://s3.tradingview.com https://*.tradingview.com https://embed.cloudflarestream.com",
+              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://s3.tradingview.com https://*.tradingview.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https:",
-              "media-src 'self' blob: https://*.r2.cloudflarestorage.com https://*.cloudflarestream.com https://*.videodelivery.net",
+              "media-src 'self' blob: https://*.r2.cloudflarestorage.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com https://www.google.com https://*.tradingview.com https://*.cloudflarestream.com https://*.videodelivery.net",
-              "frame-src 'self' https://*.tradingview.com https://www.youtube.com https://t.me https://*.cloudflarestream.com https://embed.cloudflarestream.com",
+              "connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com https://www.google.com https://*.tradingview.com",
+              "frame-src 'self' https://*.tradingview.com https://www.youtube.com https://t.me https://iframe.mediadelivery.net",
               "frame-ancestors 'none'",
             ].join('; '),
           },

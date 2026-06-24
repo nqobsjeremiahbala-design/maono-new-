@@ -138,9 +138,9 @@ model Lesson {
   type        LessonType
   duration    String
   description String
-  videoUrl    String?    // legacy R2 storage key (kept for fallback / reference)
-  streamUid   String?    // Cloudflare Stream video UID (DRM-protected playback)
-  content     String?    // markdown for text lessons
+  videoUrl     String?   // legacy R2 storage key (kept for fallback / reference)
+  bunnyVideoId String?   // Bunny Stream video GUID (DRM-protected playback)
+  content      String?   // markdown for text lessons
   position    Int        // ordering within module
 
   module            Module             @relation(fields: [moduleId], references: [id], onDelete: Cascade)
