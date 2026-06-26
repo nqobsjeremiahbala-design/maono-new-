@@ -110,6 +110,9 @@ export function CheckoutClient() {
     data.append('label', item.label)
     data.append('price', String(item.price))
     data.append('country', country)
+    const fullName = String(data.get('name') || '')
+    const email = String(data.get('email') || '')
+    const phone = String(data.get('phone') || '')
 
     // Best-effort lead capture; keepalive lets it survive the redirect.
     try {
@@ -120,8 +123,8 @@ export function CheckoutClient() {
       // non-blocking
     }
 
-    // Record a PENDING order, then POST the browser to the Netcash Pay Now page.
-    const res = await startNetcashCheckout(itemKey, country)
+    // Record a PENDING order, then POST the browser (top-level) to Netcash Pay Now.
+    const res = await startNetcashCheckout(itemKey, { country, email, name: fullName, phone })
     if (!res.ok || !res.url || !res.fields) {
       setStatus('error')
       return
@@ -129,6 +132,7 @@ export function CheckoutClient() {
     const pay = document.createElement('form')
     pay.method = 'POST'
     pay.action = res.url
+    pay.target = '_top' // Netcash disallows iframes — must be a top-level navigation
     for (const [k, v] of Object.entries(res.fields)) {
       const input = document.createElement('input')
       input.type = 'hidden'

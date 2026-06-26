@@ -142,6 +142,53 @@ export function sendPaymentFailedEmail(to: string, itemLabel: string) {
   })
 }
 
+// ─── Netcash transactional emails (success / pending / failed) ─────────────
+const TELEGRAM_URL = process.env.NEXT_PUBLIC_TELEGRAM_CHANNEL_URL || 'https://t.me/MaonoForexTrading1'
+
+const telegramLine = `<p style="margin-top:18px">Questions? Reply to this email or join our community: <a href="${TELEGRAM_URL}" style="color:#c9a84c">Maono Forex Trading on Telegram</a>.</p>`
+
+export function sendNetcashSuccessEmail(to: string, tierName: string, courseTitles: string[]) {
+  const list = courseTitles.length
+    ? `<ul style="margin:8px 0 0;padding-left:18px">${courseTitles.map((t) => `<li style="margin:2px 0">${t}</li>`).join('')}</ul>`
+    : ''
+  return sendEmail({
+    to,
+    subject: `Payment confirmed — your ${tierName} plan is active`,
+    html: layout({
+      preheader: `Your ${tierName} plan is active.`,
+      heading: 'Payment successful 🎉',
+      body: `<p>Thank you — your payment is confirmed and your <strong style="color:#fff">${tierName}</strong> plan is now active with lifetime access to:</p>${list}<p style="margin-top:12px">Jump in from your dashboard; your progress saves automatically.</p>${telegramLine}`,
+      cta: { label: 'Go to my courses', href: `${appUrl()}/my-courses` },
+    }),
+  })
+}
+
+export function sendNetcashPendingEmail(to: string, tierName: string) {
+  return sendEmail({
+    to,
+    subject: `We’re confirming your ${tierName} payment`,
+    html: layout({
+      preheader: 'Your payment is being confirmed.',
+      heading: 'Payment pending',
+      body: `<p>Thanks — we’ve received your order for the <strong style="color:#fff">${tierName}</strong> plan and it’s being confirmed. Some methods (EFT, retail) can take a little while.</p><p>As soon as the payment clears we’ll unlock your courses and email you again. No action needed.</p>${telegramLine}`,
+      cta: { label: 'View my dashboard', href: `${appUrl()}/dashboard` },
+    }),
+  })
+}
+
+export function sendNetcashFailedEmail(to: string, tierName: string) {
+  return sendEmail({
+    to,
+    subject: 'Your payment didn’t go through',
+    html: layout({
+      preheader: `We couldn't process your ${tierName} payment.`,
+      heading: 'Payment unsuccessful',
+      body: `<p>We weren’t able to process your payment for the <strong style="color:#fff">${tierName}</strong> plan. No money has been taken.</p><p>You can try again from the checkout — if it keeps failing, reply to this email and we’ll help.</p>${telegramLine}`,
+      cta: { label: 'Try again', href: `${appUrl()}/memberships` },
+    }),
+  })
+}
+
 // ─── 5. Password reset ────────────────────────────────────────────────────
 export function sendPasswordResetEmail(to: string, resetUrl: string) {
   return sendEmail({

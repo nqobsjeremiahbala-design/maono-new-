@@ -5,14 +5,15 @@ import { prisma } from '@/lib/db'
 import { CATALOG, enrollSlugsForItem } from '@/lib/checkout'
 import { canEnroll } from '@/lib/flags'
 import { sendPurchaseEmail, sendUpgradeEmail } from '@/lib/email'
-import { buildPayNowForm, isNetcashConfigured } from '@/lib/payments/netcash'
+import { isNetcashConfigured } from '@/lib/netcash/config'
+import { buildPaymentForm } from '@/lib/netcash/buildPaymentForm'
 
-// Start a real Netcash "Pay Now" payment: record a PENDING purchase and return
-// the hosted-page form for the browser to POST. Access is granted later by the
-// /api/webhooks/netcash notification once Netcash confirms payment.
+// Start a real Netcash "Pay Now" payment: create a PENDING purchase (with a
+// unique p2) and return the hosted-page form fields for the browser to POST
+// (target="_top"). Access is granted later by /api/payments/netcash/notify.
 export async function startNetcashCheckout(
-  itemKey: string,
-  country: string,
+  tierId: string,
+  contact: { country?: string; email?: string; name?: string; phone?: string } = {},
 ): Promise<{ ok: boolean; url?: string; fields?: Record<string, string>; error?: string }> {
   const session = await auth()
   if (!session?.user) return { ok: false, error: 'Not authenticated' }
@@ -25,31 +26,17 @@ export async function startNetcashCheckout(
     return { ok: false, error: 'Online payment is not configured yet. Please contact support.' }
   }
 
-  const item = CATALOG[itemKey]
-  if (!item) return { ok: false, error: 'Unknown item' }
-
   const userId = (session.user as { id: string }).id
-  const purchase = await prisma.purchase.create({
-    data: {
-      userId,
-      itemKey,
-      amountCents: Math.round(item.price * 100),
-      status: 'PENDING',
-      gateway: 'netcash',
-      paymentMethod: 'netcash',
-      country: country || 'South Africa',
-    },
-  })
-
-  const { url, fields } = buildPayNowForm({
-    reference: purchase.id,
-    amount: item.price,
-    description: item.label,
+  const res = await buildPaymentForm({
+    tierId,
     userId,
-    itemKey,
-    email: session.user.email ?? undefined,
+    email: contact.email ?? session.user.email,
+    name: contact.name ?? session.user.name,
+    phone: contact.phone,
+    country: contact.country,
   })
-  return { ok: true, url, fields }
+  if (!res.ok) return { ok: false, error: res.error }
+  return { ok: true, url: res.url, fields: res.fields }
 }
 
 // Demo checkout: no real PSP. Records a COMPLETE purchase and enrols the buyer in
