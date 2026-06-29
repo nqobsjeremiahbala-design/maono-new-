@@ -11,7 +11,8 @@ export const NETCASH_VENDOR_KEY_DEFAULT = '24ade73c-98cf-47b3-99be-cc7b867b3080'
 
 // The 4 purchasable tiers ARE the existing bundles; their price is the source of
 // truth used to verify the Notify amount.
-export const TIER_IDS = ['bundle-bronze', 'bundle-silver', 'bundle-gold', 'bundle-platinum'] as const
+// 'bundle-test' is a hidden R5 admin-only tier for live PSP smoke tests (see lib/checkout.ts).
+export const TIER_IDS = ['bundle-bronze', 'bundle-silver', 'bundle-gold', 'bundle-platinum', 'bundle-test'] as const
 export type TierId = (typeof TIER_IDS)[number]
 
 export function getTier(id: string): Bundle | null {

@@ -197,8 +197,7 @@ export function CheckoutClient() {
         <Link href="/" className="text-sm text-navy-500 hover:text-navy-900 mb-8 inline-block">
           ← Back
         </Link>
-        <h1 className="font-serif text-3xl md:text-4xl text-navy-900 mb-2">Checkout</h1>
-        <p className="text-navy-500 mb-10">Secure your spot — you&apos;ll complete payment securely via Netcash.</p>
+        <h1 className="font-serif text-3xl md:text-4xl text-navy-900 mb-10">Checkout</h1>
 
         <div className="grid md:grid-cols-[1fr_320px] gap-10">
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -243,19 +242,6 @@ export function CheckoutClient() {
                   by card or instant EFT. We never see or store your card details.
                 </p>
               </div>
-            </div>
-
-            <div>
-              <label htmlFor="co-notes" className="block text-sm font-medium text-navy-700 mb-1.5">
-                Anything we should know? <span className="text-navy-400 font-normal">(optional)</span>
-              </label>
-              <textarea
-                id="co-notes"
-                name="notes"
-                rows={3}
-                placeholder="Questions, accessibility needs, timing preferences…"
-                className="w-full rounded-md border border-navy-200 bg-white px-4 py-3 text-navy-900 placeholder:text-navy-400 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition resize-none"
-              />
             </div>
 
             {(returnStatus === 'declined' || returnStatus === 'cancelled' || returnStatus === 'error') && (
