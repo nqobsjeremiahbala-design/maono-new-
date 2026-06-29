@@ -1,7 +1,13 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-export function Logo({ variant = 'default' }: { variant?: 'default' | 'footer' }) {
+export function Logo({
+  variant = 'default',
+  compact = false,
+}: {
+  variant?: 'default' | 'footer'
+  compact?: boolean
+}) {
   const isFooter = variant === 'footer'
 
   // Transparent brand marks — light (navy bull) for the white header, dark
@@ -14,7 +20,9 @@ export function Logo({ variant = 'default' }: { variant?: 'default' | 'footer' }
 
   const heightClass = isFooter
     ? 'h-[120px]'
-    : 'h-[52px] md:h-[80px] lg:h-[96px]'
+    : compact
+      ? 'h-[40px] md:h-[52px] lg:h-[56px]' // scrolled: condensed
+      : 'h-[52px] md:h-[80px] lg:h-[96px]' // top: full size
 
   return (
     <Link href="/" className="inline-flex items-center" aria-label="Maono Forex Trading">
@@ -24,7 +32,7 @@ export function Logo({ variant = 'default' }: { variant?: 'default' | 'footer' }
         width={525}
         height={463}
         priority={!isFooter}
-        className={`${heightClass} w-auto object-contain`}
+        className={`${heightClass} w-auto object-contain transition-all duration-300`}
       />
     </Link>
   )

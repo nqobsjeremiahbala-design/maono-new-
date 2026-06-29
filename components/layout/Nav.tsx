@@ -16,19 +16,15 @@ const links = [
 
 export function Nav() {
   const [open, setOpen] = useState(false)
-  const [hidden, setHidden] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const { data: session, status } = useSession()
   const pathname = usePathname()
 
-  // Hide the sticky bar when scrolling down (so it doesn't eat content visibility),
-  // reveal it the moment the user scrolls back up. Stays put near the very top.
+  // Keep the bar sticky (always visible/clickable) but condense it once the user
+  // scrolls — the bar and logo shrink so it reclaims screen real estate.
   useEffect(() => {
-    let lastY = window.scrollY
-    const onScroll = () => {
-      const y = window.scrollY
-      setHidden(y > lastY && y > 120)
-      lastY = y
-    }
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
@@ -40,13 +36,13 @@ export function Nav() {
   const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN'
 
   return (
-    <header
-      className={`sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-navy-100 shadow-sm transition-transform duration-300 ${
-        hidden && !open ? '-translate-y-full' : 'translate-y-0'
-      }`}
-    >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[58px] md:h-[88px] lg:h-[104px] flex items-center justify-between">
-        <Logo />
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-navy-100 shadow-sm">
+      <nav
+        className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300 ${
+          scrolled ? 'h-14 md:h-16 lg:h-[68px]' : 'h-[58px] md:h-[88px] lg:h-[104px]'
+        }`}
+      >
+        <Logo compact={scrolled} />
 
         <ul className="hidden md:flex items-center gap-6 lg:gap-7">
           {links.map(l => (
