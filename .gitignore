@@ -44,9 +44,14 @@ yarn-error.log*
 
 # cloudflare / opennext
 /.open-next/
-.dev.vars
+.dev.vars*
 .wrangler/
 cloudflare-env.d.ts
+
+# local tooling logs & binaries (never commit)
+*.log
+tunnel.log.out
+cloudflared.exe
 
 # typescript
 *.tsbuildinfo

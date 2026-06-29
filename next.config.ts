@@ -9,6 +9,11 @@ if (process.env.NODE_ENV === 'development') {
 
 const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
+  // Dev-only: allow the cloudflared quick-tunnel host to reach /_next/* dev resources
+  // (server actions, client chunks, HMR). Without this, `next dev` blocks the tunnel as
+  // cross-origin and client JS never loads — forms silently fall back to GET. Harmless in
+  // prod (allowedDevOrigins is a dev-server setting only).
+  allowedDevOrigins: ['*.trycloudflare.com'],
   // Keep Prisma + the pg driver external so the OpenNext adapter can patch them for
   // workerd and so pg's runtime `require('pg-cloudflare')` survives bundling intact.
   serverExternalPackages: ['@prisma/client', '.prisma/client', '@prisma/adapter-pg', 'pg', 'pg-cloudflare'],
@@ -40,7 +45,8 @@ const nextConfig: NextConfig = {
             // TradingView and Telegram embeds need their script/frame origins allowlisted.
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://s3.tradingview.com https://*.tradingview.com",
+              // Dev only: Turbopack/React's dev runtime needs eval(); prod stays strict (no 'unsafe-eval').
+              `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com https://www.google-analytics.com https://va.vercel-scripts.com https://s3.tradingview.com https://*.tradingview.com`,
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https:",
               "media-src 'self' blob: https://*.r2.cloudflarestorage.com",

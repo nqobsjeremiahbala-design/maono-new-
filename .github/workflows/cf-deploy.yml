@@ -1,0 +1,67 @@
+name: Deploy to Cloudflare (Workers)
+
+# Builds the OpenNext/Cloudflare Worker on LINUX (Windows mangles the Prisma WASM
+# path, producing a Worker that crashes at startup). Runs on push to this branch
+# (build verification) and manually via "Run workflow".
+#
+# Default behaviour = upload a PREVIEW version only (no live traffic). Promotion to
+# production is done deliberately afterwards (locally `wrangler versions deploy <id>`,
+# or by re-running this workflow with mode = deploy).
+
+on:
+  push:
+    branches: [feat/cloudflare-workers-deploy]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "upload = preview version (safe) | deploy = promote to LIVE"
+        type: choice
+        options: [upload, deploy]
+        default: upload
+
+concurrency:
+  group: cf-deploy
+  cancel-in-progress: false
+
+env:
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: fc4c1cf981a93f11a434daa740814feb
+  # Build-time public vars (baked into the client by next build):
+  NEXT_PUBLIC_BASE_URL: https://maonoforextrading.co.za
+  NEXT_PUBLIC_APP_URL: https://maonoforextrading.co.za
+  NEXT_PUBLIC_ENROLLMENT_OPEN: "false" # registration stays closed until go-live
+  # Placeholders so the build (which never connects to the DB) doesn't fail on a
+  # missing var. Real values live as Cloudflare Worker secrets at runtime.
+  DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder
+  DIRECT_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder
+  AUTH_SECRET: build-time-placeholder-not-used-at-runtime
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: false # don't pull the 2GB of LFS videos — not needed to build the Worker
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Build (OpenNext / Cloudflare)
+        run: npm run cf:build
+
+      - name: Upload preview version (no live traffic)
+        if: ${{ github.event_name == 'push' || inputs.mode == 'upload' }}
+        run: npx wrangler versions upload
+
+      - name: Deploy to PRODUCTION (live)
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'deploy' }}
+        run: npx wrangler deploy
