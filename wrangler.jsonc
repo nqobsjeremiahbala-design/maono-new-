@@ -13,6 +13,19 @@
     "enabled": true
   },
 
+  // ─── Runtime env vars (read by SERVER code in the Worker) ────────────────
+  // NEXT_PUBLIC_* are inlined into the CLIENT bundle at build time, but the
+  // OpenNext server reads process.env at RUNTIME — so any NEXT_PUBLIC_* used in
+  // server code (route handlers, server actions) must also be set here, or it
+  // reads undefined. ENROLLMENT_OPEN gates the register API + checkout server
+  // action, so it MUST be a runtime var, not just a build-time client value.
+  "vars": {
+    "NEXT_PUBLIC_ENROLLMENT_OPEN": "true",
+    "NEXT_PUBLIC_BASE_URL": "https://maonoforextrading.co.za",
+    "NEXT_PUBLIC_APP_URL": "https://maonoforextrading.co.za",
+    "NETCASH_TEST_MODE": "false"
+  },
+
   // ─── R2: video / media storage (admin upload route) ──────────────────────
   // Bucket is created with: wrangler r2 bucket create maono-media
   "r2_buckets": [
