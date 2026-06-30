@@ -29,7 +29,7 @@ env:
   # Build-time public vars (baked into the client by next build):
   NEXT_PUBLIC_BASE_URL: https://maonoforextrading.co.za
   NEXT_PUBLIC_APP_URL: https://maonoforextrading.co.za
-  NEXT_PUBLIC_ENROLLMENT_OPEN: "false" # registration stays closed until go-live
+  NEXT_PUBLIC_ENROLLMENT_OPEN: "true" # LIVE: registration + public checkout open
   # Placeholders so the build (which never connects to the DB) doesn't fail on a
   # missing var. Real values live as Cloudflare Worker secrets at runtime.
   DATABASE_URL: postgresql://placeholder:placeholder@localhost:5432/placeholder

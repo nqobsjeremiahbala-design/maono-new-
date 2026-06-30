@@ -21,8 +21,10 @@ const COUNTRIES = [
 export function CheckoutClient() {
   const sp = useSearchParams()
   const itemKey = sp.get('item') || ''
-  const item = CATALOG[itemKey]
   const { data: session, status: authStatus } = useSession()
+  const role = (session?.user as { role?: string } | undefined)?.role
+  // The R5 test tier is admin-only — for everyone else treat it as no item.
+  const item = itemKey === 'bundle-test' && role !== 'ADMIN' ? undefined : CATALOG[itemKey]
   const [country, setCountry] = useState('South Africa')
   const [status, setStatus] = useState<'idle' | 'sending' | 'error'>('idle')
   const returnStatus = sp.get('status') // set when Netcash redirects back
@@ -66,7 +68,6 @@ export function CheckoutClient() {
   }
 
   // Go-live gate: enrollment is closed to new students (admins bypass for demos).
-  const role = (session.user as { role?: string }).role
   if (!canEnroll(role)) {
     return (
       <section className="bg-navy-950 min-h-dvh py-16 md:py-20 px-5 sm:px-6">
