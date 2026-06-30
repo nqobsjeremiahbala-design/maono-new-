@@ -1,25 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { signIn } from 'next-auth/react'
-import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 
-/** Allow only same-origin path-based redirects to prevent open-redirect phishing. */
-function safeCallbackUrl(raw: string | null): string {
-  if (!raw) return '/dashboard'
-  if (raw.startsWith('/') && !raw.startsWith('//')) return raw
-  return '/dashboard'
-}
-
 export function RegisterForm() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const callbackUrl = safeCallbackUrl(searchParams.get('callbackUrl'))
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [submittedEmail, setSubmittedEmail] = useState<string | null>(null)
+  const [resent, setResent] = useState(false)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -51,19 +41,53 @@ export function RegisterForm() {
       return
     }
 
-    const result = await signIn('credentials', {
-      email,
-      password,
-      redirect: false,
-    })
+    // No auto sign-in — the account must be confirmed by email first.
+    setSubmittedEmail(email)
+    setLoading(false)
+  }
 
-    if (result?.error) {
-      setError('Account created but sign-in failed. Please go to the login page.')
-      setLoading(false)
-    } else {
-      router.push(callbackUrl)
-      router.refresh()
+  async function resend() {
+    if (!submittedEmail) return
+    try {
+      await fetch('/api/auth/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: submittedEmail }),
+      })
+    } finally {
+      setResent(true)
     }
+  }
+
+  if (submittedEmail) {
+    return (
+      <div className="text-center">
+        <div className="w-12 h-0.5 bg-gold-500 mx-auto mb-6" />
+        <h2 className="font-serif text-2xl text-navy-900 mb-3">Check your email</h2>
+        <p className="text-navy-600 mb-2">
+          We&apos;ve sent a confirmation link to <strong>{submittedEmail}</strong>.
+        </p>
+        <p className="text-navy-500 text-sm mb-6">
+          Click it to activate your account, then sign in. (Check your spam folder if it&apos;s not there.)
+        </p>
+        {resent ? (
+          <p className="text-green-600 text-sm mb-6">✓ Sent again — it&apos;s on its way.</p>
+        ) : (
+          <button
+            type="button"
+            onClick={resend}
+            className="mb-6 text-sm font-medium text-gold-600 underline hover:text-gold-700"
+          >
+            Didn&apos;t get it? Resend email
+          </button>
+        )}
+        <p className="text-center text-sm text-navy-500">
+          <Link href="/login" className="font-medium text-gold-600 underline underline-offset-2 hover:text-gold-500">
+            Back to sign in
+          </Link>
+        </p>
+      </div>
+    )
   }
 
   return (
@@ -72,41 +96,21 @@ export function RegisterForm() {
         <label htmlFor="reg-name" className="block text-sm font-medium text-navy-700 mb-1.5">
           Full name
         </label>
-        <Input
-          id="reg-name"
-          name="name"
-          type="text"
-          required
-          autoComplete="name"
-          placeholder="Thabo Nkosi"
-        />
+        <Input id="reg-name" name="name" type="text" required autoComplete="name" placeholder="Thabo Nkosi" />
       </div>
 
       <div>
         <label htmlFor="reg-email" className="block text-sm font-medium text-navy-700 mb-1.5">
           Email
         </label>
-        <Input
-          id="reg-email"
-          name="email"
-          type="email"
-          required
-          autoComplete="email"
-          placeholder="you@example.com"
-        />
+        <Input id="reg-email" name="email" type="email" required autoComplete="email" placeholder="you@example.com" />
       </div>
 
       <div>
         <label htmlFor="reg-phone" className="block text-sm font-medium text-navy-700 mb-1.5">
           WhatsApp number <span className="text-navy-400 font-normal">(optional)</span>
         </label>
-        <Input
-          id="reg-phone"
-          name="phone"
-          type="tel"
-          autoComplete="tel"
-          placeholder="+27 81 000 0000"
-        />
+        <Input id="reg-phone" name="phone" type="tel" autoComplete="tel" placeholder="+27 81 000 0000" />
       </div>
 
       <div>
@@ -125,9 +129,7 @@ export function RegisterForm() {
         <p className="text-xs text-navy-400 mt-1.5">At least 8 characters</p>
       </div>
 
-      {error && (
-        <p className="text-red-500 text-sm">{error}</p>
-      )}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
 
       <Button type="submit" size="md" className="w-full" disabled={loading}>
         {loading ? 'Creating account…' : 'Create account'}

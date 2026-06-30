@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth'
+import NextAuth, { CredentialsSignin } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 // Google sign-in is disabled for now (see providers below). Re-add the
 // `next-auth/providers/google` import + provider when OAuth creds are ready.
@@ -12,6 +12,13 @@ export type SessionUser = {
   email: string
   name: string | null
   role: 'STUDENT' | 'ADMIN'
+}
+
+// Thrown from authorize() when the password is correct but the email isn't
+// confirmed yet. The `code` surfaces to the client so the login form can show
+// the "confirm your email" message + resend, instead of "wrong password".
+class EmailNotVerifiedError extends CredentialsSignin {
+  code = 'EmailNotVerified'
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -72,6 +79,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         if (!valid) return null
+
+        // Email-verification gate: block sign-in until the address is confirmed.
+        // Existing (grandfathered) users have emailVerified set, so this only
+        // affects new, unconfirmed self-signups.
+        if (!user.emailVerified) throw new EmailNotVerifiedError()
 
         // Record the successful sign-in (best-effort — never block login on it).
         try {

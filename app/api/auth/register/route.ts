@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/db'
 import { ENROLLMENT_OPEN } from '@/lib/flags'
-import { sendWelcomeEmail } from '@/lib/email'
+import { sendVerificationEmail } from '@/lib/email'
+import { createVerificationToken } from '@/lib/auth/verification'
 
 export async function POST(request: NextRequest) {
   try {
@@ -42,13 +43,21 @@ export async function POST(request: NextRequest) {
         email,
         passwordHash,
         phone,
+        // emailVerified intentionally left null — the user must confirm via email
+        // before they can log in (see the gate in lib/auth.ts).
       },
     })
 
-    // Welcome email (best-effort; no-ops if RESEND_API_KEY is unset).
-    await sendWelcomeEmail(email, name)
+    // Send the email-confirmation link (login is blocked until confirmed).
+    const token = await createVerificationToken(email)
+    const base = process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin
+    const verifyUrl = `${base}/verify-email?token=${token}&email=${encodeURIComponent(email)}`
+    await sendVerificationEmail(email, verifyUrl)
 
-    return NextResponse.json({ id: user.id, email: user.email }, { status: 201 })
+    return NextResponse.json(
+      { id: user.id, email: user.email, requiresVerification: true },
+      { status: 201 },
+    )
   } catch (error) {
     console.error('[register] Error:', error)
     return NextResponse.json({ error: 'Registration failed' }, { status: 500 })

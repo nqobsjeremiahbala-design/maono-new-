@@ -21,10 +21,27 @@ export function LoginForm() {
   const callbackUrl = safeCallbackUrl(searchParams.get('callbackUrl'))
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [unverified, setUnverified] = useState<string | null>(null)
+  const [resent, setResent] = useState(false)
+
+  async function resendVerification() {
+    if (!unverified) return
+    try {
+      await fetch('/api/auth/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: unverified }),
+      })
+    } finally {
+      setResent(true)
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError('')
+    setUnverified(null)
+    setResent(false)
     setLoading(true)
 
     const formData = new FormData(e.currentTarget)
@@ -38,7 +55,11 @@ export function LoginForm() {
     })
 
     if (result?.error) {
-      setError('Invalid email or password')
+      if ((result as { code?: string }).code === 'EmailNotVerified') {
+        setUnverified(email)
+      } else {
+        setError('Invalid email or password')
+      }
       setLoading(false)
     } else {
       // If no explicit callbackUrl was provided, route admins to /admin
@@ -91,8 +112,20 @@ export function LoginForm() {
         />
       </div>
 
-      {error && (
-        <p className="text-red-500 text-sm">{error}</p>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+
+      {unverified && (
+        <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
+          <p className="font-medium">Please confirm your email first.</p>
+          <p className="mt-1">We sent a confirmation link to {unverified}.</p>
+          {resent ? (
+            <p className="mt-2 font-medium">✓ Sent again — check your inbox (and spam).</p>
+          ) : (
+            <button type="button" onClick={resendVerification} className="mt-2 font-medium underline">
+              Resend confirmation email
+            </button>
+          )}
+        </div>
       )}
 
       <Button type="submit" size="md" className="w-full" disabled={loading}>

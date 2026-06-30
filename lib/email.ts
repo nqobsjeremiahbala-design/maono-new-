@@ -203,6 +203,20 @@ export function sendPasswordResetEmail(to: string, resetUrl: string) {
   })
 }
 
+// ─── 6b. Email verification (new self-signups) ────────────────────────────
+export function sendVerificationEmail(to: string, verifyUrl: string) {
+  return sendEmail({
+    to,
+    subject: 'Confirm your email — Maono Forex Trading',
+    html: layout({
+      preheader: 'Confirm your email to activate your account.',
+      heading: 'Confirm your email',
+      body: `<p>Thanks for signing up. Please confirm your email address to activate your account — you'll be able to log in once it's confirmed. This link is valid for <strong style="color:#fff">24 hours</strong>.</p><p>If you didn't create this account, you can safely ignore this email.</p>`,
+      cta: { label: 'Confirm my email', href: verifyUrl },
+    }),
+  })
+}
+
 // ─── 6. Account invite (admin-provisioned client sets their password) ──────
 export function sendClientInviteEmail(to: string, name: string | null | undefined, setupUrl: string) {
   return sendEmail({
