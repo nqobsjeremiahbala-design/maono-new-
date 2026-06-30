@@ -1,5 +1,7 @@
 import { prisma } from '@/lib/db'
 import { BUNDLE_BY_ID, COURSE_TITLES } from '@/lib/checkout'
+import { NETCASH_METHOD_LABELS } from '@/lib/netcash/config'
+import { MarkPaidButton } from './MarkPaidButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -7,6 +9,15 @@ export const dynamic = 'force-dynamic'
 function planLabel(itemKey: string, courseTitle?: string | null): string {
   if (itemKey.startsWith('bundle-')) return BUNDLE_BY_ID[itemKey]?.name ?? itemKey
   return courseTitle || COURSE_TITLES[itemKey] || itemKey
+}
+
+// Human-readable payment method (Card, Instant EFT, Capitec Pay…).
+function methodLabel(netcashMethod: string | null, paymentMethod: string | null): string {
+  const code = netcashMethod ?? (paymentMethod?.startsWith('netcash_') ? paymentMethod.slice(8) : null)
+  if (code && NETCASH_METHOD_LABELS[code]) return NETCASH_METHOD_LABELS[code]
+  if (paymentMethod === 'netcash_manual') return 'Manual'
+  if (paymentMethod === 'demo') return 'Demo'
+  return paymentMethod || '—'
 }
 
 const fmtDate = (d: Date) =>
@@ -51,10 +62,13 @@ export default async function AdminPurchasesPage() {
               <th className="px-4 py-3 text-navy-400 font-medium">Email</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Plan</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Amount</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Method</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Reference</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Country</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Status</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Gateway</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Paid / Created</th>
+              <th className="px-4 py-3 text-navy-400 font-medium text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -69,6 +83,8 @@ export default async function AdminPurchasesPage() {
                 <td className="px-4 py-3 text-navy-300">
                   R{(p.amountCents / 100).toLocaleString('en-ZA')}
                 </td>
+                <td className="px-4 py-3 text-navy-300">{methodLabel(p.netcashMethod, p.paymentMethod)}</td>
+                <td className="px-4 py-3 font-mono text-xs text-navy-400">{p.netcashRef || '—'}</td>
                 <td className="px-4 py-3 text-navy-400">{p.country || '—'}</td>
                 <td className="px-4 py-3">
                   <span className={`text-xs px-2 py-0.5 rounded-full ${
@@ -87,6 +103,16 @@ export default async function AdminPurchasesPage() {
                     <span className="text-green-400">{fmtDate(p.paidAt)}</span>
                   ) : (
                     <span className="text-navy-500">{fmtDate(p.createdAt)}</span>
+                  )}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  {p.status === 'COMPLETE' ? (
+                    <span className="text-xs text-navy-600">—</span>
+                  ) : (
+                    <MarkPaidButton
+                      purchaseId={p.id}
+                      summary={`${p.user.email} · ${planLabel(p.itemKey, p.course?.title)} · R${(p.amountCents / 100).toLocaleString('en-ZA')}`}
+                    />
                   )}
                 </td>
               </tr>
