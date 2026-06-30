@@ -9,10 +9,12 @@
 //   • Admins bypass the gate, so they can run the demo checkout and see courses
 //     play in their dashboard (for testing / demos).
 //
-// To re-open enrollment for everyone later, set NEXT_PUBLIC_ENROLLMENT_OPEN=true
-// (a build/env var) and redeploy. Defaults to CLOSED when unset.
-export const ENROLLMENT_OPEN =
-  (process.env.NEXT_PUBLIC_ENROLLMENT_OPEN ?? 'false').toLowerCase() === 'true'
+// The site is LIVE (launched 2026-06-30): registration + checkout are open to all.
+// Hardcoded true on purpose — NEXT_PUBLIC_ENROLLMENT_OPEN resolved INCONSISTENTLY
+// between OpenNext's client build (inlined) and the Worker server runtime (read from
+// process.env, where it was absent), so the Register button + register API/checkout
+// disagreed. A literal keeps client and server identical. To gate again, set to false.
+export const ENROLLMENT_OPEN = true
 
 /** True when this user may complete a checkout / enrol right now. */
 export function canEnroll(role: string | undefined): boolean {
