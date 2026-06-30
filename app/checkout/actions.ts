@@ -2,7 +2,7 @@
 
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/db'
-import { CATALOG, enrollSlugsForItem, TEST_BUNDLE_ID } from '@/lib/checkout'
+import { CATALOG, enrollSlugsForItem } from '@/lib/checkout'
 import { canEnroll } from '@/lib/flags'
 import { sendPurchaseEmail, sendUpgradeEmail } from '@/lib/email'
 import { isNetcashConfigured } from '@/lib/netcash/config'
@@ -21,10 +21,6 @@ export async function startNetcashCheckout(
   const role = (session.user as { role?: string }).role
   if (!canEnroll(role)) {
     return { ok: false, error: 'Enrolment is currently closed to new students.' }
-  }
-  // The hidden R5 test tier is for admin live smoke tests only — never purchasable by students.
-  if (tierId === TEST_BUNDLE_ID && role !== 'ADMIN') {
-    return { ok: false, error: 'Unknown item' }
   }
   if (!isNetcashConfigured()) {
     return { ok: false, error: 'Online payment is not configured yet. Please contact support.' }

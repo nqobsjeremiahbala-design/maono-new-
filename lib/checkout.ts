@@ -79,21 +79,8 @@ export const BUNDLES: Bundle[] = [
   },
 ]
 
-// Hidden admin-only test bundle for live PSP smoke tests with minimal funds (R5).
-// Deliberately kept OUT of BUNDLES so it never appears on plans/home/course pages;
-// reachable only via /checkout?item=bundle-test, and gated to admins in actions.ts.
-export const TEST_BUNDLE_ID = 'bundle-test'
-const TEST_BUNDLE: Bundle = {
-  id: TEST_BUNDLE_ID,
-  name: 'Test',
-  tagline: 'PSP smoke test',
-  price: 5,
-  courseSlugs: ['forex-trading-introduction'],
-}
-
-// Keyed lookups include the hidden test bundle; list-based UIs iterate BUNDLES (no test).
 export const BUNDLE_BY_ID: Record<string, Bundle> = Object.fromEntries(
-  [...BUNDLES, TEST_BUNDLE].map((b) => [b.id, b]),
+  BUNDLES.map((b) => [b.id, b]),
 )
 
 // All six courses ship with a video player.
@@ -114,7 +101,7 @@ export function bundlesForCourse(slug: string): Bundle[] {
 export type CheckoutItem = { label: string; sub: string; price: number; period: 'once' }
 
 export const CATALOG: Record<string, CheckoutItem> = Object.fromEntries(
-  [...BUNDLES, TEST_BUNDLE].map((b) => [
+  BUNDLES.map((b) => [
     b.id,
     {
       label: `${b.name} — ${b.tagline}`,

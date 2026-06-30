@@ -23,8 +23,7 @@ export function CheckoutClient() {
   const itemKey = sp.get('item') || ''
   const { data: session, status: authStatus } = useSession()
   const role = (session?.user as { role?: string } | undefined)?.role
-  // The R5 test tier is admin-only — for everyone else treat it as no item.
-  const item = itemKey === 'bundle-test' && role !== 'ADMIN' ? undefined : CATALOG[itemKey]
+  const item = CATALOG[itemKey]
   const [country, setCountry] = useState('South Africa')
   const [status, setStatus] = useState<'idle' | 'sending' | 'error'>('idle')
   const returnStatus = sp.get('status') // set when Netcash redirects back
