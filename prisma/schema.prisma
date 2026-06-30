@@ -33,6 +33,7 @@ model User {
   planTier      String?   // explicit bundle tier (Bronze/Silver/Gold/Platinum) when provisioned; else derived from course count
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  lastLoginAt   DateTime? // last successful sign-in (shown in admin Users)
 
   accounts    Account[]
   sessions    Session[]

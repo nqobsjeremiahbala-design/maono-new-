@@ -73,6 +73,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!valid) return null
 
+        // Record the successful sign-in (best-effort — never block login on it).
+        try {
+          await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } })
+        } catch {
+          // non-blocking
+        }
+
         return {
           id: user.id,
           email: user.email,

@@ -3,6 +3,8 @@ import type { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/db'
 import { resolvePlan } from '@/lib/plan'
 import { DeleteUserButton } from './DeleteUserButton'
+import { ResetPasswordButton } from './ResetPasswordButton'
+import { getServerSession } from '@/lib/auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -34,6 +36,9 @@ export default async function AdminUsersPage({
     take: 200,
     include: { _count: { select: { enrollments: true, purchases: true } } },
   })
+
+  const session = await getServerSession()
+  const myId = (session?.user as { id?: string } | undefined)?.id
 
   const filters: { key: Filter; label: string }[] = [
     { key: 'all', label: 'All' },
@@ -103,6 +108,7 @@ export default async function AdminUsersPage({
               <th className="px-4 py-3 text-navy-400 font-medium">Courses</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Purchases</th>
               <th className="px-4 py-3 text-navy-400 font-medium">Joined</th>
+              <th className="px-4 py-3 text-navy-400 font-medium">Last sign-in</th>
               <th className="px-4 py-3 text-navy-400 font-medium text-right">Actions</th>
             </tr>
           </thead>
@@ -131,12 +137,17 @@ export default async function AdminUsersPage({
                   <td className="px-4 py-3 text-navy-400">
                     {new Date(user.createdAt).toLocaleDateString('en-ZA')}
                   </td>
+                  <td className="px-4 py-3 text-navy-400">
+                    {user.lastLoginAt
+                      ? new Date(user.lastLoginAt).toLocaleString('en-ZA')
+                      : <span className="text-navy-600">Never</span>}
+                  </td>
                   <td className="px-4 py-3 text-right">
-                    {user.role === 'ADMIN' ? (
-                      <span className="text-xs text-navy-600">—</span>
-                    ) : (
-                      <DeleteUserButton userId={user.id} email={user.email} />
-                    )}
+                    <div className="flex items-center justify-end gap-3">
+                      {user.id !== myId && <ResetPasswordButton userId={user.id} email={user.email} />}
+                      {user.role !== 'ADMIN' && <DeleteUserButton userId={user.id} email={user.email} />}
+                      {user.id === myId && <span className="text-xs text-navy-600">—</span>}
+                    </div>
                   </td>
                 </tr>
               )
