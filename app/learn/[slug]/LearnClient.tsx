@@ -5,7 +5,7 @@ import Link from 'next/link'
 import type { CourseCurriculum, Lesson } from '@/lib/courseLessons'
 import { Markdown } from '@/lib/markdown'
 import { setLessonComplete } from './actions'
-import { BunnyLesson } from './BunnyLesson'
+import { LessonVideo } from './LessonVideo'
 
 type Props = {
   courseSlug: string
@@ -322,7 +322,7 @@ function LessonView({
       <div className="mb-8 md:mb-10">
         {lesson.type === 'video' ? (
           <div className="relative aspect-video rounded-2xl overflow-hidden bg-black shadow-elevated">
-            <BunnyLesson
+            <LessonVideo
               key={lesson.slug}
               courseSlug={courseSlug}
               lessonSlug={lesson.slug}
