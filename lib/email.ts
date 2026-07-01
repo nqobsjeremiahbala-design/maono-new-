@@ -280,7 +280,7 @@ export function welcomeBackEmailHtml(to: string, name: string | null | undefined
           <h1 style="font-family:Georgia,'Times New Roman',serif;color:#0b0f19;font-size:28px;line-height:1.15;font-weight:700;margin:0 0 12px">Welcome back${first ? `, ${first}` : ''} 👋</h1>
           <div style="width:52px;height:3px;background:${GOLD};border-radius:2px;margin:0 0 22px;font-size:0;line-height:0">&nbsp;</div>
 
-          <p style="color:#0b0f19;font-weight:500;font-size:15px;line-height:1.6;margin:0 0 16px"><a href="${site}" style="color:${GOLD_LINK};font-weight:700;text-decoration:underline">Maono Forex Trading</a> has a new home — rebuilt from scratch to be faster, cleaner, and easier to learn on. Nothing's changed about what you own: your <strong style="color:#0b0f19">${planName} Plan</strong> and every course are already waiting for you.</p>
+          <p style="color:#0b0f19;font-weight:500;font-size:15px;line-height:1.6;margin:0 0 16px"><a href="${site}" style="color:${GOLD_LINK};font-weight:700;text-decoration:underline">Maono Forex Trading</a> has a new home, rebuilt from scratch to be faster, cleaner, and easier to learn on. Nothing's changed about what you own: your <strong style="color:#0b0f19">${planName} Plan</strong> and every course are already waiting for you.</p>
 
           <table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 2px"><tr><td style="background:#faf5e6;border:1px solid ${GOLD};border-radius:10px;padding:12px 18px;color:#8a6a17;font-size:13px;font-weight:700;letter-spacing:0.02em">&#9733;&nbsp; ${planName.toUpperCase()} PLAN &middot; Lifetime Access${perks}</td></tr></table>
 
@@ -289,18 +289,18 @@ export function welcomeBackEmailHtml(to: string, name: string | null | undefined
 
           ${label('To pick up where you left off')}
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            ${step(1, `<strong style="color:#0b0f19">Open the new site</strong> — tap the gold button below.`)}
-            ${step(2, `<strong style="color:#0b0f19">Sign in</strong> with <span style="color:${GOLD_LINK};font-weight:600">${to}</span>. Don't remember your password? Tap <strong style="color:#0b0f19">"Forgot password"</strong> for a reset link — it's instant.`)}
+            ${step(1, `<strong style="color:#0b0f19">Open the new site</strong> by tapping the gold button below.`)}
+            ${step(2, `<strong style="color:#0b0f19">Sign in</strong> with <span style="color:${GOLD_LINK};font-weight:600">${to}</span>. Don't remember your password? Tap <strong style="color:#0b0f19">"Forgot password"</strong> for a reset link. It's instant.`)}
             ${step(3, `<strong style="color:#0b0f19">Head to your Dashboard</strong> and continue exactly where you left off.`)}
           </table>
 
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 4px"><tr><td style="background:#faf6ec;border-left:3px solid ${GOLD};border-radius:0 8px 8px 0;padding:13px 16px;color:#0b0f19;font-weight:500;font-size:14px;line-height:1.55">💡 Most returning members need a quick password reset on the new site — it takes about 30 seconds. <a href="${resetUrl}" style="color:${GOLD_LINK};font-weight:700">Reset it here &rarr;</a></td></tr></table>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 4px"><tr><td style="background:#faf6ec;border-left:3px solid ${GOLD};border-radius:0 8px 8px 0;padding:13px 16px;color:#0b0f19;font-weight:500;font-size:14px;line-height:1.55">💡 Most returning members need a quick password reset on the new site, and it takes about 30 seconds. <a href="${resetUrl}" style="color:${GOLD_LINK};font-weight:700">Reset it here &rarr;</a></td></tr></table>
 
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0 6px"><tr><td align="center">
             <a href="${loginUrl}" style="display:inline-block;background:${GOLD};color:#0a0f1e;font-weight:700;font-size:16px;text-decoration:none;padding:15px 44px;border-radius:999px">Log in to my dashboard &rarr;</a>
           </td></tr></table>
 
-          <p style="text-align:center;color:#0b0f19;font-weight:500;font-size:14px;margin:16px 0 4px">Daily setups &amp; community — <a href="${TELEGRAM_URL}" style="color:${GOLD_LINK};font-weight:700">join our Telegram channel &rarr;</a></p>
+          <p style="text-align:center;color:#0b0f19;font-weight:500;font-size:14px;margin:16px 0 4px">Daily setups &amp; community. <a href="${TELEGRAM_URL}" style="color:${GOLD_LINK};font-weight:700">Join our Telegram channel &rarr;</a></p>
         </td></tr>
 
         <tr><td style="padding:22px 32px 28px;border-top:1px solid #edf0f5">
