@@ -52,6 +52,7 @@ cloudflare-env.d.ts
 *.log
 tunnel.log.out
 cloudflared.exe
+scripts/db-check.mjs
 
 # typescript
 *.tsbuildinfo

@@ -9,6 +9,8 @@ if (process.env.NODE_ENV === 'development') {
 
 const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx', 'mdx'],
+  // Don't leak the framework/version to attackers scanning for known CVEs.
+  poweredByHeader: false,
   // Dev-only: allow the cloudflared quick-tunnel host to reach /_next/* dev resources
   // (server actions, client chunks, HMR). Without this, `next dev` blocks the tunnel as
   // cross-origin and client JS never loads — forms silently fall back to GET. Harmless in
@@ -37,7 +39,7 @@ const nextConfig: NextConfig = {
           { key: 'X-Frame-Options', value: 'DENY' },
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
           {
             key: 'Content-Security-Policy',
             // 'unsafe-inline' is still required for the GA bootstrap snippet and a few inline style attributes.
