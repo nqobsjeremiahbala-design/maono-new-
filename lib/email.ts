@@ -2,6 +2,8 @@
 // No-ops gracefully when RESEND_API_KEY is not set, so it never breaks a flow.
 // Required env: RESEND_API_KEY. Optional: EMAIL_FROM (defaults to Resend sandbox).
 
+import { BUNDLE_BY_ID, COURSE_TITLES } from './checkout'
+
 const RESEND_ENDPOINT = 'https://api.resend.com/emails'
 
 function appUrl() {
@@ -228,24 +230,51 @@ function friendlyFirstName(name?: string | null): string {
   return /^[A-Z][a-zA-Z'’-]{1,}$/.test(first) ? first : ''
 }
 
+// Plan → ordered course titles (learning order) for the "what you have access to" list.
+const PLAN_TO_BUNDLE: Record<string, string> = {
+  Bronze: 'bundle-bronze', Silver: 'bundle-silver', Gold: 'bundle-gold', Platinum: 'bundle-platinum',
+}
+function coursesForPlan(planName: string): string[] {
+  const b = BUNDLE_BY_ID[PLAN_TO_BUNDLE[planName] ?? '']
+  return b ? b.courseSlugs.map((s) => COURSE_TITLES[s] ?? s) : []
+}
+
 export function welcomeBackEmailHtml(to: string, name: string | null | undefined, planName: string): string {
   const first = friendlyFirstName(name)
-  const loginUrl = `${appUrl()}/login`
-  const resetUrl = `${appUrl()}/forgot-password`
+  const site = appUrl()
+  const host = site.replace(/^https?:\/\//, '')
+  const loginUrl = `${site}/login`
+  const resetUrl = `${site}/forgot-password`
+  const courses = coursesForPlan(planName)
+  const courseList = courses.length
+    ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:10px 0 0">${courses
+        .map(
+          (t, i) =>
+            `<tr><td valign="top" style="padding:0 10px 7px 0;color:#c9a84c;font-weight:700;font-size:15px">${i + 1}.</td><td style="padding:0 0 7px;color:#e6edf7;font-size:15px;line-height:1.5">${t}</td></tr>`,
+        )
+        .join('')}</table>`
+    : ''
+  const platinumPerks =
+    planName === 'Platinum'
+      ? `<p style="margin:12px 0 0">Plus your Platinum extras — <strong style="color:#fff">monthly 1‑on‑1 mentorship</strong> and <strong style="color:#fff">priority Telegram support</strong>.</p>`
+      : ''
   return layout({
-      preheader: `We've rebuilt Maono Forex Trading. Here's how to log back in and pick up your ${planName} courses.`,
+      preheader: `We've redesigned Maono Forex Trading. Here's how to log back in and pick up your ${planName} courses.`,
       heading: `Welcome back${first ? `, ${first}` : ''} 👋`,
       body: `
-        <p>Maono Forex Trading has a <strong style="color:#fff">brand-new home</strong> — faster, cleaner and built around how you actually learn to trade.</p>
-        <p>Your account came with us. You still have <strong style="color:#fff">lifetime access to your ${planName} plan</strong> — every course, ready when you are.</p>
+        <img src="${site}/images/hero/hero-main.jpg" alt="Maono Forex Trading" width="520" style="display:block;width:100%;max-width:520px;height:auto;border:0;border-radius:12px;margin:0 0 22px" />
+        <p><a href="${site}" style="color:#c9a84c;font-weight:600;text-decoration:none">Maono Forex Trading</a> (${host}) has a brand‑new home. We've rebuilt the entire site from the ground up for a faster, cleaner and altogether nicer learning experience — and your account came with us, every course included.</p>
+        <p>You're on the <strong style="color:#fff">${planName} plan</strong>, with lifetime access to:</p>
+        ${courseList}
+        ${platinumPerks}
         <p style="margin:22px 0 10px;color:#ffffff;font-weight:600">Getting back in takes under a minute:</p>
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px;line-height:1.55;color:#b4c2dc">
           <tr><td valign="top" style="padding:0 12px 12px 0;width:26px"><span style="display:inline-block;width:24px;height:24px;background:#c9a84c;color:#0a0f1e;border-radius:12px;text-align:center;font-weight:700;font-size:13px;line-height:24px">1</span></td><td style="padding:0 0 12px"><strong style="color:#fff">Open the new site</strong> — tap the gold button below.</td></tr>
           <tr><td valign="top" style="padding:0 12px 12px 0"><span style="display:inline-block;width:24px;height:24px;background:#c9a84c;color:#0a0f1e;border-radius:12px;text-align:center;font-weight:700;font-size:13px;line-height:24px">2</span></td><td style="padding:0 0 12px"><strong style="color:#fff">Sign in</strong> with this email address (<span style="color:#fff">${to}</span>). Can't remember your password? Tap <strong style="color:#fff">"Forgot password"</strong> and we'll email you a reset link.</td></tr>
           <tr><td valign="top" style="padding:0 12px 0 0"><span style="display:inline-block;width:24px;height:24px;background:#c9a84c;color:#0a0f1e;border-radius:12px;text-align:center;font-weight:700;font-size:13px;line-height:24px">3</span></td><td><strong style="color:#fff">Open your Dashboard</strong> — your ${planName} courses are waiting.</td></tr>
         </table>
-        <p style="margin-top:18px">First time back on the new site? Most returning members just <a href="${resetUrl}" style="color:#c9a84c">reset their password here</a> — it takes about 30 seconds.</p>
-        ${telegramLine}
+        <p style="margin-top:18px">First time back on the new site? Most returning members simply <a href="${resetUrl}" style="color:#c9a84c">reset their password here</a> — it takes about 30 seconds.</p>
+        <p style="margin-top:22px;padding-top:16px;border-top:1px solid #14223c">Want daily setups, market ideas and community support? <a href="${TELEGRAM_URL}" style="color:#c9a84c;font-weight:600">Join our Telegram channel →</a></p>
       `,
       cta: { label: 'Log in to my dashboard', href: loginUrl },
   })
