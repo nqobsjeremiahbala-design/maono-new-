@@ -246,38 +246,70 @@ export function welcomeBackEmailHtml(to: string, name: string | null | undefined
   const loginUrl = `${site}/login`
   const resetUrl = `${site}/forgot-password`
   const courses = coursesForPlan(planName)
+  const preheader = `We've redesigned Maono Forex Trading — here's how to log back in and pick up your ${planName} courses.`
+
+  const GOLD = '#c9a84c' // brand gold (solid elements)
+  const GOLD_TXT = '#e0b64d' // lighter gold for links/emphasis on dark
+  const label = (t: string) =>
+    `<p style="margin:26px 0 12px;color:#7f8aa1;font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase">${t}</p>`
   const courseList = courses.length
-    ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:10px 0 0">${courses
+    ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:2px 0 0">${courses
         .map(
           (t, i) =>
-            `<tr><td valign="top" style="padding:0 10px 7px 0;color:#c9a84c;font-weight:700;font-size:15px">${i + 1}.</td><td style="padding:0 0 7px;color:#e6edf7;font-size:15px;line-height:1.5">${t}</td></tr>`,
+            `<tr><td valign="top" style="width:20px;padding:0 12px 9px 0;color:${GOLD};font-weight:700;font-size:15px;line-height:1.5">${i + 1}</td><td style="padding:0 0 9px;color:#dbe4f0;font-size:15px;line-height:1.5">${t}</td></tr>`,
         )
         .join('')}</table>`
     : ''
-  const platinumPerks =
-    planName === 'Platinum'
-      ? `<p style="margin:12px 0 0">Plus your Platinum extras — <strong style="color:#fff">monthly 1‑on‑1 mentorship</strong> and <strong style="color:#fff">priority Telegram support</strong>.</p>`
-      : ''
-  return layout({
-      preheader: `We've redesigned Maono Forex Trading. Here's how to log back in and pick up your ${planName} courses.`,
-      heading: `Welcome back${first ? `, ${first}` : ''} 👋`,
-      body: `
-        <img src="${site}/images/hero/hero-main.jpg" alt="Maono Forex Trading" width="520" style="display:block;width:100%;max-width:520px;height:auto;border:0;border-radius:12px;margin:0 0 22px" />
-        <p><a href="${site}" style="color:#c9a84c;font-weight:600;text-decoration:none">Maono Forex Trading</a> (${host}) has a brand‑new home. We've rebuilt the entire site from the ground up for a faster, cleaner and altogether nicer learning experience — and your account came with us, every course included.</p>
-        <p>You're on the <strong style="color:#fff">${planName} plan</strong>, with lifetime access to:</p>
-        ${courseList}
-        ${platinumPerks}
-        <p style="margin:22px 0 10px;color:#ffffff;font-weight:600">Getting back in takes under a minute:</p>
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px;line-height:1.55;color:#b4c2dc">
-          <tr><td valign="top" style="padding:0 12px 12px 0;width:26px"><span style="display:inline-block;width:24px;height:24px;background:#c9a84c;color:#0a0f1e;border-radius:12px;text-align:center;font-weight:700;font-size:13px;line-height:24px">1</span></td><td style="padding:0 0 12px"><strong style="color:#fff">Open the new site</strong> — tap the gold button below.</td></tr>
-          <tr><td valign="top" style="padding:0 12px 12px 0"><span style="display:inline-block;width:24px;height:24px;background:#c9a84c;color:#0a0f1e;border-radius:12px;text-align:center;font-weight:700;font-size:13px;line-height:24px">2</span></td><td style="padding:0 0 12px"><strong style="color:#fff">Sign in</strong> with this email address (<span style="color:#fff">${to}</span>). Can't remember your password? Tap <strong style="color:#fff">"Forgot password"</strong> and we'll email you a reset link.</td></tr>
-          <tr><td valign="top" style="padding:0 12px 0 0"><span style="display:inline-block;width:24px;height:24px;background:#c9a84c;color:#0a0f1e;border-radius:12px;text-align:center;font-weight:700;font-size:13px;line-height:24px">3</span></td><td><strong style="color:#fff">Open your Dashboard</strong> — your ${planName} courses are waiting.</td></tr>
-        </table>
-        <p style="margin-top:18px">First time back on the new site? Most returning members simply <a href="${resetUrl}" style="color:#c9a84c">reset their password here</a> — it takes about 30 seconds.</p>
-        <p style="margin-top:22px;padding-top:16px;border-top:1px solid #14223c">Want daily setups, market ideas and community support? <a href="${TELEGRAM_URL}" style="color:#c9a84c;font-weight:600">Join our Telegram channel →</a></p>
-      `,
-      cta: { label: 'Log in to my dashboard', href: loginUrl },
-  })
+  const perks = planName === 'Platinum' ? ' &middot; Mentorship + Priority Support' : ''
+  const step = (n: number, html: string) =>
+    `<tr><td valign="top" style="width:30px;padding:0 14px 16px 0"><span style="display:inline-block;width:28px;height:28px;background:${GOLD};color:#0a0f1e;border-radius:14px;text-align:center;font-weight:700;font-size:14px;line-height:28px">${n}</span></td><td style="padding:0 0 16px;color:#aeb9cc;font-size:15px;line-height:1.55">${html}</td></tr>`
+
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;background:#0a0f1e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0">${preheader}</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0f1e;padding:28px 14px">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#0c1526;border:1px solid #1b2942;border-radius:18px;overflow:hidden">
+        <tr><td align="center" style="padding:30px 32px 8px">
+          <img src="${site}/images/logo/maono_forex_trading_logo_transparent_dark_site.png" alt="Maono Forex Trading" width="150" style="display:block;width:150px;max-width:52%;height:auto;border:0;outline:none;text-decoration:none" />
+        </td></tr>
+        <tr><td style="padding:14px 32px 0">
+          <img src="${site}/images/hero/hero-main.jpg" alt="Maono Forex Trading" width="496" style="display:block;width:100%;max-width:496px;height:auto;border:0;border-radius:12px" />
+        </td></tr>
+        <tr><td style="padding:26px 32px 10px">
+          <h1 style="font-family:Georgia,'Times New Roman',serif;color:#ffffff;font-size:28px;line-height:1.15;font-weight:700;margin:0 0 12px">Welcome back${first ? `, ${first}` : ''}</h1>
+          <div style="width:52px;height:3px;background:${GOLD};border-radius:2px;margin:0 0 22px;font-size:0;line-height:0">&nbsp;</div>
+
+          <p style="color:#aeb9cc;font-size:15px;line-height:1.65;margin:0 0 16px"><a href="${site}" style="color:${GOLD_TXT};font-weight:600;text-decoration:none">Maono Forex Trading</a> (${host}) has a brand-new home. We've rebuilt the entire site from the ground up for a faster, cleaner and altogether nicer learning experience — and your account came with us, every course included.</p>
+
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 2px"><tr><td style="background:#13203a;border:1px solid rgba(201,168,76,0.45);border-radius:10px;padding:12px 18px;color:#e6c46e;font-size:13px;font-weight:600;letter-spacing:0.02em">&#9733;&nbsp; ${planName.toUpperCase()} PLAN &middot; Lifetime Access${perks}</td></tr></table>
+
+          ${label('Included in your plan')}
+          ${courseList}
+
+          ${label('Getting back in takes under a minute')}
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            ${step(1, `<strong style="color:#ffffff">Open the new site</strong> — tap the gold button below.`)}
+            ${step(2, `<strong style="color:#ffffff">Sign in</strong> with this email (<span style="color:${GOLD_TXT}">${to}</span>). Forgotten your password? Tap <strong style="color:#ffffff">"Forgot password"</strong> for a reset link.`)}
+            ${step(3, `<strong style="color:#ffffff">Open your Dashboard</strong> and pick up right where you left off.`)}
+          </table>
+
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 4px"><tr><td style="background:#0f1a30;border-left:3px solid ${GOLD};border-radius:0 8px 8px 0;padding:13px 16px;color:#aeb9cc;font-size:14px;line-height:1.55">First time back on the new site? Most returning members simply <a href="${resetUrl}" style="color:${GOLD_TXT};font-weight:600">reset their password here</a> — it takes about 30 seconds.</td></tr></table>
+
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0 6px"><tr><td align="center">
+            <a href="${loginUrl}" style="display:inline-block;background:${GOLD};color:#0a0f1e;font-weight:700;font-size:16px;text-decoration:none;padding:15px 44px;border-radius:999px">Log in to my dashboard &rarr;</a>
+          </td></tr></table>
+
+          <p style="text-align:center;color:#8a95ab;font-size:14px;margin:16px 0 4px">Daily setups &amp; community — <a href="${TELEGRAM_URL}" style="color:${GOLD_TXT};font-weight:600">join our Telegram channel &rarr;</a></p>
+        </td></tr>
+
+        <tr><td style="padding:22px 32px 28px;border-top:1px solid #16233c">
+          <p style="color:#5b6580;font-size:12px;line-height:1.6;margin:14px 0 0">Maono Forex Trading &middot; ${host}<br/>You're receiving this because you have an account with us.</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`
 }
 
 export function sendWelcomeBackEmail(to: string, name: string | null | undefined, planName: string) {
