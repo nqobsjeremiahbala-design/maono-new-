@@ -248,8 +248,8 @@ export function welcomeBackEmailHtml(to: string, name: string | null | undefined
   const courses = coursesForPlan(planName)
   const preheader = `We've redesigned Maono Forex Trading — here's how to log back in and pick up your ${planName} courses.`
 
-  const GOLD = '#c9a84c' // brand gold (solid elements)
-  const GOLD_TXT = '#e0b64d' // lighter gold for links/emphasis on dark
+  const GOLD = '#c9a84c' // brand gold (buttons, circles, underline)
+  const GOLD_LINK = '#a67c17' // darker gold for links/emphasis on white (readable)
   const label = (t: string) =>
     `<p style="margin:26px 0 12px;color:#7f8aa1;font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase">${t}</p>`
   const courseList = courses.length
@@ -265,46 +265,46 @@ export function welcomeBackEmailHtml(to: string, name: string | null | undefined
     `<tr><td valign="top" style="width:30px;padding:0 14px 16px 0"><span style="display:inline-block;width:28px;height:28px;background:${GOLD};color:#0a0f1e;border-radius:14px;text-align:center;font-weight:700;font-size:14px;line-height:28px">${n}</span></td><td style="padding:0 0 16px;color:#aeb9cc;font-size:15px;line-height:1.55">${html}</td></tr>`
 
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;background:#0a0f1e;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<body style="margin:0;background:#eef1f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0">${preheader}</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0f1e;padding:28px 14px">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f6;padding:28px 14px">
     <tr><td align="center">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#0c1526;border:1px solid #1b2942;border-radius:18px;overflow:hidden">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border:1px solid #e4e8ef;border-radius:18px;overflow:hidden">
         <tr><td align="center" style="padding:30px 32px 8px">
-          <img src="${site}/images/logo/maono_forex_trading_logo_transparent_dark_site.png" alt="Maono Forex Trading" width="150" style="display:block;width:150px;max-width:52%;height:auto;border:0;outline:none;text-decoration:none" />
+          <img src="${site}/images/logo/maono_forex_trading_logo_transparent_light_site.png" alt="Maono Forex Trading" width="150" style="display:block;width:150px;max-width:52%;height:auto;border:0;outline:none;text-decoration:none" />
         </td></tr>
         <tr><td style="padding:14px 32px 0">
           <img src="${site}/images/hero/hero-main.jpg" alt="Maono Forex Trading" width="496" style="display:block;width:100%;max-width:496px;height:auto;border:0;border-radius:12px" />
         </td></tr>
         <tr><td style="padding:26px 32px 10px">
-          <h1 style="font-family:Georgia,'Times New Roman',serif;color:#ffffff;font-size:28px;line-height:1.15;font-weight:700;margin:0 0 12px">Welcome back${first ? `, ${first}` : ''}</h1>
+          <h1 style="font-family:Georgia,'Times New Roman',serif;color:#0f1a30;font-size:28px;line-height:1.15;font-weight:700;margin:0 0 12px">Welcome back${first ? `, ${first}` : ''}</h1>
           <div style="width:52px;height:3px;background:${GOLD};border-radius:2px;margin:0 0 22px;font-size:0;line-height:0">&nbsp;</div>
 
-          <p style="color:#aeb9cc;font-size:15px;line-height:1.65;margin:0 0 16px"><a href="${site}" style="color:${GOLD_TXT};font-weight:600;text-decoration:none">Maono Forex Trading</a> (${host}) has a brand-new home. We've rebuilt the entire site from the ground up for a faster, cleaner and altogether nicer learning experience — and your account came with us, every course included.</p>
+          <p style="color:#475569;font-size:15px;line-height:1.65;margin:0 0 16px"><a href="${site}" style="color:${GOLD_LINK};font-weight:600;text-decoration:none">Maono Forex Trading</a> (${host}) has a brand-new home. We've rebuilt the entire site from the ground up for a faster, cleaner and altogether nicer learning experience — and your account came with us, every course included.</p>
 
-          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 2px"><tr><td style="background:#13203a;border:1px solid rgba(201,168,76,0.45);border-radius:10px;padding:12px 18px;color:#e6c46e;font-size:13px;font-weight:600;letter-spacing:0.02em">&#9733;&nbsp; ${planName.toUpperCase()} PLAN &middot; Lifetime Access${perks}</td></tr></table>
+          <table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 2px"><tr><td style="background:#faf5e6;border:1px solid ${GOLD};border-radius:10px;padding:12px 18px;color:#8a6a17;font-size:13px;font-weight:700;letter-spacing:0.02em">&#9733;&nbsp; ${planName.toUpperCase()} PLAN &middot; Lifetime Access${perks}</td></tr></table>
 
           ${label('Included in your plan')}
           ${courseList}
 
           ${label('Getting back in takes under a minute')}
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            ${step(1, `<strong style="color:#ffffff">Open the new site</strong> — tap the gold button below.`)}
-            ${step(2, `<strong style="color:#ffffff">Sign in</strong> with this email (<span style="color:${GOLD_TXT}">${to}</span>). Forgotten your password? Tap <strong style="color:#ffffff">"Forgot password"</strong> for a reset link.`)}
-            ${step(3, `<strong style="color:#ffffff">Open your Dashboard</strong> and pick up right where you left off.`)}
+            ${step(1, `<strong style="color:#0f1a30">Open the new site</strong> — tap the gold button below.`)}
+            ${step(2, `<strong style="color:#0f1a30">Sign in</strong> with this email (<span style="color:${GOLD_LINK}">${to}</span>). Forgotten your password? Tap <strong style="color:#0f1a30">"Forgot password"</strong> for a reset link.`)}
+            ${step(3, `<strong style="color:#0f1a30">Open your Dashboard</strong> and pick up right where you left off.`)}
           </table>
 
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 4px"><tr><td style="background:#0f1a30;border-left:3px solid ${GOLD};border-radius:0 8px 8px 0;padding:13px 16px;color:#aeb9cc;font-size:14px;line-height:1.55">First time back on the new site? Most returning members simply <a href="${resetUrl}" style="color:${GOLD_TXT};font-weight:600">reset their password here</a> — it takes about 30 seconds.</td></tr></table>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 4px"><tr><td style="background:#faf6ec;border-left:3px solid ${GOLD};border-radius:0 8px 8px 0;padding:13px 16px;color:#475569;font-size:14px;line-height:1.55">First time back on the new site? Most returning members simply <a href="${resetUrl}" style="color:${GOLD_LINK};font-weight:600">reset their password here</a> — it takes about 30 seconds.</td></tr></table>
 
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0 6px"><tr><td align="center">
             <a href="${loginUrl}" style="display:inline-block;background:${GOLD};color:#0a0f1e;font-weight:700;font-size:16px;text-decoration:none;padding:15px 44px;border-radius:999px">Log in to my dashboard &rarr;</a>
           </td></tr></table>
 
-          <p style="text-align:center;color:#8a95ab;font-size:14px;margin:16px 0 4px">Daily setups &amp; community — <a href="${TELEGRAM_URL}" style="color:${GOLD_TXT};font-weight:600">join our Telegram channel &rarr;</a></p>
+          <p style="text-align:center;color:#7a8699;font-size:14px;margin:16px 0 4px">Daily setups &amp; community — <a href="${TELEGRAM_URL}" style="color:${GOLD_LINK};font-weight:600">join our Telegram channel &rarr;</a></p>
         </td></tr>
 
-        <tr><td style="padding:22px 32px 28px;border-top:1px solid #16233c">
-          <p style="color:#5b6580;font-size:12px;line-height:1.6;margin:14px 0 0">Maono Forex Trading &middot; ${host}<br/>You're receiving this because you have an account with us.</p>
+        <tr><td style="padding:22px 32px 28px;border-top:1px solid #edf0f5">
+          <p style="color:#94a0b3;font-size:12px;line-height:1.6;margin:14px 0 0">Maono Forex Trading &middot; ${host}<br/>You're receiving this because you have an account with us.</p>
         </td></tr>
       </table>
     </td></tr>
