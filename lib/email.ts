@@ -217,6 +217,48 @@ export function sendVerificationEmail(to: string, verifyUrl: string) {
   })
 }
 
+// ─── 8. Welcome-back / reactivation (bulk to existing migrated clients) ────
+// Personalised per user (first name + their plan). Single clear CTA + a reset
+// fallback, since most returning members won't remember their old password.
+
+// Greet by first name only when it looks like a real given name — migrated
+// WordPress "names" are often usernames (jwessels, Deoni.Olivier, Jamyadams95).
+function friendlyFirstName(name?: string | null): string {
+  const first = (name ?? '').trim().split(/\s+/)[0] ?? ''
+  return /^[A-Z][a-zA-Z'’-]{1,}$/.test(first) ? first : ''
+}
+
+export function welcomeBackEmailHtml(to: string, name: string | null | undefined, planName: string): string {
+  const first = friendlyFirstName(name)
+  const loginUrl = `${appUrl()}/login`
+  const resetUrl = `${appUrl()}/forgot-password`
+  return layout({
+      preheader: `We've rebuilt Maono Forex Trading. Here's how to log back in and pick up your ${planName} courses.`,
+      heading: `Welcome back${first ? `, ${first}` : ''} 👋`,
+      body: `
+        <p>Maono Forex Trading has a <strong style="color:#fff">brand-new home</strong> — faster, cleaner and built around how you actually learn to trade.</p>
+        <p>Your account came with us. You still have <strong style="color:#fff">lifetime access to your ${planName} plan</strong> — every course, ready when you are.</p>
+        <p style="margin:22px 0 10px;color:#ffffff;font-weight:600">Getting back in takes under a minute:</p>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:15px;line-height:1.55;color:#b4c2dc">
+          <tr><td valign="top" style="padding:0 12px 12px 0;width:26px"><span style="display:inline-block;width:24px;height:24px;background:#c9a84c;color:#0a0f1e;border-radius:12px;text-align:center;font-weight:700;font-size:13px;line-height:24px">1</span></td><td style="padding:0 0 12px"><strong style="color:#fff">Open the new site</strong> — tap the gold button below.</td></tr>
+          <tr><td valign="top" style="padding:0 12px 12px 0"><span style="display:inline-block;width:24px;height:24px;background:#c9a84c;color:#0a0f1e;border-radius:12px;text-align:center;font-weight:700;font-size:13px;line-height:24px">2</span></td><td style="padding:0 0 12px"><strong style="color:#fff">Sign in</strong> with this email address (<span style="color:#fff">${to}</span>). Can't remember your password? Tap <strong style="color:#fff">"Forgot password"</strong> and we'll email you a reset link.</td></tr>
+          <tr><td valign="top" style="padding:0 12px 0 0"><span style="display:inline-block;width:24px;height:24px;background:#c9a84c;color:#0a0f1e;border-radius:12px;text-align:center;font-weight:700;font-size:13px;line-height:24px">3</span></td><td><strong style="color:#fff">Open your Dashboard</strong> — your ${planName} courses are waiting.</td></tr>
+        </table>
+        <p style="margin-top:18px">First time back on the new site? Most returning members just <a href="${resetUrl}" style="color:#c9a84c">reset their password here</a> — it takes about 30 seconds.</p>
+        ${telegramLine}
+      `,
+      cta: { label: 'Log in to my dashboard', href: loginUrl },
+  })
+}
+
+export function sendWelcomeBackEmail(to: string, name: string | null | undefined, planName: string) {
+  const first = friendlyFirstName(name)
+  const subject = first
+    ? `Welcome back, ${first} — your ${planName} courses are ready`
+    : `Welcome back — your ${planName} courses are ready`
+  return sendEmail({ to, subject, html: welcomeBackEmailHtml(to, name, planName) })
+}
+
 // ─── 6. Account invite (admin-provisioned client sets their password) ──────
 export function sendClientInviteEmail(to: string, name: string | null | undefined, setupUrl: string) {
   return sendEmail({
