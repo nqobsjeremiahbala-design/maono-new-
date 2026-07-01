@@ -256,13 +256,13 @@ export function welcomeBackEmailHtml(to: string, name: string | null | undefined
     ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:2px 0 0">${courses
         .map(
           (t, i) =>
-            `<tr><td valign="top" style="width:20px;padding:0 12px 9px 0;color:${GOLD};font-weight:700;font-size:15px;line-height:1.5">${i + 1}</td><td style="padding:0 0 9px;color:#dbe4f0;font-size:15px;line-height:1.5">${t}</td></tr>`,
+            `<tr><td valign="top" style="width:20px;padding:0 12px 9px 0;color:${GOLD_LINK};font-weight:700;font-size:15px;line-height:1.5">${i + 1}</td><td style="padding:0 0 9px;color:#0b0f19;font-weight:600;font-size:15px;line-height:1.5">${t}</td></tr>`,
         )
         .join('')}</table>`
     : ''
   const perks = planName === 'Platinum' ? ' &middot; Mentorship + Priority Support' : ''
   const step = (n: number, html: string) =>
-    `<tr><td valign="top" style="width:30px;padding:0 14px 16px 0"><span style="display:inline-block;width:28px;height:28px;background:${GOLD};color:#0a0f1e;border-radius:14px;text-align:center;font-weight:700;font-size:14px;line-height:28px">${n}</span></td><td style="padding:0 0 16px;color:#aeb9cc;font-size:15px;line-height:1.55">${html}</td></tr>`
+    `<tr><td valign="top" style="width:30px;padding:0 14px 16px 0"><span style="display:inline-block;width:28px;height:28px;background:${GOLD};color:#0a0f1e;border-radius:14px;text-align:center;font-weight:700;font-size:14px;line-height:28px">${n}</span></td><td style="padding:0 0 16px;color:#0b0f19;font-weight:500;font-size:15px;line-height:1.55">${html}</td></tr>`
 
   return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;background:#eef1f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
@@ -277,30 +277,30 @@ export function welcomeBackEmailHtml(to: string, name: string | null | undefined
           <img src="${site}/images/hero/hero-main.jpg" alt="Maono Forex Trading" width="496" style="display:block;width:100%;max-width:496px;height:auto;border:0;border-radius:12px" />
         </td></tr>
         <tr><td style="padding:26px 32px 10px">
-          <h1 style="font-family:Georgia,'Times New Roman',serif;color:#0f1a30;font-size:28px;line-height:1.15;font-weight:700;margin:0 0 12px">Welcome back${first ? `, ${first}` : ''}</h1>
+          <h1 style="font-family:Georgia,'Times New Roman',serif;color:#0b0f19;font-size:28px;line-height:1.15;font-weight:700;margin:0 0 12px">Welcome back${first ? `, ${first}` : ''} 👋</h1>
           <div style="width:52px;height:3px;background:${GOLD};border-radius:2px;margin:0 0 22px;font-size:0;line-height:0">&nbsp;</div>
 
-          <p style="color:#475569;font-size:15px;line-height:1.65;margin:0 0 16px"><a href="${site}" style="color:${GOLD_LINK};font-weight:600;text-decoration:underline">Maono Forex Trading</a> has a brand-new home. We've rebuilt the entire site from the ground up for a faster, cleaner and altogether nicer learning experience — and your account came with us, every course included.</p>
+          <p style="color:#0b0f19;font-weight:500;font-size:15px;line-height:1.6;margin:0 0 16px"><a href="${site}" style="color:${GOLD_LINK};font-weight:700;text-decoration:underline">Maono Forex Trading</a> has a new home — rebuilt from scratch to be faster, cleaner, and easier to learn on. Nothing's changed about what you own: your <strong style="color:#0b0f19">${planName} Plan</strong> and every course are already waiting for you.</p>
 
           <table role="presentation" cellpadding="0" cellspacing="0" style="margin:6px 0 2px"><tr><td style="background:#faf5e6;border:1px solid ${GOLD};border-radius:10px;padding:12px 18px;color:#8a6a17;font-size:13px;font-weight:700;letter-spacing:0.02em">&#9733;&nbsp; ${planName.toUpperCase()} PLAN &middot; Lifetime Access${perks}</td></tr></table>
 
-          ${label('Included in your plan')}
+          ${label("What's included")}
           ${courseList}
 
-          ${label('Getting back in takes under a minute')}
+          ${label('To pick up where you left off')}
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            ${step(1, `<strong style="color:#0f1a30">Open the new site</strong> — tap the gold button below.`)}
-            ${step(2, `<strong style="color:#0f1a30">Sign in</strong> with this email (<span style="color:${GOLD_LINK}">${to}</span>). Forgotten your password? Tap <strong style="color:#0f1a30">"Forgot password"</strong> for a reset link.`)}
-            ${step(3, `<strong style="color:#0f1a30">Open your Dashboard</strong> and pick up right where you left off.`)}
+            ${step(1, `<strong style="color:#0b0f19">Open the new site</strong> — tap the gold button below.`)}
+            ${step(2, `<strong style="color:#0b0f19">Sign in</strong> with <span style="color:${GOLD_LINK};font-weight:600">${to}</span>. Don't remember your password? Tap <strong style="color:#0b0f19">"Forgot password"</strong> for a reset link — it's instant.`)}
+            ${step(3, `<strong style="color:#0b0f19">Head to your Dashboard</strong> and continue exactly where you left off.`)}
           </table>
 
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 4px"><tr><td style="background:#faf6ec;border-left:3px solid ${GOLD};border-radius:0 8px 8px 0;padding:13px 16px;color:#475569;font-size:14px;line-height:1.55">First time back on the new site? Most returning members simply <a href="${resetUrl}" style="color:${GOLD_LINK};font-weight:600">reset their password here</a> — it takes about 30 seconds.</td></tr></table>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 4px"><tr><td style="background:#faf6ec;border-left:3px solid ${GOLD};border-radius:0 8px 8px 0;padding:13px 16px;color:#0b0f19;font-weight:500;font-size:14px;line-height:1.55">💡 Most returning members need a quick password reset on the new site — it takes about 30 seconds. <a href="${resetUrl}" style="color:${GOLD_LINK};font-weight:700">Reset it here &rarr;</a></td></tr></table>
 
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0 6px"><tr><td align="center">
             <a href="${loginUrl}" style="display:inline-block;background:${GOLD};color:#0a0f1e;font-weight:700;font-size:16px;text-decoration:none;padding:15px 44px;border-radius:999px">Log in to my dashboard &rarr;</a>
           </td></tr></table>
 
-          <p style="text-align:center;color:#7a8699;font-size:14px;margin:16px 0 4px">Daily setups &amp; community — <a href="${TELEGRAM_URL}" style="color:${GOLD_LINK};font-weight:600">join our Telegram channel &rarr;</a></p>
+          <p style="text-align:center;color:#0b0f19;font-weight:500;font-size:14px;margin:16px 0 4px">Daily setups &amp; community — <a href="${TELEGRAM_URL}" style="color:${GOLD_LINK};font-weight:700">join our Telegram channel &rarr;</a></p>
         </td></tr>
 
         <tr><td style="padding:22px 32px 28px;border-top:1px solid #edf0f5">
