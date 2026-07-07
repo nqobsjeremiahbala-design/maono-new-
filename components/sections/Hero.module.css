@@ -116,21 +116,14 @@
     width: 100%; height: 100%; object-fit: cover; object-position: 88% 42%;
   }
 
-  /* Light overall darkening so the art reads as a backdrop rather than
-     competing with the text — the real legibility guarantee is the card
-     behind .left below, not this gradient. */
+  /* Left-to-right scrim so the text stays legible directly over the art —
+     no card/box, just a darkened band behind the copy. */
   .vignette {
-    background: linear-gradient(0deg, rgba(4,7,15,0.35) 0%, rgba(4,7,15,0.05) 45%, rgba(4,7,15,0.3) 100%);
+    background: linear-gradient(100deg, rgba(6,10,22,0.92) 0%, rgba(6,10,22,0.82) 35%, rgba(6,10,22,0.45) 58%, rgba(6,10,22,0.1) 78%, transparent 92%);
   }
 
-  .layout { flex-direction: column; padding: 130px 20px 48px; gap: 12px; min-height: 100vh; }
-  .left {
-    max-width: 100%;
-    background: rgb(8, 13, 27);
-    border-radius: 20px;
-    padding: 24px 20px 28px;
-    box-shadow: 0 20px 50px -12px rgba(0,0,0,0.6);
-  }
+  .layout { flex-direction: column; padding: 130px 26px 48px; gap: 12px; min-height: 100vh; }
+  .left { max-width: 100%; }
 }
 @media (max-width: 520px) {
   .heroCta { flex-direction: column; }
