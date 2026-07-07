@@ -35,37 +35,33 @@ export function Nav() {
   const isLoggedIn = status === 'authenticated' && session?.user
   const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN'
 
-  // Home has a full-bleed navy hero: the nav floats transparent over it and
-  // only gains a navy blur once scrolled. Every other page is a plain white
-  // background, so the nav stays solid white throughout — same as before.
+  // Every page opens on a navy section, so the nav is always transparent (no
+  // tint, no border) with white text and a blur-only effect once scrolled —
+  // it never paints a solid background over whatever's behind it.
   const isHome = pathname === '/'
+  const textShadow = { textShadow: '0 1px 3px rgba(0,0,0,0.6)' }
 
   return (
     <>
       <header
-        className={`fixed top-0 inset-x-0 z-50 transition-colors duration-300 ${
-          isHome
-            ? scrolled
-              ? 'bg-navy-950/75 backdrop-blur-md shadow-lg shadow-black/25'
-              : 'bg-transparent'
-            : 'bg-white/95 backdrop-blur border-b border-navy-100 shadow-sm'
+        className={`fixed top-0 inset-x-0 z-50 bg-transparent transition-[backdrop-filter] duration-300 ${
+          scrolled ? 'backdrop-blur-md' : ''
         }`}
       >
         <nav
-          className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between transition-all duration-300 ${
+          className={`w-full px-4 sm:px-6 flex items-center justify-between transition-all duration-300 ${
             scrolled ? 'h-16 md:h-[72px] lg:h-[76px]' : 'h-[64px] md:h-[104px] lg:h-[120px]'
           }`}
         >
-          <Logo onDark={isHome} compact={scrolled} />
+          <Logo onDark compact={scrolled} />
 
           <ul className="hidden md:flex items-center gap-7 lg:gap-8">
             {links.map(l => (
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className={`text-[17px] font-bold uppercase tracking-wide transition-colors ${
-                    isHome ? 'text-white hover:text-gold-400' : 'text-navy-900 hover:text-gold-600'
-                  }`}
+                  style={textShadow}
+                  className="text-[17px] font-bold uppercase tracking-wide text-white hover:text-gold-400 transition-colors"
                 >
                   {l.label}
                 </Link>
@@ -75,6 +71,7 @@ export function Nav() {
               <li>
                 <Link
                   href="/dashboard"
+                  style={textShadow}
                   className="text-[17px] font-bold uppercase tracking-wide text-gold-500 hover:text-gold-400 transition-colors"
                 >
                   Dashboard
@@ -85,7 +82,8 @@ export function Nav() {
               <li>
                 <Link
                   href="/admin"
-                  className="text-[17px] font-bold uppercase tracking-wide text-purple-700 hover:text-purple-500 transition-colors"
+                  style={textShadow}
+                  className="text-[17px] font-bold uppercase tracking-wide text-purple-300 hover:text-purple-200 transition-colors"
                 >
                   Admin
                 </Link>
@@ -96,16 +94,12 @@ export function Nav() {
           <div className="hidden md:flex items-center gap-2">
             {isLoggedIn ? (
               <>
-                <span className={`text-sm mr-1 ${isHome ? 'text-white/80' : 'text-navy-600'}`}>
+                <span style={textShadow} className="text-sm mr-1 text-white/80">
                   {session.user?.name || session.user?.email}
                 </span>
                 <button
                   onClick={() => signOut({ callbackUrl: '/' })}
-                  className={`press px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md border transition-colors ${
-                    isHome
-                      ? 'border-white/50 text-white hover:border-white'
-                      : 'border-navy-300 text-navy-900 hover:border-navy-900'
-                  }`}
+                  className="press px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md border border-white/50 text-white hover:border-white transition-colors"
                 >
                   Sign Out
                 </button>
@@ -121,11 +115,7 @@ export function Nav() {
                 {ENROLLMENT_OPEN && (
                   <Link
                     href="/register"
-                    className={`press px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md border transition-colors ${
-                      isHome
-                        ? 'border-white/50 text-white hover:bg-white/10'
-                        : 'border-navy-300 text-navy-900 hover:bg-navy-50'
-                    }`}
+                    className="press px-4 py-2 text-sm font-bold uppercase tracking-wide rounded-md border border-white/50 text-white hover:bg-white/10 transition-colors"
                   >
                     Register
                   </Link>
@@ -136,7 +126,8 @@ export function Nav() {
 
           <button
             onClick={() => setOpen(!open)}
-            className={`md:hidden p-2 ${isHome ? 'text-white' : 'text-navy-900'}`}
+            style={textShadow}
+            className="md:hidden p-2 text-white"
             aria-label="Toggle menu"
           >
             <span className="block w-5 h-0.5 bg-current mb-1" />
@@ -146,15 +137,13 @@ export function Nav() {
         </nav>
 
         {open && (
-          <div className={`md:hidden border-t px-4 pb-4 ${isHome ? 'bg-navy-950/95 border-white/10' : 'bg-white border-navy-100'}`}>
+          <div className="md:hidden bg-navy-950/95 backdrop-blur-md px-4 pb-4">
             <ul className="flex flex-col gap-3 pt-4">
               {links.map(l => (
                 <li key={l.href}>
                   <Link
                     href={l.href}
-                    className={`font-bold uppercase tracking-wide text-sm transition-colors ${
-                      isHome ? 'text-white hover:text-gold-400' : 'text-navy-900 hover:text-gold-600'
-                    }`}
+                    className="font-bold uppercase tracking-wide text-sm text-white hover:text-gold-400 transition-colors"
                     onClick={() => setOpen(false)}
                   >
                     {l.label}
@@ -176,7 +165,7 @@ export function Nav() {
                 <li>
                   <Link
                     href="/admin"
-                    className="text-purple-700 hover:text-purple-500 text-sm font-bold uppercase tracking-wide"
+                    className="text-purple-300 hover:text-purple-200 text-sm font-bold uppercase tracking-wide"
                     onClick={() => setOpen(false)}
                   >
                     Admin
@@ -187,9 +176,7 @@ export function Nav() {
                 {isLoggedIn ? (
                   <button
                     onClick={() => { signOut({ callbackUrl: '/' }); setOpen(false) }}
-                    className={`press w-full px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md border ${
-                      isHome ? 'border-white/50 text-white' : 'border-navy-300 text-navy-900'
-                    }`}
+                    className="press w-full px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md border border-white/50 text-white"
                   >
                     Sign Out
                   </button>
@@ -205,9 +192,7 @@ export function Nav() {
                     {ENROLLMENT_OPEN && (
                       <Link
                         href="/register"
-                        className={`press flex-1 text-center px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md border ${
-                          isHome ? 'border-white/50 text-white' : 'border-navy-300 text-navy-900'
-                        }`}
+                        className="press flex-1 text-center px-4 py-2.5 text-sm font-bold uppercase tracking-wide rounded-md border border-white/50 text-white"
                         onClick={() => setOpen(false)}
                       >
                         Register
@@ -221,11 +206,12 @@ export function Nav() {
         )}
       </header>
 
-      {/* Reserves the nav's height in normal-page flow so fixed positioning
-          doesn't hide content underneath it. The home page skips this: its
-          hero is full-bleed navy and meant to show through the transparent
-          nav, and the hero's own top padding clears its heading text. */}
-      {!isHome && <div aria-hidden className="h-[64px] md:h-[104px] lg:h-[120px]" />}
+      {/* Reserves the nav's height in normal-page flow so the fixed nav doesn't
+          hide content underneath it. Painted navy so a fully transparent nav
+          reads seamlessly against it (every page opens on a navy section).
+          Home skips this: its hero is full-bleed navy art starting at y=0,
+          and its own top padding already clears the heading text. */}
+      {!isHome && <div aria-hidden className="h-[64px] md:h-[104px] lg:h-[120px] bg-navy-950" />}
     </>
   )
 }

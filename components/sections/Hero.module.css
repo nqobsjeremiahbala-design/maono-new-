@@ -51,9 +51,9 @@
   animation: fadeUp .7s ease both .05s;
 }
 .h1 {
-  font-weight: 900; font-size: clamp(58px, 9vw, 122px);
-  color: var(--color-white); line-height: .84; text-transform: uppercase;
-  letter-spacing: -4px; margin: 0 0 2px;
+  font-weight: 900; font-size: clamp(38px, 5.2vw, 72px);
+  color: var(--color-white); line-height: .92; text-transform: uppercase;
+  letter-spacing: -1px; margin: 0 0 2px;
   animation: fadeUp .7s ease both .15s;
 }
 .h2 {
