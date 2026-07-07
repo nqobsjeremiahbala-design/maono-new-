@@ -35,22 +35,16 @@ export function Nav() {
   const isLoggedIn = status === 'authenticated' && session?.user
   const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN'
 
-  // Every page opens on a navy section, so the nav is always transparent (no
-  // tint, no border) with white text and a blur-only effect once scrolled —
-  // it never paints a solid background over whatever's behind it.
+  // Solid navy at all times — no transparency, no blur, no border — it just
+  // stays put as a plain bar while the page scrolls underneath it.
   const isHome = pathname === '/'
-  const textShadow = { textShadow: '0 1px 3px rgba(0,0,0,0.6)' }
 
   return (
     <>
-      <header
-        className={`fixed top-0 inset-x-0 z-50 bg-transparent transition-[backdrop-filter] duration-300 ${
-          scrolled ? 'backdrop-blur-md' : ''
-        }`}
-      >
+      <header className="fixed top-0 inset-x-0 z-50 bg-navy-950">
         <nav
           className={`w-full px-4 sm:px-6 flex items-center justify-between transition-all duration-300 ${
-            scrolled ? 'h-16 md:h-[72px] lg:h-[76px]' : 'h-[64px] md:h-[104px] lg:h-[120px]'
+            scrolled ? 'h-[68px] md:h-[80px] lg:h-[88px]' : 'h-[80px] md:h-[116px] lg:h-[136px]'
           }`}
         >
           <Logo onDark compact={scrolled} />
@@ -60,7 +54,6 @@ export function Nav() {
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  style={textShadow}
                   className="text-[17px] font-bold uppercase tracking-wide text-white hover:text-gold-400 transition-colors"
                 >
                   {l.label}
@@ -71,7 +64,6 @@ export function Nav() {
               <li>
                 <Link
                   href="/dashboard"
-                  style={textShadow}
                   className="text-[17px] font-bold uppercase tracking-wide text-gold-500 hover:text-gold-400 transition-colors"
                 >
                   Dashboard
@@ -82,7 +74,6 @@ export function Nav() {
               <li>
                 <Link
                   href="/admin"
-                  style={textShadow}
                   className="text-[17px] font-bold uppercase tracking-wide text-purple-300 hover:text-purple-200 transition-colors"
                 >
                   Admin
@@ -94,7 +85,7 @@ export function Nav() {
           <div className="hidden md:flex items-center gap-2">
             {isLoggedIn ? (
               <>
-                <span style={textShadow} className="text-sm mr-1 text-white/80">
+                <span className="text-sm mr-1 text-white/80">
                   {session.user?.name || session.user?.email}
                 </span>
                 <button
@@ -126,7 +117,6 @@ export function Nav() {
 
           <button
             onClick={() => setOpen(!open)}
-            style={textShadow}
             className="md:hidden p-2 text-white"
             aria-label="Toggle menu"
           >
@@ -137,7 +127,7 @@ export function Nav() {
         </nav>
 
         {open && (
-          <div className="md:hidden bg-navy-950/95 backdrop-blur-md px-4 pb-4">
+          <div className="md:hidden bg-navy-950 px-4 pb-4">
             <ul className="flex flex-col gap-3 pt-4">
               {links.map(l => (
                 <li key={l.href}>
@@ -207,11 +197,10 @@ export function Nav() {
       </header>
 
       {/* Reserves the nav's height in normal-page flow so the fixed nav doesn't
-          hide content underneath it. Painted navy so a fully transparent nav
-          reads seamlessly against it (every page opens on a navy section).
-          Home skips this: its hero is full-bleed navy art starting at y=0,
-          and its own top padding already clears the heading text. */}
-      {!isHome && <div aria-hidden className="h-[64px] md:h-[104px] lg:h-[120px] bg-navy-950" />}
+          hide content underneath it. Home skips this: its hero is full-bleed
+          navy art starting at y=0, and its own top padding already clears
+          the heading text. */}
+      {!isHome && <div aria-hidden className="h-[80px] md:h-[116px] lg:h-[136px] bg-navy-950" />}
     </>
   )
 }
