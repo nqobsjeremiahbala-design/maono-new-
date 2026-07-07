@@ -19,7 +19,7 @@ export function CTABanner({
           rel="noopener noreferrer"
           className="press inline-flex items-center justify-center px-8 py-4 text-lg bg-gold-500 text-navy-950 font-semibold rounded-md hover:bg-gold-400 transition-colors"
         >
-          Join Telegram Channel →
+          Join Telegram Channel
         </Link>
       </div>
     </section>

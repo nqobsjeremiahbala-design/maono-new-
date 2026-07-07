@@ -99,7 +99,7 @@ export function TelegramTestimonials() {
             rel="noopener noreferrer"
             className="press inline-flex items-center justify-center px-6 py-3.5 min-h-[48px] rounded-md bg-navy-950 text-white font-semibold hover:bg-navy-800 transition-colors"
           >
-            Join the Telegram channel →
+            Join the Telegram channel
           </Link>
         </div>
       </div>

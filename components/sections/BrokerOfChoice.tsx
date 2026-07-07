@@ -98,7 +98,7 @@ export function BrokerOfChoice() {
             rel="noopener noreferrer"
             className="press inline-flex h-[52px] w-[220px] items-center justify-center rounded-md bg-gold-500 text-base font-bold text-navy-950 shadow-lg transition-all duration-200 hover:scale-[1.02] hover:brightness-110"
           >
-            Open a trading account →
+            Open a trading account
           </Link>
           <Link
             href={BROKER_OF_CHOICE.url}

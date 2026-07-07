@@ -60,7 +60,7 @@ export function MembershipsPreview() {
 
         <div className="text-center">
           <Button variant="outline">
-            <Link href="/memberships">Compare all bundles →</Link>
+            <Link href="/memberships">Compare all bundles</Link>
           </Button>
         </div>
       </div>
