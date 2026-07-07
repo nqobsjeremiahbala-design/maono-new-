@@ -35,13 +35,15 @@ export function Nav() {
   const isLoggedIn = status === 'authenticated' && session?.user
   const isAdmin = (session?.user as { role?: string } | undefined)?.role === 'ADMIN'
 
-  // Solid navy at all times — no transparency, no blur, no border — it just
-  // stays put as a plain bar while the page scrolls underneath it.
+  // Transparent, not a flat fill — every page opens on navy (the hero's
+  // gradient or the navy-950 spacer below), so a see-through nav always
+  // shows exactly what's behind it: a perfect blend, no seam, no border,
+  // and no blur/glass effect.
   const isHome = pathname === '/'
 
   return (
     <>
-      <header className="fixed top-0 inset-x-0 z-50 bg-navy-950">
+      <header className="fixed top-0 inset-x-0 z-50 bg-transparent">
         <nav
           className={`w-full px-4 sm:px-6 flex items-center justify-between transition-all duration-300 ${
             scrolled ? 'h-[68px] md:h-[80px] lg:h-[88px]' : 'h-[80px] md:h-[116px] lg:h-[136px]'
