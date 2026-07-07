@@ -80,7 +80,7 @@ function PlanPanel({ plan }: { plan: Plan }) {
         href="/memberships"
         className="press inline-flex items-center justify-center rounded-md bg-gradient-to-br from-gold-300 to-gold-500 px-7 py-3.5 font-bold text-navy-950 transition-transform hover:-translate-y-0.5"
       >
-        Upgrade Plan →
+        Upgrade Plan
       </Link>
     </div>
   )

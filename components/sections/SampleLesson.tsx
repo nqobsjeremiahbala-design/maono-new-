@@ -19,7 +19,7 @@ export function SampleLesson() {
         </div>
         <div className="text-center">
           <Button>
-            <Link href="/resources">Browse all free resources →</Link>
+            <Link href="/resources">Browse all free resources</Link>
           </Button>
         </div>
       </div>

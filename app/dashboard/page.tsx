@@ -255,7 +255,6 @@ export default async function DashboardPage() {
                     </div>
                     <span className="inline-flex items-center gap-2 rounded-md bg-gradient-to-br from-gold-300 to-gold-500 px-6 py-3 text-sm font-bold text-navy-950">
                       {continueLearning.progress === 0 ? 'Start learning' : continueLearning.progress === 100 ? 'Review course' : 'Resume lesson'}
-                      <span aria-hidden className="transition-transform group-hover:translate-x-1">→</span>
                     </span>
                   </div>
                 </div>
@@ -273,7 +272,7 @@ export default async function DashboardPage() {
                   href="/memberships"
                   className="press inline-flex items-center justify-center rounded-xl bg-gradient-to-br from-gold-300 to-gold-500 px-10 py-4 text-base font-bold text-navy-950 transition-transform hover:-translate-y-0.5"
                 >
-                  Browse bundles →
+                  Browse bundles
                 </Link>
               </div>
             )}

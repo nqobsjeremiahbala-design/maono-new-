@@ -65,7 +65,6 @@ export default function ResourcesPage() {
               <p className="text-navy-600 text-base sm:text-lg mb-6 leading-relaxed max-w-lg">{featured.description}</p>
               <span className="inline-flex items-center gap-2 text-sm font-semibold text-navy-900">
                 Read the guide
-                <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">→</span>
               </span>
             </div>
             <div className="order-1 md:order-2 relative aspect-[4/5] rounded-3xl overflow-hidden bg-gradient-to-br from-navy-100 via-white to-navy-50">

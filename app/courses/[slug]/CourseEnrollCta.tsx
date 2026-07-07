@@ -66,7 +66,6 @@ export function CourseEnrollCta({ slug, totalLessons, hasPlayer }: Props) {
           className="press w-full inline-flex items-center justify-center px-5 py-3.5 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
         >
           {progress === 0 ? 'Start learning' : progress === 100 ? 'Review course' : 'Continue learning'}
-          <span aria-hidden className="ml-2">→</span>
         </Link>
         <Link
           href="/my-courses"
@@ -105,7 +104,7 @@ function EnrollCard({ slug }: { slug: string }) {
         href="/memberships"
         className="press w-full inline-flex items-center justify-center px-5 py-3.5 rounded-md bg-gold-500 text-navy-950 font-semibold hover:bg-gold-400 transition-colors"
       >
-        Choose a plan <span aria-hidden className="ml-2">→</span>
+        Choose a plan
       </Link>
 
       <ul className="mt-6 space-y-2.5 text-sm text-navy-300">
@@ -129,7 +128,7 @@ function EnrollCard({ slug }: { slug: string }) {
         rel="noopener noreferrer"
         className="block mt-6 text-sm text-navy-300 hover:text-gold-400 transition-colors"
       >
-        Or join the Telegram channel first →
+        Or join the Telegram channel first
       </Link>
     </aside>
   )

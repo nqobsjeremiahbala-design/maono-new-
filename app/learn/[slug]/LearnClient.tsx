@@ -365,7 +365,7 @@ function LessonView({
           disabled={!prev}
           className="press flex-1 group text-left px-5 py-4 rounded-md border border-navy-800 bg-navy-900/50 hover:bg-navy-900 hover:border-navy-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          <span className="block text-xs text-navy-500 tracking-[0.15em] uppercase mb-1">← Previous</span>
+          <span className="block text-xs text-navy-500 tracking-[0.15em] uppercase mb-1">Previous</span>
           <span className="block text-sm text-white font-medium truncate">
             {prev?.title ?? 'You’re at the start'}
           </span>
@@ -375,7 +375,7 @@ function LessonView({
             onClick={() => onNavigate(next.slug)}
             className="press flex-1 group text-right px-5 py-4 rounded-md border border-navy-800 bg-navy-900/50 hover:bg-navy-900 hover:border-navy-700 transition-colors"
           >
-            <span className="block text-xs text-gold-400 tracking-[0.15em] uppercase mb-1">Next →</span>
+            <span className="block text-xs text-gold-400 tracking-[0.15em] uppercase mb-1">Next</span>
             <span className="block text-sm text-white font-medium truncate">{next.title}</span>
           </button>
         ) : nextCourse ? (
@@ -384,12 +384,12 @@ function LessonView({
             href={`/learn/${nextCourse.slug}`}
             className="press flex-1 text-right px-5 py-4 rounded-md bg-gold-500 hover:bg-gold-400 transition-colors"
           >
-            <span className="block text-xs font-bold text-navy-950/70 tracking-[0.15em] uppercase mb-1">Next course →</span>
+            <span className="block text-xs font-bold text-navy-950/70 tracking-[0.15em] uppercase mb-1">Next course</span>
             <span className="block text-sm text-navy-950 font-bold truncate">{nextCourse.title}</span>
           </Link>
         ) : (
           <div className="flex-1 text-right px-5 py-4 rounded-md border border-navy-800 bg-navy-900/50 opacity-50">
-            <span className="block text-xs text-gold-400 tracking-[0.15em] uppercase mb-1">Next →</span>
+            <span className="block text-xs text-gold-400 tracking-[0.15em] uppercase mb-1">Next</span>
             <span className="block text-sm text-white font-medium truncate">Course complete 🎉</span>
           </div>
         )}

@@ -148,7 +148,6 @@ export default async function MyCoursesPage() {
 
                     <span className="inline-flex items-center gap-2 text-sm text-gold-400 font-semibold">
                       {progress === 0 ? 'Start learning' : progress === 100 ? 'Review course' : 'Continue learning'}
-                      <span aria-hidden className="transition-transform duration-200 group-hover:translate-x-1">→</span>
                     </span>
                   </div>
                 </Link>
@@ -162,7 +161,7 @@ export default async function MyCoursesPage() {
             href="/courses"
             className="press inline-flex items-center gap-2 text-sm text-navy-300 hover:text-gold-400 transition-colors"
           >
-            Browse more courses <span aria-hidden>→</span>
+            Browse more courses
           </Link>
           <a
             href="https://t.me/maonoforextrading"

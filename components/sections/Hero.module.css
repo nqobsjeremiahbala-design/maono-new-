@@ -107,10 +107,13 @@
 @media (max-width: 960px) {
   .illusLayer {
     position: relative; width: 100%; height: auto;
-    max-width: 620px; margin: 8px auto 0;
+    max-width: 620px; margin: 88px auto 0;
   }
   .illusImg { height: auto; object-fit: contain; }
-  .layout { flex-direction: column; padding: 126px 26px 56px; gap: 12px; min-height: 0; }
+  /* Image now precedes this block in flow (mobile only), so it no longer
+     needs the ~130px reserved for the fixed nav — that's already cleared
+     by the image's own top margin above. */
+  .layout { flex-direction: column; padding: 28px 26px 48px; gap: 12px; min-height: 0; }
   .left { max-width: 100%; }
 }
 @media (max-width: 520px) {

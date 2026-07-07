@@ -26,7 +26,7 @@ export function TeamSnapshot() {
           {TEAM.map(m => <TeamCard key={m.name} member={m} />)}
         </div>
         <Button variant="outline">
-          <Link href="/about">Read our full story →</Link>
+          <Link href="/about">Read our full story</Link>
         </Button>
       </div>
     </section>

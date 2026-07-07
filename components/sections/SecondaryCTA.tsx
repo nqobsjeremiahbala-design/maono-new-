@@ -28,7 +28,7 @@ export function SecondaryCTA() {
           rel="noopener noreferrer"
           className="inline-flex items-center justify-center px-10 py-4 bg-gold-500 text-navy-950 font-semibold rounded-md hover:bg-gold-400 transition-colors"
         >
-          Join Telegram →
+          Join Telegram
         </Link>
       </div>
     </section>

@@ -80,7 +80,7 @@ export default function MembershipsPage() {
                     : 'border border-navy-800 text-navy-900 hover:bg-navy-950 hover:text-white'
                 }`}
               >
-                Choose {bundle.name} →
+                Choose {bundle.name}
               </Link>
             </div>
           ))}

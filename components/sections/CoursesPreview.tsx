@@ -22,7 +22,7 @@ export function CoursesPreview() {
         )}
         <div className="text-center">
           <Button variant="outline">
-            <Link href="/courses">View all courses →</Link>
+            <Link href="/courses">View all courses</Link>
           </Button>
         </div>
       </div>

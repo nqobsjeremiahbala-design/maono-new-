@@ -16,7 +16,7 @@ export function StickyBar() {
           rel="noopener noreferrer"
           className="shrink-0 bg-gold-500 text-navy-950 font-semibold text-sm px-4 py-2.5 rounded-md min-h-[44px] flex items-center"
         >
-          Join Telegram →
+          Join Telegram
         </Link>
       </div>
     </>

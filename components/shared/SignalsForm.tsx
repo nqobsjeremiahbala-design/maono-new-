@@ -49,7 +49,7 @@ export function SignalsForm() {
         <p className="text-red-500 text-sm">Something went wrong. Try WhatsApp directly instead.</p>
       )}
       <Button type="submit" size="lg" className="w-full" disabled={status === 'sending'}>
-        {status === 'sending' ? 'Joining...' : 'Join the free signals group →'}
+        {status === 'sending' ? 'Joining...' : 'Join the free signals group'}
       </Button>
       <p className="text-center text-xs text-navy-400">
         Or{' '}
