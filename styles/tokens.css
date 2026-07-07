@@ -1,0 +1,30 @@
+/* ============================================================
+   Maono Forex Trading — sitewide brand tokens
+   Imported once in app/globals.css: @import "../styles/tokens.css";
+   Reference anywhere as var(--color-gold), etc.
+
+   --font-display resolves to the Montserrat next/font variable set
+   on <html> in app/layout.tsx (self-hosted, matches the --font-sans
+   Rubik pattern already used site-wide — no external font request).
+   ============================================================ */
+
+:root {
+  /* Navy system (deep navy → hero gradient stops) */
+  --color-navy:        #0a0f1e;
+  --color-navy-hero-1: #12244a;
+  --color-navy-hero-2: #0c1834;
+  --color-navy-hero-3: #0a1024;
+
+  /* Gold / amber accent */
+  --color-gold:        #f5a623;
+  --color-gold-bright: #fbb040;
+  --color-gold-dark:   #c8841a;
+
+  /* Neutrals + cool accents */
+  --color-white: #ffffff;
+  --color-gray:  #c9ccd6;
+  --color-blue:  #3d7fce;
+  --color-teal:  #3ec6e0;
+
+  --font-display: var(--font-montserrat), system-ui, sans-serif;
+}

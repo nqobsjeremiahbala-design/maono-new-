@@ -54,7 +54,7 @@ const nextConfig: NextConfig = {
               "media-src 'self' blob: https://*.r2.cloudflarestorage.com",
               "font-src 'self' https://fonts.gstatic.com",
               "connect-src 'self' https://www.google-analytics.com https://vitals.vercel-insights.com https://www.google.com https://*.tradingview.com",
-              "frame-src 'self' https://*.tradingview.com https://www.youtube.com https://t.me https://iframe.mediadelivery.net",
+              "frame-src 'self' https://*.tradingview.com https://*.tradingview-widget.com https://www.youtube.com https://t.me https://iframe.mediadelivery.net",
               "frame-ancestors 'none'",
             ].join('; '),
           },

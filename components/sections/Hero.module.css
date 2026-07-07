@@ -1,0 +1,119 @@
+/* ============================================================
+   Maono Forex Trading — hero styles (CSS Module)
+   Colors reference the brand tokens defined in styles/tokens.css
+   ============================================================ */
+
+/* ---- entrance animations ---- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes illusIn {
+  from { opacity: 0; transform: scale(1.04); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  min-height: 100vh; position: relative; overflow: hidden;
+  font-family: var(--font-display);
+  background: radial-gradient(ellipse 85% 95% at 70% 44%,
+    var(--color-navy-hero-1) 0%, var(--color-navy-hero-2) 42%,
+    var(--color-navy-hero-3) 78%, #080d1c 100%);
+}
+.vignette {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(ellipse 120% 120% at 50% 50%, transparent 55%, rgba(4,7,15,0.5) 100%);
+}
+
+.illusLayer {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 60%; z-index: 0; overflow: hidden; pointer-events: none;
+}
+.illusImg {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: right center; display: block;
+  animation: illusIn 1.1s ease both 0.1s;
+}
+
+.layout {
+  display: flex; align-items: center; min-height: 100vh;
+  padding: 150px 48px 80px; position: relative; z-index: 2;
+}
+.left { max-width: 560px; }
+
+.eyebrow {
+  font-weight: 800; font-size: clamp(38px, 5.2vw, 72px);
+  color: var(--color-gold); line-height: .92; text-transform: uppercase;
+  letter-spacing: -1px; margin: 0 0 2px;
+  animation: fadeUp .7s ease both .05s;
+}
+.h1 {
+  font-weight: 900; font-size: clamp(58px, 9vw, 122px);
+  color: var(--color-white); line-height: .84; text-transform: uppercase;
+  letter-spacing: -4px; margin: 0 0 2px;
+  animation: fadeUp .7s ease both .15s;
+}
+.h2 {
+  font-weight: 900; font-size: clamp(38px, 5.4vw, 78px);
+  color: var(--color-white); line-height: .9; text-transform: uppercase;
+  letter-spacing: -2px; margin: 0 0 34px;
+  animation: fadeUp .7s ease both .25s;
+}
+.sub {
+  display: flex; flex-direction: column; margin-bottom: 46px;
+  animation: fadeUp .7s ease both .4s;
+}
+.sub span {
+  color: var(--color-white); font-size: clamp(19px, 1.9vw, 26px);
+  font-weight: 500; line-height: 1.55; letter-spacing: .2px;
+}
+
+.heroCta { display: flex; gap: 18px; flex-wrap: wrap; animation: fadeUp .7s ease both .55s; }
+
+.btnPrimary {
+  font-family: var(--font-display); font-weight: 800; font-size: 14px;
+  letter-spacing: 1.4px; text-transform: uppercase; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--color-gold); color: var(--color-navy);
+  border: none; border-radius: 5px; padding: 18px 40px;
+  cursor: pointer; transition: background .2s, transform .15s;
+}
+.btnPrimary:hover { background: var(--color-gold-bright); transform: translateY(-2px); }
+
+.btnOutline {
+  font-family: var(--font-display); font-weight: 800; font-size: 14px;
+  letter-spacing: 1.4px; text-transform: uppercase; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--color-white);
+  border: 1.5px solid rgba(255,255,255,0.55); border-radius: 5px;
+  padding: 18px 40px; cursor: pointer;
+  transition: border-color .2s, background .2s, transform .15s;
+}
+.btnOutline:hover { border-color: #fff; background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+
+/* Focus visibility */
+.btnPrimary:focus-visible, .btnOutline:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 960px) {
+  .illusLayer {
+    position: relative; width: 100%; height: auto;
+    max-width: 620px; margin: 8px auto 0;
+  }
+  .illusImg { height: auto; object-fit: contain; }
+  .layout { flex-direction: column; padding: 126px 26px 56px; gap: 12px; min-height: 0; }
+  .left { max-width: 100%; }
+}
+@media (max-width: 520px) {
+  .heroCta { flex-direction: column; }
+  .heroCta a { width: 100%; }
+}

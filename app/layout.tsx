@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Rubik } from 'next/font/google'
+import { Rubik, Montserrat } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import Script from 'next/script'
 import { Nav } from '@/components/layout/Nav'
@@ -11,6 +11,12 @@ const rubik = Rubik({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700', '800', '900'],
   variable: '--font-sans',
+})
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-montserrat',
 })
 
 export const metadata: Metadata = {
@@ -30,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const gaEnabled = gaId && /^G-[A-Z0-9]+$/.test(gaId)
 
   return (
-    <html lang="en-ZA" className={rubik.variable}>
+    <html lang="en-ZA" className={`${rubik.variable} ${montserrat.variable}`}>
       <body>
         <Providers>
           <Nav />

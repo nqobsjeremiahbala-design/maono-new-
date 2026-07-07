@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
 
 @theme {
   --color-navy-950: #0a0f1e;
@@ -11,10 +12,11 @@
   --color-navy-300: #b4c2dc;
   --color-navy-200: #d3dcec;
   --color-navy-100: #e8eef5;
-  --color-gold-600: #b8942f;
-  --color-gold-500: #c9a84c;
-  --color-gold-400: #d4b96a;
-  --color-gold-300: #e0ce94;
+  /* Brand gold — matches styles/tokens.css (--color-gold etc.) */
+  --color-gold-600: #c8841a;
+  --color-gold-500: #f5a623;
+  --color-gold-400: #fbb040;
+  --color-gold-300: #fbcf7c;
 
   --font-sans: 'Rubik', ui-sans-serif, system-ui, sans-serif;
   --font-serif: 'Rubik', ui-sans-serif, system-ui, sans-serif;
@@ -119,7 +121,7 @@
   font-weight: 600;
 }
 .prose-maono a {
-  color: #b8942f;
+  color: var(--color-gold-600);
   text-decoration: none;
   border-bottom: 1px solid transparent;
   transition: border-color 150ms var(--ease-out-strong);
@@ -144,14 +146,14 @@
   content: "→";
   position: absolute;
   left: 0;
-  color: #c9a84c;
+  color: var(--color-gold-500);
   font-weight: 600;
 }
 .prose-maono ol {
   list-style: decimal;
 }
 .prose-maono ol > li::marker {
-  color: #c9a84c;
+  color: var(--color-gold-500);
   font-weight: 600;
 }
 .prose-maono ul > li + li,
@@ -159,7 +161,7 @@
   margin-top: 0.5rem;
 }
 .prose-maono blockquote {
-  border-left: 3px solid #c9a84c;
+  border-left: 3px solid var(--color-gold-500);
   padding-left: 1.5rem;
   font-style: italic;
   font-family: var(--font-serif);

@@ -23,8 +23,8 @@ export default function HomePage() {
   return (
     <>
       <JsonLd data={organizationJsonLd()} />
-      <TradingViewTicker />
       <Hero />
+      <TradingViewTicker />
       <MembershipsPreview />
       <BrokerOfChoice />
       <TelegramTestimonials />
