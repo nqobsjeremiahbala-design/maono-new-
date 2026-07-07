@@ -73,7 +73,7 @@ function layout(opts: { heading: string; body: string; cta?: { label: string; hr
           <img src="${appUrl()}/images/logo/maono_forex_trading_logo_transparent_light_site.png" alt="Maono Forex Trading" width="156" style="display:inline-block;width:156px;max-width:55%;height:auto;border:0;outline:none;text-decoration:none" />
         </td></tr>
         <tr><td style="padding:16px 32px 0">
-          <img src="${appUrl()}/assets/bull-scene.png" alt="Maono Forex Trading — bull market illustration" width="456" style="display:block;width:100%;max-width:456px;height:auto;border:0;border-radius:12px" />
+          <img src="${appUrl()}/assets/bull-scene-email.png" alt="Maono Forex Trading — bull market illustration" width="456" style="display:block;width:100%;max-width:456px;height:auto;border:0;border-radius:12px" />
         </td></tr>
         <tr><td style="padding:20px 32px 4px">
           <h1 style="color:#ffffff;font-size:22px;line-height:1.25;margin:0 0 12px">${heading}</h1>
@@ -254,7 +254,7 @@ export function welcomeBackEmailHtml(to: string, name: string | null | undefined
   const GOLD = '#f5a623' // brand gold (buttons, circles, underline) — matches the site
   const GOLD_LINK = '#c8841a' // darker gold for links/emphasis on white (readable)
   const label = (t: string) =>
-    `<p style="margin:26px 0 12px;color:#7f8aa1;font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase">${t}</p>`
+    `<p style="margin:26px 0 12px;color:#0b0f19;font-size:15px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase">${t}</p>`
   const courseList = courses.length
     ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:2px 0 0">${courses
         .map(
@@ -277,7 +277,7 @@ export function welcomeBackEmailHtml(to: string, name: string | null | undefined
           <img src="${site}/images/logo/maono_forex_trading_logo_transparent_light_site.png" alt="Maono Forex Trading" width="150" style="display:block;width:150px;max-width:52%;height:auto;border:0;outline:none;text-decoration:none" />
         </td></tr>
         <tr><td style="padding:14px 32px 0">
-          <img src="${site}/assets/bull-scene.png" alt="Maono Forex Trading — bull market illustration" width="496" style="display:block;width:100%;max-width:496px;height:auto;border:0;border-radius:12px" />
+          <img src="${site}/assets/bull-scene-email.png" alt="Maono Forex Trading — bull market illustration" width="496" style="display:block;width:100%;max-width:496px;height:auto;border:0;border-radius:12px" />
         </td></tr>
         <tr><td style="padding:26px 32px 10px">
           <h1 style="font-family:Georgia,'Times New Roman',serif;color:#0b0f19;font-size:28px;line-height:1.15;font-weight:700;margin:0 0 12px">Welcome back${first ? `, ${first}` : ''} 👋</h1>
