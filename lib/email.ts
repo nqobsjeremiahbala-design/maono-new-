@@ -69,7 +69,7 @@ function layout(opts: { heading: string; body: string; cta?: { label: string; hr
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0f1e;padding:32px 16px">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#0d1426;border:1px solid #1a2d50;border-radius:16px;overflow:hidden">
-        <tr><td align="center" style="padding:28px 32px 8px">
+        <tr><td align="center" style="background:#0a0f1e;padding:28px 32px">
           <img src="${appUrl()}/images/logo/maono_forex_trading_logo_transparent_dark_site.png" alt="Maono Forex Trading" width="140" style="display:inline-block;width:140px;max-width:48%;height:auto;border:0;outline:none;text-decoration:none" />
         </td></tr>
         <tr><td style="padding:16px 32px 4px">
@@ -270,8 +270,8 @@ export function welcomeBackEmailHtml(to: string, name: string | null | undefined
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f6;padding:28px 14px">
     <tr><td align="center">
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border:1px solid #e4e8ef;border-radius:18px;overflow:hidden">
-        <tr><td align="center" style="padding:30px 32px 8px">
-          <img src="${site}/images/logo/maono_forex_trading_logo_transparent_light_site.png" alt="Maono Forex Trading" width="150" style="display:block;width:150px;max-width:52%;height:auto;border:0;outline:none;text-decoration:none" />
+        <tr><td align="center" style="background:#0a0f1e;padding:30px 32px">
+          <img src="${site}/images/logo/maono_forex_trading_logo_transparent_dark_site.png" alt="Maono Forex Trading" width="150" style="display:block;width:150px;max-width:52%;height:auto;border:0;outline:none;text-decoration:none" />
         </td></tr>
         <tr><td style="padding:18px 32px 10px">
           <h1 style="font-family:Georgia,'Times New Roman',serif;color:#0b0f19;font-size:28px;line-height:1.15;font-weight:700;margin:0 0 12px">Welcome back${first ? `, ${first}` : ''} 👋</h1>
